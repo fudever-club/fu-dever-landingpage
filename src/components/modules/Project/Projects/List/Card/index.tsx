@@ -21,6 +21,7 @@ function Card({
         <div className="w-[100%] sm:h-[66.66%] md:h-[50%] xl:h-[52.8%] ">
           <Image
             loading="lazy"
+            unoptimized
             src={image}
             width={500}
             height={500}

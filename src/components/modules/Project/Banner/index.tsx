@@ -50,7 +50,7 @@ const Blogs = () => {
               <motion.div
                 animate="show"
                 variants={parent}
-                className="overflow-hidden flex md:justify-start sm:justify-center relative w-[100%] h-[50px] sm:text-[32px] lg:text-[40px] font-black sm:leading-[39px] lg:leading-[48px] text-primary"
+                className="overflow-visible flex flex-wrap md:justify-start sm:justify-center relative w-[100%] min-h-[80px] sm:text-[32px] lg:text-[40px] font-black sm:leading-[39px] lg:leading-[48px] text-primary"
               >
                 {[
                   "F",

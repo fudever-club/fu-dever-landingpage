@@ -4,7 +4,13 @@ import leetcode from "@icons/pages/leaderBoard/leetcode.svg";
 import crown from "@icons/pages/leaderBoard/crown.svg";
 import avatar_default from "@images/pages/leaderBoard/avatar_default.png";
 import Link from "next/link";
-function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
+function LeaderboardModule({
+  leaderboardData,
+  hasLoadError = false,
+}: {
+  leaderboardData: any[];
+  hasLoadError?: boolean;
+}) {
   const user1 = leaderboardData?.[0];
   const user2 = leaderboardData?.[1];
   const user3 = leaderboardData?.[2];
@@ -18,15 +24,15 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
         >
           CÁC THÀNH VIÊN DẪN ĐẦU CODING LEADERBOARD
         </h1>
-        <p className="text-[#0065A9] font-[700] not-italic lg:text-[20px] md:text-[16px] sm:text-[14px]  xl:mt-[28px] lg:mt-[25px] md:mt-[23px] sm:mt-[20px]">
-          SUMMER - 2024
+        <p className="text-[#0065A9] font-[700] not-italic lg:text-[20px] md:text-[16px] sm:text-[14px] xl:mt-[28px] lg:mt-[25px] md:mt-[23px] sm:mt-[20px]">
+          SUMMER - 2026 (GEN 9 - KHÓA K21)
         </p>
         <div className="flex mt-12 px-5 gap-4 lg:gap-20">
           <div className="flex flex-col lg:gap-12 gap-6 mt-20">
             <div className="relative">
               <Image
                 loading="lazy"
-                src={user2?.userId?.avatar ?? avatar_default}
+                src={user2?.user?.avatar ?? avatar_default}
                 alt=""
                 width={290}
                 height={400}
@@ -38,8 +44,8 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
             </div>
             <div className="flex flex-col items-center gap-1">
               <p className="lg:text-2xl text-base font-bold text-center">
-                {user2?.userId
-                  ? user2?.userId?.firstname + " " + user2?.userId?.lastname
+                {user2?.user
+                  ? user2?.user?.firstname + " " + user2?.user?.lastname
                   : "Không có thông tin"}
               </p>
               <div className="flex gap-2 items-center">
@@ -68,7 +74,7 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
               />
               <Image
                 loading="lazy"
-                src={user1?.userId?.avatar ?? avatar_default}
+                src={user1?.user?.avatar ?? avatar_default}
                 alt=""
                 width={290}
                 height={400}
@@ -80,8 +86,8 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
             </div>
             <div className="flex flex-col items-center gap-1">
               <p className="lg:text-2xl text-base font-bold text-center">
-                {user1?.userId
-                  ? user1?.userId?.firstname + " " + user1?.userId?.lastname
+                {user1?.user
+                  ? user1?.user?.firstname + " " + user1?.user?.lastname
                   : "Không có thông tin"}
               </p>
               <div className="flex gap-2 items-center">
@@ -102,7 +108,7 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
             <div className="relative">
               <Image
                 loading="lazy"
-                src={user3?.userId?.avatar ?? avatar_default}
+                src={user3?.user?.avatar ?? avatar_default}
                 alt=""
                 width={290}
                 height={400}
@@ -114,8 +120,8 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
             </div>
             <div className="flex flex-col items-center gap-1">
               <p className="lg:text-2xl text-base font-bold text-center">
-                {user3?.userId
-                  ? user3?.userId?.firstname + " " + user3?.userId?.lastname
+                {user3?.user
+                  ? user3?.user?.firstname + " " + user3?.user?.lastname
                   : "Không có thông tin"}
               </p>
               <div className="flex gap-2 items-center">
@@ -135,23 +141,34 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
         </div>
       </section>
       <section className="max-w-[1440px] mx-auto w-full bg-[#F8FCFF] lg:px-20 px-5 py-10 flex flex-col gap-4">
-        {leaderboardData?.map((user: any, index: number) => (
-          <Link href={`/member/${user.userId._id}`} key={index}>
+        {hasLoadError && (
+          <p role="status" className="rounded-2xl border border-blue-100 bg-white p-5 text-center text-sm text-[#0065A9]">
+            Bảng xếp hạng đang được đồng bộ. Vui lòng thử lại sau ít phút.
+          </p>
+        )}
+        {!hasLoadError && leaderboardData.length === 0 && (
+          <p role="status" className="rounded-2xl border border-blue-100 bg-white p-5 text-center text-sm text-[#0065A9]">
+            Chưa có dữ liệu bảng xếp hạng.
+          </p>
+        )}
+        {leaderboardData?.map((user: any, index: number) => {
+          const profileKey = user?.user?.profileKey;
+          const row = (
             <div className="cursor-pointer hover:bg-[#7dd6ff] transition-all w-full bg-white drop-shadow-md rounded-2xl lg:p-5 md:p-4 sm:p-3 flex items-center group ">
               <span className="block lg:w-24 w-10 text-center text-xs lg:text-lg">
                 {index + 1}
               </span>
               <Image
                 loading="lazy"
-                src={user?.userId?.avatar ?? avatar_default}
+                src={user?.user?.avatar ?? avatar_default}
                 alt=""
                 width={40}
                 height={40}
                 className="rounded-full w-10 h-10 object-cover mx-5"
               />
               <p className="text-xs lg:text-lg flex-1">
-                {user?.userId
-                  ? user?.userId?.firstname + " " + user?.userId?.lastname
+                {user?.user
+                  ? user?.user?.firstname + " " + user?.user?.lastname
                   : "Không có thông tin"}
               </p>
               <span className="hidden w-48 text-center text-xs lg:text-lg md:block ">
@@ -161,8 +178,16 @@ function LeaderboardModule({ leaderboardData }: { leaderboardData: any }) {
                 {user?.acSubmissionList?.length * 10} pts
               </span>
             </div>
-          </Link>
-        ))}
+          );
+
+          return profileKey ? (
+            <Link href={`/member/${encodeURIComponent(profileKey)}`} key={`${profileKey}-${index}`}>
+              {row}
+            </Link>
+          ) : (
+            <div key={`leaderboard-${index}`}>{row}</div>
+          );
+        })}
       </section>
     </main>
   );

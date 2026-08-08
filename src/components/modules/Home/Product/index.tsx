@@ -44,54 +44,54 @@ function Product() {
       className=" h-fit flex justify-center items-center relative overflow-hidden"
     >
       <motion.div className="max-w-[1440px] w-[100%] h-fit py-[40px] md:py-[60px] lg:py-[60px] xl:py-[60px] flex flex-col-reverse md:flex-row lg:flex-row xl:flex-row justify-between relative px-[20px] md:px-[40px] lg:px-[40px] xl:px-[80px]">
-        <div className="max-w-[100%] md:max-w-[50%] lg:max-w-[50%] xl:max-w-[50%] w-[100%] h-[320px] md:h-[320px] lg:h-[480px] xl:h-[610px] grid grid-cols-2 grid-rows-2 gap-[20px] md:gap-[20px] lg:gap-[40px] xl:gap-[50px] mt-[20px] md:mt-[0px] lg:mt-[0px] xl:mt-[0px]">
-          <div className=" bg-[#FFFFFF] pt-[12px] md:pt-[12px] lg:pt-[20px] xl:pt-[20px] px-[30px md:px-[30px] lg:px-[40px] xl:px-[40px] pb-[23px] flex flex-col items-center drop-shadow-xl relative">
+        <div className="mt-6 grid h-auto w-full max-w-full grid-cols-2 gap-4 md:mt-0 md:max-w-[50%] md:gap-5 lg:max-w-[50%] lg:gap-8 xl:max-w-[50%] xl:gap-10">
+          <div className="relative flex flex-col items-center rounded-xl bg-white px-4 pb-4 pt-3 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <Image
               loading="lazy"
               src={ProductsOne}
               className="w-[90px] md:w-[90px] lg:w-[140px] xl:w-[200px]"
               alt="Product Image"
             />
-            <h3 className=" mt-[8px] md:mt-[8px] lg:mt-[18px] xl:mt-[8px] font-[400] text-[12px] md:text-[12px] lg:text-[18px] xl:text-[20px] leading-[28px]">
+            <h3 className="mt-2 text-sm font-medium leading-6 text-slate-800 md:text-base lg:text-lg">
               2D Game
             </h3>
             <div className="w-[100%] h-[100%] absolute bg-[#ffffff] top-0 left-0 z-[-1] blur-[4px]"></div>
           </div>
 
-          <div className=" bg-[#FFFFFF] pt-[12px] md:pt-[12px] lg:pt-[20px] xl:pt-[20px] px-[30px md:px-[30px] lg:px-[40px] xl:px-[40px] pb-[23px] flex flex-col items-center drop-shadow-xl relative">
+          <div className="relative flex flex-col items-center rounded-xl bg-white px-4 pb-4 pt-3 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <Image
               loading="lazy"
               src={ProductsTwo}
               className="w-[90px] md:w-[90px] lg:w-[140px] xl:w-[200px]"
               alt="Product Image"
             />
-            <h3 className="mt-[8px] md:mt-[8px] lg:mt-[18px] xl:mt-[8px] font-[400] text-[12px] md:text-[12px] lg:text-[18px] xl:text-[20px] leading-[28px]">
+            <h3 className="mt-2 text-sm font-medium leading-6 text-slate-800 md:text-base lg:text-lg">
               Web App
             </h3>
             <div className="w-[100%] h-[100%] absolute bg-[#FFFFFF] top-0 left-0 z-[-1] blur-[4px]"></div>
           </div>
 
-          <div className=" bg-[#FFFFFF] pt-[12px] md:pt-[12px] lg:pt-[20px] xl:pt-[20px] px-[30px md:px-[30px] lg:px-[40px] xl:px-[40px] pb-[23px] flex flex-col items-center drop-shadow-xl relative">
+          <div className="relative flex flex-col items-center rounded-xl bg-white px-4 pb-4 pt-3 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <Image
               loading="lazy"
               src={ProductsThree}
               className="w-[90px] md:w-[90px] lg:w-[140px] xl:w-[200px]"
               alt="Product Image"
             />
-            <h3 className="mt-[8px] md:mt-[8px] lg:mt-[18px] xl:mt-[8px] font-[400] text-[12px] md:text-[12px] lg:text-[18px] xl:text-[20px] leading-[28px]">
+            <h3 className="mt-2 text-sm font-medium leading-6 text-slate-800 md:text-base lg:text-lg">
               Mobile App
             </h3>
             <div className="w-[100%] h-[100%] absolute bg-[#FFFFFF] top-0 left-0 z-[-1] blur-[4px]"></div>
           </div>
 
-          <div className=" bg-[#FFFFFF] pt-[12px] md:pt-[12px] lg:pt-[20px] xl:pt-[20px] px-[30px md:px-[30px] lg:px-[40px] xl:px-[40px] pb-[23px] flex flex-col items-center drop-shadow-xl relative">
+          <div className="relative flex flex-col items-center rounded-xl bg-white px-4 pb-4 pt-3 shadow-md transition-all duration-200 hover:-translate-y-1 hover:shadow-lg">
             <Image
               loading="lazy"
               src={ProductsFour}
               className="w-[90px] md:w-[90px] lg:w-[140px] xl:w-[200px]"
               alt="Product Image"
             />
-            <h3 className="mt-[8px] md:mt-[8px] lg:mt-[18px] xl:mt-[8px] font-[400] text-[12px] md:text-[12px] lg:text-[18px] xl:text-[20px] leading-[28px]">
+            <h3 className="mt-2 text-sm font-medium leading-6 text-slate-800 md:text-base lg:text-lg">
               Model AI
             </h3>
             <div className="w-[100%] h-[100%] absolute bg-[#FFFFFF] top-0 left-0 z-[-1] blur-[4px]"></div>
@@ -105,7 +105,7 @@ function Product() {
             textPosition="right"
           ></SectionTitle>
           <div className="w-[100%] md:w-[100%] lg:w-[100%] xl:w-[100%] mt-[28px]">
-            <p className="text-right leading-[normal] md:leading-[normal] lg:leading-[normal] xl:leading-[19px] text-[12px] md:text-[12px] lg:text-[14px] xl:text-[16px] pl-[0] md:pl-[20px] lg:pl-[20px] xl:pl-[20px]">
+            <p className="text-left text-sm leading-6 text-slate-700 md:pl-5 md:text-right md:text-base md:leading-7">
               Sản phẩm của chúng tôi mang lại những cải tiến quan trọng, hỗ trợ
               các ngành công nghiệp và nâng cao trải nghiệm người dùng. Với các
               công nghệ hiện đại và luôn lấy người dùng làm trung tâm, chúng tôi

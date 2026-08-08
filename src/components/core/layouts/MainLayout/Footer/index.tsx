@@ -15,7 +15,7 @@ function Footer() {
     {
       logo: mail,
       tittle: "club.dever@gmail.com",
-      url: "mailto:someone@example.com",
+      url: "mailto:club.dever@gmail.com",
     },
     {
       logo: phone,
@@ -103,7 +103,7 @@ function Footer() {
                 Trang chủ
               </Link>
               <Link
-                href="/blogs"
+                href="/project"
                 className="hover:underline text-[12px] md:text-[12px] lg:text-[16px] xl:text-[16px]"
               >
                 Dự án
@@ -124,6 +124,9 @@ function Footer() {
               </Link>
             </div>
           </div>
+        </div>
+        <div className="border-t border-white/20 pt-4 mt-6 text-center text-xs text-white/80">
+          © 2026 FU-DEVER CLUB. All rights reserved.
         </div>
       </div>
     </div>

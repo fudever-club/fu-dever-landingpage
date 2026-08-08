@@ -1,5 +1,5 @@
 "use client";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import introduction from "@images/pages/home/introduction/introduce.png";
 import SectionTitle from "@components/core/common/SectionTitle";
@@ -39,7 +39,6 @@ function Counter({
 
 function Introduction() {
   const [isReadMore, setReadMore] = useState<boolean>(false);
-  const [isDesktopSite, setIsDesktopSite] = useState<boolean>(true);
   const [scrollPosition, setScrollPosition] = useState(0);
   const [hasCounted, setHasCounted] = useState<boolean>(false);
 
@@ -89,11 +88,10 @@ function Introduction() {
 
   const handleReadMore = () => {
     setReadMore((isReadMore) => !isReadMore);
-    setIsDesktopSite((isDesktopSite) => false);
   };
 
   return (
-    <div className="bg-[#F8FCFF]  text-[#000000]">
+    <div id="gioi-thieu" className="bg-[#F8FCFF] text-[#000000]">
       <div className="max-w-[1440px] mx-auto  flex justify-end xl:flex-row lg:flex-row md:flex-row flex-col relative">
         <div className=" lg:w-[50%] md:w-[62%] sm:w-full pl-[20px] md:pl-[40px] lg:pl-[40px] xl:pl-[80px]  py-[40px] md:py-[60px] lg:py-[60px] xl:py-[60px] md:absolute md:left-0 z-10">
           <SectionTitle
@@ -102,7 +100,7 @@ function Introduction() {
             textPosition="left"
           ></SectionTitle>
           <div className="pt-[20px] md:pt-[20px] lg:pt-[40px] xl:pt-[28px] text-[16px]">
-            <p className=" m-0 p0 text-[12px] md:text-[12px] lg:text-[14px] xl:text-[16px] leading-[normal] font-[400]">
+            <p className="m-0 text-sm font-normal leading-6 text-slate-700 md:text-base md:leading-7">
               Chào mừng đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT!
               Tại đây, chúng tôi tạo ra một cộng đồng năng động cho những lập
               trình viên tương lai, cung cấp cơ hội phát triển kỹ năng và giao
@@ -122,12 +120,7 @@ function Introduction() {
                 <br />
                 ...
               </span>
-              <span
-                className="hidden md:hidden lg:block xl:block "
-                style={{
-                  display: isReadMore ? "block" : "",
-                }}
-              >
+              <span className={`${isReadMore ? "block" : "hidden"} lg:block`}>
                 <br />
                 Từ một nhóm sinh viên nhiệt huyết, FU-DEVER đã phát triển thành
                 một cộng đồng đa dạng, tổ chức các sự kiện lớn và khuyến khích
@@ -138,10 +131,11 @@ function Introduction() {
                 <br />
                 <br />
                 <button
-                  className="px-[16px] py-[8px] border-[1px] border-primary text-primary rounded-md flex items-center outline-none"
+                  className="flex items-center rounded-lg border border-primary px-4 py-2 text-sm font-semibold text-primary transition-all duration-200 hover:bg-blue-50 active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
                   onClick={handleReadMore}
+                  aria-expanded={isReadMore}
                 >
-                  {isReadMore ? "Read less" : "Read more"}{" "}
+                  {isReadMore ? "Thu gọn" : "Xem thêm"}{" "}
                   <span>
                     <Image
                       loading="lazy"
@@ -188,7 +182,7 @@ function Introduction() {
                       item.number + "+"
                     )}
                   </span>
-                  <span className="text-[16px] md:text-[16px] lg:text-[16px] xl:text-[32px] font-[700] mt-[8px] h-[39px]">
+                  <span className="mt-2 h-[39px] text-sm font-bold md:text-base xl:text-2xl">
                     {item.tittle}
                   </span>
                 </div>

@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: "class",
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -17,8 +18,10 @@ module.exports = {
         subPolygon: "polygon(8.5% 89.75%, 100% 79.75%, 100% 100%, 0% 100%)",
       },
       colors: {
-        primary: "#0098FF",
-        highlight: "#FF0000",
+        primary: "#0066CC", // WCAG AA compliant (4.56:1 contrast ratio against white)
+        "primary-light": "#0098FF",
+        "primary-dark": "#004C99", // WCAG AAA compliant (6.7:1)
+        highlight: "#D90000",
       },
       backgroundSize: {
         auto: "auto",

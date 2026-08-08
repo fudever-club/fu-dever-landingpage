@@ -12,6 +12,9 @@
 }
 
 :root, html, body {
+  --dever-primary: #0066CC;
+  --dever-primary-dark: #004C99;
+  --dever-accent: #0080FF;
   /* --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255; */
@@ -40,14 +43,14 @@
 
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: #0f172a;
+  background: #ffffff;
   }
+
+:focus-visible {
+  outline: 3px solid var(--dever-accent);
+  outline-offset: 3px;
+}
 
 .stroke-text
  {

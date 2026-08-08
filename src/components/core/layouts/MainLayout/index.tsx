@@ -1,35 +1,21 @@
 "use client";
 import Header from "./Header";
 import Footer from "./Footer";
-import { useEffect, useState } from "react";
-import Reloading from "./Reloading";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  const [isLoading, setIsloading] = useState(true);
-
-  useEffect(() => {
-    const loadingTimeout = setTimeout(() => {
-      setIsloading(false);
-    }, 2000);
-
-    const minimumLoadingTime = 2000;
-    const additionalTime = minimumLoadingTime - 2000;
-    if (additionalTime > 0) {
-      setTimeout(() => {
-        setIsloading(false);
-      }, additionalTime);
-    }
-
-    return () => {
-      clearTimeout(loadingTimeout);
-    };
-  }, []);
   return (
     <>
-      {isLoading ? <Reloading /> : null}
-      <Header></Header>
-      {children}
-      <Footer></Footer>
+      <a
+        href="#main-content"
+        className="sr-only fixed left-4 top-4 z-[200] rounded-lg bg-[#0066CC] px-4 py-2 text-sm font-semibold text-white shadow-lg focus:not-sr-only focus:outline-none focus:ring-4 focus:ring-blue-200"
+      >
+        Chuyển đến nội dung chính
+      </a>
+      <Header />
+      <main id="main-content" tabIndex={-1} className="pt-16 outline-none">
+        {children}
+      </main>
+      <Footer />
     </>
   );
 };

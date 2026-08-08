@@ -45,6 +45,7 @@ const Album = ({ albums }: any) => {
                     <SwiperSlide key={index}>
                       <Image
                         src={image?.url}
+                        unoptimized
                         alt=""
                         width={400}
                         height={400}

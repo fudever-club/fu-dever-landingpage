@@ -1,5 +1,4 @@
 import LeaderboardModule from "@components/modules/Leaderboard/Main";
-import axios from "axios";
 
 export const metadata = {
   title: "FU-DEVER | Bảng xếp hạng",
@@ -16,28 +15,40 @@ export const metadata = {
   },
 };
 
-const getLeaderboard = async () => {
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    url: "https://dever-dashboard-api-v2.onrender.com/api/v1/leetcode",
-  };
+type LeaderboardEntry = {
+  leetcodeUsername?: string;
+  acSubmissionList?: unknown[];
+  user?: {
+    firstname?: string | null;
+    lastname?: string | null;
+    avatar?: string | null;
+    profileKey?: string | null;
+  } | null;
+};
 
+const getLeaderboard = async (): Promise<{ data: LeaderboardEntry[]; error: boolean }> => {
+  const productionApi = "https://dever-backend-production.up.railway.app";
   try {
-    const response = await axios.request(config);
-    return response;
-  } catch (error) {
-    return error;
+    const response = await fetch(`${productionApi}/api/v1/leetcode`, { cache: "no-store" });
+    if (!response.ok) return { data: [], error: true };
+
+    const payload = await response.json();
+    if (Array.isArray(payload?.data)) return { data: payload.data, error: false };
+  } catch {
+    // The rendered module presents a recovery state instead of stale sample data.
   }
+
+  return { data: [], error: true };
 };
 
 export default async function LeaderBoardPage() {
-  const leaderboard: any = await getLeaderboard();
+  const leaderboard = await getLeaderboard();
 
   return (
     <>
-      <LeaderboardModule leaderboardData={leaderboard?.data?.data} />;
+      <LeaderboardModule leaderboardData={leaderboard.data} hasLoadError={leaderboard.error} />
     </>
   );
 }
-export const revalidate = 20;
+export const revalidate = 60;
+export const dynamic = "force-dynamic";

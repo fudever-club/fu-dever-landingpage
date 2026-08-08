@@ -78,6 +78,7 @@ const MainAlbum = ({ album }: any) => {
             <li key={index} className=" lg:py-2 sm:py-2">
               <Image
                 loading="lazy"
+                unoptimized
                 src={image?.url}
                 alt={image?.url}
                 width={400}

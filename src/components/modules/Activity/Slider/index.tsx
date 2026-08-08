@@ -67,6 +67,7 @@ function Slider({ images }: any) {
               <SwiperSlide key={image._id} style={{ width: "50%" }}>
                 <Image
                   loading="lazy"
+                  unoptimized
                   src={image?.url}
                   alt={image?.createdAt}
                   width={400}
@@ -95,6 +96,7 @@ function Slider({ images }: any) {
               <SwiperSlide key={image._id}>
                 <Image
                   src={image?.url}
+                  unoptimized
                   alt={image?.createdAt}
                   width={400}
                   height={400}

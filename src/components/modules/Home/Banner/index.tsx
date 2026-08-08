@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useRef } from "react";
 
@@ -15,9 +16,7 @@ import retangle4 from "@icons/pages/home/banner/Rectangle_10.svg";
 import retangle5 from "@icons/pages/home/banner/Rectangle_11.svg";
 import retangle6 from "@icons/pages/home/banner/Rectangle_12.svg";
 import retangle7 from "@icons/pages/home/banner/Rectangle_13.svg";
-
 import "./style.css";
-
 type obj = {
   x: number;
   y: number;
@@ -64,12 +63,16 @@ function Banner() {
           };
         });
       }}
-      className=" h-[421px] md:h-[573px] lg:h-[708px] xl:h-[810px] flex justify-center items-center "
+      className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_#E6F4FF_0%,_#FFFFFF_58%)] md:min-h-[573px] lg:min-h-[708px] xl:min-h-[810px]"
     >
+
       <div className="max-w-[1440px] w-[100%] px-[20px] md:px-[40px] lg:px-[40px] xl:px-[80px] h-[100%] flex justify-center items-center">
-        <div className="w-[310px] lg:w-[724px] xl:w-[724px] h-fit flex flex-col justify-center items-center xl:translate-y-[-40px] lg:translate-y-[-37px] md:translate-y-[32px] translate-y-[28px]">
+        <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center justify-center py-12 text-center md:max-w-2xl xl:-translate-y-10">
+          <p className="mb-4 rounded-full border border-blue-200 bg-white/80 px-3 py-1 text-xs font-semibold tracking-wide text-[#004C99] shadow-sm">
+            CÂU LẠC BỘ LẬP TRÌNH · FPT UNIVERSITY ĐÀ NẴNG
+          </p>
           <h1
-            className={`stroke-black relative text-[#0098FF] text-[32px] xl:text-[40px] flex justify-center items-center font-[700]  xl:leading-[48px] leading-[40px]`}
+            className="relative flex items-center justify-center text-4xl font-bold leading-tight text-[#0066CC] md:text-5xl xl:text-6xl"
           >
             FU-DEVER
             <motion.span
@@ -78,30 +81,53 @@ function Banner() {
               className="w-[120px] animate-line h-[5px] bg-[red] absolute top-[50px] xl:top-[54px]"
             ></motion.span>
           </h1>
-          <h2
-            className={`text-[#0098FF] text-[24px] xl:text-[32px] mt-[24px] font-[700] leading-[39px] `}
-          >
+          <h2 className="mt-4 text-xl font-semibold leading-tight text-slate-900 md:text-2xl xl:text-3xl">
             WORK HARD - PLAY HARD
           </h2>
-          <p className="text-center text-[#22181C] whitespace-nowrap font-[400] text-[16px] lg:text-[20px] xl:text-[20px] leading-[18px] lg:leading-[23px] xl:leading-[23px] mt-[12px]">
-            Hãy tham gia ngay câu lạc bộ dever của chúng tôi! <br></br>
-            Kết nối với cộng đồng đam mê công nghệ và nhiều hơn thế nữa.<br></br>
+          <p className="mt-4 max-w-lg text-pretty text-sm leading-6 text-slate-600 md:text-base md:leading-7 xl:text-lg">
+            Học cùng cộng đồng yêu công nghệ, thực chiến qua workshop, dự án và
+            thử thách lập trình.
           </p>
-          <button className="px-[24px] xl:px-[32px] py-[12px] xl:py-[16px] bg-[#0098FF] flex justify-center items-center mt-[20px]">
-            <p className="font-[400] text-[12px] xl:text-[16px] text-white leading-[19px]">
-              <a
-                target="_blank"
-                href="https://docs.google.com/forms/d/1zr-qtjxbWkFvV10AWEyRnlsdq2IzqqOrewaHWXKIuDQ/prefill"
-                className="text-white decoration-none"
-              >
-                ĐĂNG KÝ NGAY
-              </a>
-            </p>
-          </button>
+          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a
+              href="https://docs.google.com/forms/d/1zr-qtjxbWkFvV10AWEyRnlsdq2IzqqOrewaHWXKIuDQ/prefill"
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-xl bg-[#0066CC] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#004C99] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
+            >
+              Đăng ký thành viên
+            </a>
+            <Link
+              href="/events"
+              className="rounded-xl border border-[#0066CC] bg-white px-5 py-3 text-sm font-semibold text-[#0066CC] shadow-sm transition-all duration-200 hover:bg-blue-50 hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
+            >
+              Xem sự kiện sắp tới
+            </Link>
+          </div>
         </div>
       </div>
 
-      <motion.div className="max-w-[1440px] w-[100%]  h-[421px] md:h-[573px] lg:h-[708px] xl:h-[810px] px-[20px] md:px-[40px] lg:px-[40px] xl:px-[80px] hidden md:block lg:block xl:block absolute z-[-1]">
+      <motion.div
+        aria-hidden="true"
+        animate={{ y: [0, -10, 0], rotate: [0, 1, 0] }}
+        transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -bottom-6 -left-5 z-[1] h-36 w-28 md:hidden"
+      >
+        <Image loading="lazy" src={image3} alt="" className="h-full w-full object-contain" />
+      </motion.div>
+      <motion.div
+        aria-hidden="true"
+        animate={{ y: [0, 12, 0], rotate: [0, -1, 0] }}
+        transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -bottom-8 -right-7 z-[1] h-48 w-36 md:hidden"
+      >
+        <Image loading="lazy" src={image2} alt="" className="h-full w-full object-contain" />
+      </motion.div>
+
+      <motion.div
+        aria-hidden="true"
+        className="pointer-events-none absolute z-[1] hidden h-[421px] w-full max-w-[1440px] px-5 md:block md:h-[573px] md:px-10 lg:h-[708px] lg:px-10 xl:h-[810px] xl:px-20"
+      >
         <motion.div
           animate={{
             x: client.x,
@@ -113,7 +139,7 @@ function Banner() {
           }}
           className="w-[240px] h-[258px] lg:w-[200px] lg:h-[240px] xl:w-[226px] xl:h-[272px] absolute bottom-[40px]"
         >
-          <Image loading="lazy" src={image2} alt="person" />
+          <Image loading="lazy" src={image2} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -126,7 +152,7 @@ function Banner() {
           }}
           className="w-[200px] h-[190px] lg:w-[210] lg:h-[260px] xl:w-[236px] xl:h-[333px] absolute right-[20px] md:right-[40px] lg:right-[40px] xl:right-[80px] bottom-[61px] lg:bottom-[44px] xl:bottom-[80px]"
         >
-          <Image loading="lazy" src={image4} alt="person" />
+          <Image loading="lazy" src={image4} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -139,7 +165,7 @@ function Banner() {
           }}
           className="w-[120px] h-[144px] xl:w-[133px] xl:h-[141px] absolute right-[120px] lg:right-[180px] xl:right-[328px] top-[116px] lg:top-[147px] xl:top-[132px]"
         >
-          <Image loading="lazy" src={image3} alt="person" />
+          <Image loading="lazy" src={image3} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -152,7 +178,7 @@ function Banner() {
           }}
           className="w-[134px] h-[138px] xl:w-[156px] xl:h-[148px] absolute xl:left-[256px] top-[96px] lg:top-[142px] xl:top-[120px] lg:left-[180px] left-[120px]"
         >
-          <Image loading="lazy" src={image1} alt="person" />
+          <Image loading="lazy" src={image1} alt="" />
         </motion.div>
       </motion.div>
 

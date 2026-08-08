@@ -44,10 +44,17 @@ const getAlbum = async () => {
     return error;
   }
 };
+import DeverActivityGallery from "@components/ui/DeverActivityGallery";
+
 async function Activity() {
   const data: any = await getActivity();
   const albums: any = await getAlbum();
-  return <MainActivy data={data?.data?.data} albums={albums?.data?.data} />;
+  return (
+    <div className="max-w-[1440px] mx-auto px-5 md:px-10 xl:px-20 py-8">
+      <DeverActivityGallery />
+      <MainActivy data={data?.data?.data} albums={albums?.data?.data} />
+    </div>
+  );
 }
 
 export default Activity;
