@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FU-DEVER Landing Page
 
-## Getting Started
+The public web presence of FU-DEVER Club at FPT University Da Nang. It introduces the club, showcases projects and activities, and presents public member, alumni, resource, event, blog, Project Lab, and leaderboard information.
 
-First, run the development server:
+## Related services
+
+| Service | Repository | Production |
+| --- | --- | --- |
+| Landing page | [fu-dever-landingpage](https://github.com/fudever-club/fu-dever-landingpage) | [Open](https://fu-dever-landingpage-v2.vercel.app) |
+| Member portal | [dever-client](https://github.com/fudever-club/dever-client) | [Open](https://dever-client-taupe.vercel.app/vi/sign-in) |
+| Admin dashboard | [dever-admin](https://github.com/fudever-club/dever-admin) | [Open](https://dever-admin-lac.vercel.app/vi/sign-in) |
+| Backend API | [dever-backend](https://github.com/fudever-club/dever-backend) | [Open](https://dever-backend-production.up.railway.app/health) |
+
+## Experience principles
+
+- Preserve DEVER blue (`#0066CC`) and the floating DEVER characters on the home hero.
+- Use real API content or an explicit loading, empty, or error state—never fabricated public data.
+- Use opaque public profile keys; do not expose member identifiers or sensitive contact information.
+- Keep interactive content keyboard-accessible and responsive on desktop and mobile.
+
+## Tech stack
+
+Next.js 14 App Router, TypeScript, Tailwind CSS, Framer Motion, Swiper, and React Three Fiber.
+
+## Run locally
+
+Requires Node.js 20+ and a running DEVER backend.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm ci
+npm run dev -- -p 3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Create `.env.local` with the local service URLs:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```env
+NEXT_PUBLIC_API_SERVER=http://localhost:5000
+NEXT_PUBLIC_CLIENT_URL=http://localhost:3002
+NEXT_PUBLIC_ADMIN_URL=http://localhost:3003
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+Open [http://localhost:3000](http://localhost:3000). If a running development server shows stale `/_next/static` assets after a build, stop it and start a fresh development process.
 
-## Learn More
+## Quality checks
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run lint
+npm run build
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Contributing
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Use real club-provided media or component-native SVG/CSS visuals; do not add AI-generated imagery. Keep one clear primary action per decision area and validate loading, empty, error, success, and disabled states for every data-driven interaction.

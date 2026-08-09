@@ -56,7 +56,12 @@ function Footer() {
                   className="w-[24px] h-[24px] xl:w-[23px] xl:h-[32px]"
                 />
               </a>
-              <a target="_blank" href="https://github.com/sawsew467">
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href="https://github.com/fudever-club"
+                aria-label="FU-DEVER Club on GitHub"
+              >
                 <Image
                   loading="lazy"
                   src={githubLogo}

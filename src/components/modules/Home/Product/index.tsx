@@ -151,7 +151,12 @@ function Product() {
               <a href="https://www.facebook.com/FPTUDever">
                 <Image loading="lazy" src={Facebook} alt="Facebook" />
               </a>
-              <a href="https://github.com/sawsew467">
+              <a
+                href="https://github.com/fudever-club"
+                target="_blank"
+                rel="noreferrer"
+                aria-label="FU-DEVER Club on GitHub"
+              >
                 <Image loading="lazy" src={Github} alt="Github" />
               </a>
               <a href="https://www.tiktok.com/@daihocfptdanang">
