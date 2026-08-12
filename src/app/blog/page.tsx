@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Clock3, Heart, Search } from "lucide-react";
+import { Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 
@@ -194,7 +194,7 @@ export default function BlogPage() {
             <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center gap-3">
                 <span className="bg-amber-100 text-amber-900 font-extrabold text-xs px-3 py-1 rounded-full border border-amber-300">
-                  🔥 BÀI VIẾT NỔI BẬT 2026
+                  <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> BÀI VIẾT NỔI BẬT
                 </span>
                 <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full">
                   {featuredPost.category}
@@ -322,7 +322,7 @@ export default function BlogPage() {
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">
-            <span className="text-5xl block mb-4">🔍</span>
+            <SearchX className="mx-auto mb-4 h-10 w-10 text-[#0066CC]" strokeWidth={1.6} aria-hidden="true" />
             <h3 className="text-xl font-extrabold text-gray-900">Không tìm thấy bài viết phù hợp</h3>
             <p className="text-gray-600 text-sm mt-1 font-medium">Hãy thử tìm kiếm với từ khóa khác hoặc chuyển danh mục.</p>
           </div>

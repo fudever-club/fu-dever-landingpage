@@ -18,7 +18,7 @@ export default function DeverRoadmapVector() {
           <h3 className="text-base font-bold text-white font-sans">Lộ Trình Đào Tạo Chuyên Môn FU-DEVER</h3>
         </div>
         <span className="px-3 py-1 text-xs font-mono rounded-full bg-[#0066CC]/20 text-blue-300 border border-[#0066CC]/40">
-          Standard Curriculum 2026
+          Khung tham khảo
         </span>
       </div>
 

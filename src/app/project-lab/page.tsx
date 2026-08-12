@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import Image from "next/image";
+import { ExternalLink, Lightbulb, UsersRound } from "lucide-react";
 import DeverProjectTerminal from "@components/ui/DeverProjectTerminal";
 
 export const metadata: Metadata = {
@@ -63,8 +63,8 @@ export default async function ProjectLabPage() {
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
         <div className="bg-gradient-to-r from-[#0098FF] to-[#00528C] rounded-3xl p-8 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between shadow-xl overflow-hidden relative">
           <div className="lg:w-3/5 z-10">
-            <span className="inline-block bg-white/20 backdrop-blur-md text-white font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
-              💡 DEVER TEAM MATCHMAKING
+            <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
+              <Lightbulb className="h-4 w-4" aria-hidden="true" /> DEVER TEAM MATCHMAKING
             </span>
             <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight">
               Project Lab & Tìm Đồng Đội
@@ -72,13 +72,13 @@ export default async function ProjectLabPage() {
             <p className="text-white/90 text-base lg:text-lg mb-6 max-w-xl">
               Nơi chắp cánh ý tưởng! Đăng bài tuyển thành viên làm đồ án, dự án thực tế hoặc tham gia vào các sản phẩm hấp dẫn do các Senior dẫn dắt.
             </p>
-            <div className="flex gap-4">
-              <span className="bg-white/15 border border-white/30 text-white font-semibold px-6 py-3 rounded-xl">
+            <div className="flex flex-col gap-3 md:flex-row md:gap-4">
+              <span className="bg-white/15 border border-white/30 text-center text-white font-semibold px-4 py-3 rounded-xl sm:px-6">
                 Dự án được quản trị viên xét duyệt
               </span>
               <a
                 href="#projects"
-                className="bg-white/10 backdrop-blur-md border border-white/30 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/20 transition-all"
+                className="bg-white/10 backdrop-blur-md border border-white/30 text-center text-white font-semibold px-4 py-3 rounded-xl hover:bg-white/20 transition-all sm:px-6"
               >
                 Xem Dự Án Đang Tuyển
               </a>
@@ -92,12 +92,12 @@ export default async function ProjectLabPage() {
 
       {/* Projects List */}
       <section id="projects" className="max-w-[1440px] mx-auto px-5 lg:px-20">
-        <div className="flex justify-between items-center mb-8">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">Dự Án Đang Cần Đồng Đội</h2>
             <p className="text-gray-500 text-sm">Tham gia ngay để tích lũy kinh nghiệm làm dự án thực tế</p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <span className="bg-[#0098FF] text-white text-xs font-semibold px-4 py-2 rounded-lg cursor-pointer">
               Tất cả
             </span>
@@ -126,7 +126,7 @@ export default async function ProjectLabPage() {
                   </span>
                 </div>
                 <h3 className="text-lg font-bold text-gray-800 mb-2 leading-snug">{item.title}</h3>
-                <p className="text-xs text-gray-500 mb-3 font-medium">👤 FU-DEVER Project Lab</p>
+                <p className="mb-3 flex items-center gap-1.5 text-xs font-medium text-gray-500"><UsersRound className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />FU-DEVER Project Lab</p>
                 <p className="text-gray-600 text-xs mb-4 leading-relaxed">{item.summary}</p>
 
                 <div className="mb-4">
@@ -146,7 +146,7 @@ export default async function ProjectLabPage() {
 
               {item.contactUrl ? (
                 <a href={item.contactUrl} target="_blank" rel="noreferrer" className="w-full bg-[#0098FF] hover:bg-blue-600 text-center text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm">
-                  Liên hệ tham gia ↗
+                  <span className="inline-flex items-center justify-center gap-1.5">Liên hệ tham gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></span>
                 </a>
               ) : (
                 <span className="w-full bg-slate-100 text-center text-slate-500 font-semibold text-xs py-3 rounded-xl">

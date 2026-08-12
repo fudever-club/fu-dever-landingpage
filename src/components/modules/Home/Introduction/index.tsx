@@ -152,12 +152,12 @@ function Introduction() {
             </p>
           </div>
         </div>
-        <div className="flex md:items-end lg:items-end xl:items-end mt-[20px] md:mt-[0px] lg:pt-[0px] xl:pt-[0px] w-fit lg:h-[519px] md:h-[450px] relative z-0">
+        <div className="relative z-0 mt-[20px] flex w-full md:mt-[0px] md:w-fit md:items-end lg:h-[519px] lg:items-end lg:pt-[0px] xl:items-end xl:pt-[0px] md:h-[450px]">
           <span className="absolute h-full xl:w-[200px] lg:w-[180px] md:w-[150px] background_blur_left_to_right left-0 md:block sm:hidden"></span>
           <span className="absolute h-[100px] w-full background_blur_top_to_bottom left-0 md:hidden block"></span>
           <Image
             loading="lazy"
-            className="w-auto h-full "
+            className="h-auto w-full md:h-full md:w-auto"
             src={introduction}
             alt="Picture of the author"
           />

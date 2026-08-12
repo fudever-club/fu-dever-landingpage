@@ -1,7 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { CalendarDays, Clock3, MapPin, UsersRound } from "lucide-react";
+import {
+  Bolt,
+  BrainCircuit,
+  CalendarDays,
+  ClipboardList,
+  Clock3,
+  ExternalLink,
+  Flame,
+  Globe2,
+  MapPin,
+  Rocket,
+  Trophy,
+  UsersRound,
+  X,
+} from "lucide-react";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 
 interface EventItem {
@@ -85,7 +99,7 @@ export default function EventsPage() {
               <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="text-xs font-black tracking-wider uppercase text-blue-50">
-                  ⚡ FU-DEVER EVENTS & WORKSHOPS 2026
+                  <Bolt className="h-3.5 w-3.5" aria-hidden="true" /> FU-DEVER EVENTS & WORKSHOPS
                 </span>
               </div>
 
@@ -101,14 +115,14 @@ export default function EventsPage() {
               </p>
 
               <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-extrabold text-blue-100">
-                <span className="bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  🌐 Web Fullstack
+                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
+                  <Globe2 className="h-3.5 w-3.5" aria-hidden="true" /> Web Fullstack
                 </span>
-                <span className="bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  🤖 AI & Machine Learning
+                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
+                  <BrainCircuit className="h-3.5 w-3.5" aria-hidden="true" /> AI & Machine Learning
                 </span>
-                <span className="bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  🏆 ICPC & LeetCode
+                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
+                  <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> ICPC & LeetCode
                 </span>
               </div>
             </div>
@@ -119,7 +133,7 @@ export default function EventsPage() {
                 <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-amber-300/60 transition-all">
                   <div className="flex items-center justify-between mb-3">
                     <span className="bg-amber-400 text-gray-950 font-black text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
-                      🔥 SỰ KIỆN NỔI BẬT
+                      <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> SỰ KIỆN NỔI BẬT
                     </span>
                     <span className="text-xs text-blue-100 font-bold">{events[0].status}</span>
                   </div>
@@ -132,8 +146,8 @@ export default function EventsPage() {
                   </p>
 
                   <div className="bg-black/20 rounded-xl p-3 text-xs text-blue-100 font-semibold space-y-1 border border-white/10 mb-4">
-                    <p>📅 <strong>Thời gian:</strong> {events[0].date} ({events[0].time})</p>
-                    <p>📍 <strong>Địa điểm:</strong> {events[0].location}</p>
+                    <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Thời gian:</strong> {events[0].date} ({events[0].time})</span></p>
+                    <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Địa điểm:</strong> {events[0].location}</span></p>
                   </div>
 
                   <button
@@ -141,7 +155,7 @@ export default function EventsPage() {
                     type="button"
                     className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-gray-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
                   >
-                    🚀 Đăng Ký Tham Gia Ngay ↗
+                    <Rocket className="h-4 w-4" aria-hidden="true" /> Đăng Ký Tham Gia Ngay <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
                 </div>
               </div>
@@ -212,7 +226,7 @@ export default function EventsPage() {
                         onClick={() => setSelectedRegisterEvent(evt)}
                         className="px-5 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
                       >
-                        Đăng Ký Tham Gia ↗
+                        Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                       </button>
                     ) : (
                       <span className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-extrabold rounded-xl">
@@ -233,15 +247,15 @@ export default function EventsPage() {
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 lg:p-8 shadow-2xl space-y-5">
             <div className="flex justify-between items-start">
               <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
-                📋 ĐĂNG KÝ QUA GOOGLE FORM
+                <ClipboardList className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> ĐĂNG KÝ QUA GOOGLE FORM
               </span>
               <button
                 type="button"
                 onClick={() => setSelectedRegisterEvent(null)}
                 aria-label="Đóng hộp thoại đăng ký"
-                className="text-gray-500 hover:text-gray-800 font-extrabold text-xl"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800"
               >
-                ✕
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -255,8 +269,8 @@ export default function EventsPage() {
             </div>
 
             <div className="bg-blue-50 rounded-2xl p-4 text-xs space-y-2 border border-blue-200 text-gray-900 font-semibold">
-              <p>📅 <strong>Thời gian:</strong> {selectedRegisterEvent.date} ({selectedRegisterEvent.time})</p>
-              <p>📍 <strong>Địa điểm:</strong> {selectedRegisterEvent.location}</p>
+              <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Thời gian:</strong> {selectedRegisterEvent.date} ({selectedRegisterEvent.time})</span></p>
+              <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Địa điểm:</strong> {selectedRegisterEvent.location}</span></p>
             </div>
 
             <div className="pt-2 flex justify-end gap-3">
@@ -273,7 +287,7 @@ export default function EventsPage() {
                 rel="noreferrer"
                 className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2"
               >
-                Mở Google Form Đăng Ký ↗
+                Mở Google Form Đăng Ký <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
           </div>

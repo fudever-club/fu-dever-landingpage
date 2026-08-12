@@ -193,7 +193,7 @@ function Product() {
       <Image
         loading="lazy"
         src={Vector}
-        className="absolute bottom-[-100px] md:bottom-[-140px] lg:bottom-[-120px] xl:bottom-0 right-[-580px] md:right-[-500px] lg:right-[-300px] xl:right-0 z-[-1] max-w-fit "
+        className="absolute bottom-[-100px] right-[-580px] z-[-1] hidden max-w-fit md:block md:bottom-[-140px] md:right-[-500px] lg:bottom-[-120px] lg:right-[-300px] xl:bottom-0 xl:right-0"
         alt="Vector"
       />
     </section>

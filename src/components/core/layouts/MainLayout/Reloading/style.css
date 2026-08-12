@@ -1,7 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900");
-
 .content h2 {
-  font-family: "Poppins", sans-serif;
+  font-family: inherit;
 }
 
 

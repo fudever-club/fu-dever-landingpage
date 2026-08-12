@@ -1,7 +1,23 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
+import {
+  ArrowRight,
+  BookOpen,
+  BrainCircuit,
+  CalendarDays,
+  CheckCircle2,
+  Download,
+  ExternalLink,
+  FileText,
+  MapPinned,
+  MonitorCog,
+  PenLine,
+  ServerCog,
+  Trophy,
+  X,
+  type LucideIcon,
+} from "lucide-react";
 import DeverRoadmapVector from "@components/ui/DeverRoadmapVector";
 
 interface RoadmapItem {
@@ -10,7 +26,7 @@ interface RoadmapItem {
   desc: string;
   level: string;
   tag: string;
-  icon: string;
+  icon: LucideIcon;
   milestones: {
     step: string;
     topics: string[];
@@ -36,7 +52,7 @@ const ROADMAPS: RoadmapItem[] = [
     desc: "Từ HTML/CSS cơ bản, JavaScript ES6+, React, Next.js 14 App Router cho đến tối ưu hiệu năng web.",
     level: "Cơ bản -> Nâng cao",
     tag: "Web Dev",
-    icon: "💻",
+    icon: MonitorCog,
     milestones: [
       {
         step: "Giai đoạn 1: Nền tảng Web Core (Tuần 1-3)",
@@ -59,7 +75,7 @@ const ROADMAPS: RoadmapItem[] = [
     desc: "Node.js, Express, MongoDB, PostgreSQL, RESTful API, Docker containerization & Cloud Deploy.",
     level: "Trung cấp",
     tag: "Backend",
-    icon: "⚙️",
+    icon: ServerCog,
     milestones: [
       {
         step: "Giai đoạn 1: Node.js Core & REST API (Tuần 1-4)",
@@ -82,7 +98,7 @@ const ROADMAPS: RoadmapItem[] = [
     desc: "Cấu trúc dữ liệu & Giải thuật nâng cao (DP, Graph, Tree, Segment Tree) dành cho các giải đấu ICPC & OLP.",
     level: "Chuyên sâu",
     tag: "Algorithm",
-    icon: "🏆",
+    icon: Trophy,
     milestones: [
       {
         step: "Giai đoạn 1: Thuật toán cơ bản & СĐDL (Tuần 1-4)",
@@ -105,7 +121,7 @@ const ROADMAPS: RoadmapItem[] = [
     desc: "Python, NumPy, Pandas, Scikit-Learn và nhập môn Neural Networks dành riêng cho sinh viên FPT.",
     level: "Nhập môn",
     tag: "AI / Data",
-    icon: "🤖",
+    icon: BrainCircuit,
     milestones: [
       {
         step: "Giai đoạn 1: Python cho Khoa học Dữ liệu (Tuần 1-3)",
@@ -173,7 +189,7 @@ export default function ResourcesPage() {
         <div className="bg-gradient-to-r from-[#0055B8] to-[#003880] rounded-3xl p-8 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between shadow-xl overflow-hidden relative">
           <div className="lg:w-3/5 z-10">
             <span className="inline-block bg-white/20 backdrop-blur-md text-white font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
-              📚 DEVER LEARNING VAULT (MONGODB CONNECTED)
+              <BookOpen className="h-4 w-4" aria-hidden="true" /> DEVER LEARNING VAULT
             </span>
             <h1 className="text-3xl lg:text-5xl font-extrabold mb-4 leading-tight">
               Kho Tài Liệu & Lộ Trình Lập Trình
@@ -181,7 +197,7 @@ export default function ResourcesPage() {
             <p className="text-white/90 text-base lg:text-lg mb-6 max-w-xl">
               Tổng hợp lộ trình học tập bài bản, slide bài giảng workshop và các mã nguồn mẫu chuẩn hóa do Ban Chuyên Môn FU-DEVER biên soạn.
             </p>
-            <div className="flex gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <a
                 href="#roadmaps"
                 className="bg-white text-[#0055B8] font-bold px-6 py-3 rounded-xl hover:bg-opacity-90 transition-all shadow-md"
@@ -219,7 +235,9 @@ export default function ResourcesPage() {
             >
               <div>
                 <div className="flex justify-between items-start mb-4">
-                  <span className="text-4xl p-3 bg-blue-50 rounded-2xl">{item.icon}</span>
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-blue-100 bg-blue-50 text-[#0066CC]">
+                    <item.icon className="h-6 w-6" strokeWidth={1.8} aria-hidden="true" />
+                  </span>
                   <span className="bg-[#0055B8]/10 text-[#0055B8] text-xs font-extrabold px-3 py-1.5 rounded-full border border-blue-200">
                     {item.tag}
                   </span>
@@ -232,7 +250,7 @@ export default function ResourcesPage() {
               <div className="pt-4 border-t border-gray-200 flex justify-between items-center text-xs font-bold text-gray-700">
                 <span>Cấp độ: {item.level}</span>
                 <span className="text-[#0055B8] font-extrabold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                  Xem chi tiết lộ trình &rarr;
+                  Xem chi tiết lộ trình <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
                 </span>
               </div>
             </div>
@@ -243,8 +261,8 @@ export default function ResourcesPage() {
       {/* Workshop Resources Section */}
       <section id="workshops" className="max-w-[1440px] mx-auto px-5 lg:px-20">
         <div className="bg-white rounded-3xl p-8 lg:p-12 shadow-lg border border-blue-100">
-          <h2 className="text-2xl font-black text-gray-950 mb-6 flex items-center gap-3">
-            <span>📥</span> Tài Liệu & Slide Bài Giảng Workshop (MongoDB Live)
+          <h2 className="text-2xl font-extrabold text-gray-950 mb-6 flex items-center gap-3">
+            <Download className="h-6 w-6 text-[#0066CC]" aria-hidden="true" /> Tài Liệu & Slide Bài Giảng Workshop
           </h2>
 
           <div className="space-y-4">
@@ -262,15 +280,15 @@ export default function ResourcesPage() {
                   </div>
                   <h4 className="font-extrabold text-gray-950 text-base">{item.title}</h4>
                   <div className="flex items-center gap-4 text-xs text-gray-600 font-medium mt-1">
-                    {item.date && <span>📅 {item.date}</span>}
-                    {item.author && <span>✍️ {item.author}</span>}
+                    {item.date && <span className="flex items-center gap-1"><CalendarDays className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />{item.date}</span>}
+                    {item.author && <span className="flex items-center gap-1"><PenLine className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />{item.author}</span>}
                   </div>
                 </div>
                 <button
                   onClick={() => setSelectedResource(item)}
                   className="bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold px-5 py-2.5 rounded-xl transition-all self-start sm:self-center shadow-md shadow-blue-600/20 flex items-center gap-1.5"
                 >
-                  📥 Tải Tài Liệu / Code
+                  <Download className="h-3.5 w-3.5" aria-hidden="true" /> Tải Tài Liệu / Code
                 </button>
               </div>
             ))}
@@ -284,7 +302,9 @@ export default function ResourcesPage() {
           <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[85vh] overflow-y-auto p-6 lg:p-8 shadow-2xl space-y-6">
             <div className="flex justify-between items-start border-b border-gray-200 pb-4">
               <div className="flex items-center gap-3">
-                <span className="text-4xl">{selectedRoadmap.icon}</span>
+                <span className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-blue-50 text-[#0066CC]">
+                  <selectedRoadmap.icon className="h-5 w-5" strokeWidth={1.8} aria-hidden="true" />
+                </span>
                 <div>
                   <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
                     {selectedRoadmap.tag}
@@ -296,14 +316,15 @@ export default function ResourcesPage() {
               </div>
               <button
                 onClick={() => setSelectedRoadmap(null)}
-                className="text-gray-500 hover:text-gray-800 font-extrabold text-xl"
+                aria-label="Đóng chi tiết lộ trình"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800"
               >
-                ✕
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
             <div>
-              <h4 className="font-extrabold text-sm text-gray-900 mb-3">📍 Khung Chương Trình Học Tập</h4>
+              <h4 className="flex items-center gap-2 font-extrabold text-sm text-gray-900 mb-3"><MapPinned className="h-4 w-4 text-[#0066CC]" aria-hidden="true" />Khung Chương Trình Học Tập</h4>
               <div className="space-y-4">
                 {selectedRoadmap.milestones.map((m, idx) => (
                   <div key={idx} className="bg-blue-50 rounded-2xl p-4 border border-blue-200">
@@ -319,11 +340,11 @@ export default function ResourcesPage() {
             </div>
 
             <div className="border-t border-gray-200 pt-4">
-              <h4 className="font-extrabold text-sm text-gray-900 mb-2">📚 Giáo Trình Khuyên Đọc</h4>
+              <h4 className="flex items-center gap-2 font-extrabold text-sm text-gray-900 mb-2"><BookOpen className="h-4 w-4 text-[#0066CC]" aria-hidden="true" />Giáo Trình Khuyên Đọc</h4>
               <div className="flex flex-wrap gap-2">
                 {selectedRoadmap.recommendBooks.map((b, idx) => (
                   <span key={idx} className="bg-gray-100 text-gray-800 text-xs font-bold px-3 py-1 rounded-lg border border-gray-200">
-                    📖 {b}
+                    <BookOpen className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" /> {b}
                   </span>
                 ))}
               </div>
@@ -347,13 +368,14 @@ export default function ResourcesPage() {
           <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl text-center space-y-5">
             <div className="flex justify-between items-center">
               <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
-                📥 TẢI TÀI LIỆU WORKSHOP
+                <Download className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> TẢI TÀI LIỆU WORKSHOP
               </span>
               <button
                 onClick={() => setSelectedResource(null)}
-                className="text-gray-500 hover:text-gray-800 font-extrabold text-xl"
+                aria-label="Đóng chi tiết tài liệu"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800"
               >
-                ✕
+                <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
@@ -365,7 +387,7 @@ export default function ResourcesPage() {
             </div>
 
             <div className="bg-blue-50 p-4 rounded-2xl text-xs text-gray-800 font-semibold border border-blue-200">
-              ✅ Tài liệu được lưu trữ an toàn trên Google Drive / GitHub của CLB FU-DEVER.
+              <CheckCircle2 className="mr-2 inline h-4 w-4 text-emerald-600" aria-hidden="true" />Tài liệu được lưu trữ trên Google Drive hoặc GitHub của CLB FU-DEVER.
             </div>
 
             <div className="flex justify-end gap-3 pt-2">
@@ -381,7 +403,7 @@ export default function ResourcesPage() {
                 rel="noreferrer"
                 className="px-6 py-2.5 bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold rounded-xl shadow-md flex items-center gap-1.5"
               >
-                Tải Ngay (Link Mở Rộng) ↗
+                Tải ngay <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
             </div>
           </div>
