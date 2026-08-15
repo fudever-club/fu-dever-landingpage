@@ -1,11 +1,21 @@
-import { Inter } from "next/font/google";
+import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import { Metadata } from "next";
 
 import MainLayout from "@components/core/layouts/MainLayout";
 
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const deverSans = Be_Vietnam_Pro({
+  subsets: ["latin", "vietnamese"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-dever-sans",
+  display: "swap",
+});
+const deverMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-dever-mono",
+  display: "swap",
+});
 export const metadata: Metadata = {
   title: "FU-DEVER",
   description:
@@ -27,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
+    <html lang="vi">
+      <body className={`${deverSans.variable} ${deverMono.variable} font-sans`}>
         <MainLayout>{children}</MainLayout>
       </body>
     </html>

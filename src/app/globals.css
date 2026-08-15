@@ -45,7 +45,11 @@
 body {
   color: #0f172a;
   background: #ffffff;
-  }
+  font-family: var(--font-dever-sans), sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
 :focus-visible {
   outline: 3px solid var(--dever-accent);

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Clock3, Heart, Search } from "lucide-react";
+import { Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 
@@ -72,7 +72,9 @@ const CATEGORIES = [
   "Kinh Nghiệm CLB",
 ];
 
-const API_SERVER = "https://dever-backend-production.up.railway.app";
+const API_SERVER =
+  process.env.NEXT_PUBLIC_API_SERVER ||
+  "http://localhost:5000";
 
 function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]; size?: "regular" | "large" }) {
   const name = author?.name || "DEVER Member";
@@ -194,14 +196,17 @@ export default function BlogPage() {
             <div className="lg:col-span-7 space-y-4">
               <div className="flex items-center gap-3">
                 <span className="bg-amber-100 text-amber-900 font-extrabold text-xs px-3 py-1 rounded-full border border-amber-300">
-                  🔥 BÀI VIẾT NỔI BẬT 2026
+                  <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> BÀI VIẾT NỔI BẬT
                 </span>
                 <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full">
                   {featuredPost.category}
                 </span>
               </div>
 
-              <Link href={`/blog/${encodeURIComponent(featuredPost.slug)}`} className="block text-2xl lg:text-4xl font-extrabold text-gray-950 leading-snug hover:text-[#0066CC] transition-colors">
+              <Link
+                href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
+                className="block text-2xl lg:text-4xl font-extrabold text-gray-950 leading-snug hover:text-[#0066CC] transition-colors"
+              >
                 {featuredPost.title}
               </Link>
 
@@ -215,7 +220,15 @@ export default function BlogPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-3 text-xs text-gray-700 font-semibold">
-                  <span className="flex items-center gap-1"><Clock3 className="h-3.5 w-3.5" /> {featuredPost.readTime || "5 phút đọc"}</span>
+                  <span className="flex items-center gap-1">
+                    <Clock3 className="h-3.5 w-3.5" /> {featuredPost.readTime || "5 phút đọc"}
+                  </span>
+                  <Link
+                    href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
+                    className="inline-flex items-center gap-1 font-bold text-[#0066CC] hover:text-[#004C99] transition-colors"
+                  >
+                    Đọc bài viết →
+                  </Link>
                   <button
                     type="button"
                     onClick={(e) => handleLike(featuredPost, e)}
@@ -233,9 +246,21 @@ export default function BlogPage() {
               </div>
             </div>
 
-            <div className="lg:col-span-5 h-64 overflow-hidden rounded-2xl border border-blue-200 shadow-lg lg:h-80">
-              <DeverKnowledgeCanvas title={featuredPost.title} className="transition-transform duration-500 hover:scale-[1.02]" />
-            </div>
+            <Link
+              href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
+              className="block lg:col-span-5 h-64 overflow-hidden rounded-2xl border border-blue-200 shadow-lg lg:h-80 group cursor-pointer bg-slate-100 relative"
+            >
+              {featuredPost.coverImage ? (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={featuredPost.coverImage}
+                  alt={featuredPost.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                />
+              ) : (
+                <DeverKnowledgeCanvas title={featuredPost.title} className="transition-transform duration-500 group-hover:scale-[1.03]" />
+              )}
+            </Link>
           </div>
         </section>
       )}
@@ -268,22 +293,35 @@ export default function BlogPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredPosts.map((post, idx) => {
             const pId = post._id || post.id || idx;
+            const slugTarget = post.slug || post._id || String(post.id);
             return (
               <article
                 key={pId}
                 className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
               >
                 <div>
-                  <div className="relative h-48 w-full overflow-hidden">
-                    <DeverKnowledgeCanvas title={post.title} className="transition-transform duration-500 group-hover:scale-[1.025]" />
+                  <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
+                    {post.coverImage ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img
+                        src={post.coverImage}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                    ) : (
+                      <DeverKnowledgeCanvas title={post.title} className="transition-transform duration-500 group-hover:scale-[1.025]" />
+                    )}
                     <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-[11px] px-3 py-1 rounded-full shadow-md border border-blue-100">
                       {post.category}
                     </span>
-                  </div>
+                  </Link>
 
                   {/* Content */}
                   <div className="p-6">
-                    <Link href={`/blog/${encodeURIComponent(post.slug)}`} className="block text-lg font-extrabold text-gray-950 mb-3 leading-snug group-hover:text-[#0066CC] transition-colors line-clamp-2">
+                    <Link
+                      href={`/blog/${encodeURIComponent(slugTarget)}`}
+                      className="block text-lg font-extrabold text-gray-950 mb-3 leading-snug group-hover:text-[#0066CC] transition-colors line-clamp-2"
+                    >
                       {post.title}
                     </Link>
                     <p className="text-gray-700 text-xs leading-relaxed mb-4 line-clamp-3 font-medium">
@@ -322,7 +360,7 @@ export default function BlogPage() {
 
         {filteredPosts.length === 0 && (
           <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">
-            <span className="text-5xl block mb-4">🔍</span>
+            <SearchX className="mx-auto mb-4 h-10 w-10 text-[#0066CC]" strokeWidth={1.6} aria-hidden="true" />
             <h3 className="text-xl font-extrabold text-gray-900">Không tìm thấy bài viết phù hợp</h3>
             <p className="text-gray-600 text-sm mt-1 font-medium">Hãy thử tìm kiếm với từ khóa khác hoặc chuyển danh mục.</p>
           </div>

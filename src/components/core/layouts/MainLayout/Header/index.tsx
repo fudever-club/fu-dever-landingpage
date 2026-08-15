@@ -1,18 +1,34 @@
 "use client";
 import React, { useEffect, useState, Suspense } from "react";
 import Logo from "@images/header/logo.svg";
-import MenuLogo from "@images/header/menu.svg";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { AppProgressBar, useRouter } from "next-nprogress-bar";
 import "./style.css";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import {
+  CalendarDays,
+  ChevronDown,
+  GraduationCap,
+  Home,
+  Images,
+  Lightbulb,
+  Library,
+  Menu,
+  Newspaper,
+  Rocket,
+  ShieldCheck,
+  Trophy,
+  UserRound,
+  UsersRound,
+  X,
+} from "lucide-react";
 import DeverCommandPalette from "@components/ui/DeverCommandPalette";
 
 const animationHeader: any = {
   down: {
-    y: [-60, 0],
+    y: 0,
     opacity: [0, 1],
     backgroundColor: "#fff",
     boxShadow: "0px 4px 20px 0px rgba(0, 152, 255, 0.12)",
@@ -85,21 +101,21 @@ function Header() {
       </Suspense>
       <DeverCommandPalette />
 
-      <div className="max-w-[1440px] mx-auto h-[64px] flex items-center justify-between px-5 md:px-10 xl:px-20">
+      <div className="max-w-[1440px] mx-auto h-[64px] flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Logo */}
-        <div className="flex items-center">
-          <Link href="/" className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center">
+          <Link href="/" className="flex items-center gap-2" aria-label="FU-DEVER - Trang chủ">
             <Image
               loading="lazy"
               src={Logo}
               alt="FU-DEVER Logo"
-              className="w-auto h-9"
+              className="h-8 w-auto sm:h-9"
             />
           </Link>
         </div>
 
         {/* Centered Desktop Navigation Grouping */}
-        <div className="hidden lg:flex items-center justify-center gap-8 text-[15px] font-medium mx-auto">
+        <div className="hidden xl:flex min-w-0 items-center justify-center gap-6 2xl:gap-8 text-sm font-semibold mx-auto">
           {/* Trang chủ */}
           <button
             onClick={() => handleDirect("/")}
@@ -130,9 +146,7 @@ function Header() {
               } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
             >
               Góc Học Tập
-              <span className="text-xs transition-transform duration-200" style={{ transform: activeDropdown === "learning" ? "rotate(180deg)" : "rotate(0deg)" }}>
-                ▾
-              </span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "learning" ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
 
             <AnimatePresence>
@@ -148,7 +162,7 @@ function Header() {
                     onClick={() => handleDirect("/blog")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">📰</span>
+                    <Newspaper className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Blog Kỹ Thuật</div>
                       <div className="text-xs text-gray-400">Chia sẻ kiến thức lập trình</div>
@@ -159,7 +173,7 @@ function Header() {
                     onClick={() => handleDirect("/events")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">📅</span>
+                    <CalendarDays className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Sự Kiện & Workshop</div>
                       <div className="text-xs text-gray-400">Lịch trình hội thảo CLB</div>
@@ -170,10 +184,10 @@ function Header() {
                     onClick={() => handleDirect("/resources")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">📚</span>
+                    <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Kho Tài Liệu & Roadmap</div>
-                      <div className="text-xs text-gray-400">Lộ trình học & Slide mẫu</div>
+                      <div className="font-semibold">Kho Tài Liệu Học Thuật</div>
+                      <div className="text-xs text-gray-400">Slide workshop & Mã nguồn mẫu</div>
                     </div>
                   </button>
                 </motion.div>
@@ -195,9 +209,7 @@ function Header() {
               } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
             >
               Cộng Đồng
-              <span className="text-xs transition-transform duration-200" style={{ transform: activeDropdown === "community" ? "rotate(180deg)" : "rotate(0deg)" }}>
-                ▾
-              </span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "community" ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
 
             <AnimatePresence>
@@ -213,7 +225,7 @@ function Header() {
                     onClick={() => handleDirect("/leaderboard")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">🏆</span>
+                    <Trophy className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Bảng Xếp Hạng</div>
                       <div className="text-xs text-gray-400">Đua TOP LeetCode giải thuật</div>
@@ -224,7 +236,7 @@ function Header() {
                     onClick={() => handleDirect("/member")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">👥</span>
+                    <UsersRound className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Thành Viên CLB</div>
                       <div className="text-xs text-gray-400">Danh sách member active</div>
@@ -235,7 +247,7 @@ function Header() {
                     onClick={() => handleDirect("/alumni")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">🎓</span>
+                    <GraduationCap className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Cựu Thành Viên</div>
                       <div className="text-xs text-gray-400">Hall of Fame sinh viên xuất sắc</div>
@@ -260,9 +272,7 @@ function Header() {
               } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
             >
               Sản Phẩm & Lab
-              <span className="text-xs transition-transform duration-200" style={{ transform: activeDropdown === "projects" ? "rotate(180deg)" : "rotate(0deg)" }}>
-                ▾
-              </span>
+              <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "projects" ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
 
             <AnimatePresence>
@@ -278,7 +288,7 @@ function Header() {
                     onClick={() => handleDirect("/project")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">🚀</span>
+                    <Rocket className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Tất Cả Dự Án</div>
                       <div className="text-xs text-gray-400">Showcase sản phẩm CLB</div>
@@ -289,7 +299,7 @@ function Header() {
                     onClick={() => handleDirect("/project-lab")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">💡</span>
+                    <Lightbulb className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Project Lab</div>
                       <div className="text-xs text-gray-400">Gợi ý ý tưởng & Ghép đội</div>
@@ -300,7 +310,7 @@ function Header() {
                     onClick={() => handleDirect("/activity")}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
                   >
-                    <span className="text-lg">🎪</span>
+                    <Images className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Hoạt Động CLB</div>
                       <div className="text-xs text-gray-400">Hình ảnh & Kỷ niệm DEVER</div>
@@ -313,32 +323,34 @@ function Header() {
         </div>
 
         {/* Right Ecosystem Portals */}
-        <div className="flex items-center justify-end gap-2 sm:gap-3">
+        <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
           <a
             href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-1.5 bg-blue-50 text-[#0098FF] hover:bg-blue-100 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-blue-200"
+            className="hidden xl:inline-flex items-center gap-1.5 bg-blue-50 text-[#0066CC] hover:bg-blue-100 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-blue-200"
           >
-            <span>👤</span> Member Portal
+            <UserRound className="h-3.5 w-3.5" aria-hidden="true" /> Member Portal
           </a>
 
           <a
             href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden xl:inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-gray-200"
+            className="hidden 2xl:inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-gray-200"
           >
-            <span>🛡️</span> Admin Portal
+            <ShieldCheck className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" /> Admin Portal
           </a>
 
-          <Image
-            loading="lazy"
-            src={MenuLogo}
-            alt="Menu Toggle"
-            className="block lg:hidden cursor-pointer"
+          <button
+            type="button"
+            aria-label={isOpenMenu ? "Đóng điều hướng" : "Mở điều hướng"}
+            aria-expanded={isOpenMenu}
             onClick={() => setOpenMenu(!isOpenMenu)}
-          />
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 xl:hidden"
+          >
+            {isOpenMenu ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
+          </button>
         </div>
       </div>
 
@@ -349,53 +361,53 @@ function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
+            className="xl:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
           >
             <div className="p-4 flex flex-col gap-2 max-h-[80vh] overflow-y-auto text-sm">
               <button
                 onClick={() => handleDirect("/")}
-                className="w-full text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
+                className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
               >
-                🏠 Trang chủ
+                <Home className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Trang chủ
               </button>
 
               <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                 Góc Học Tập
               </div>
-              <button onClick={() => handleDirect("/blog")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                📰 Blog Kỹ Thuật
+              <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Newspaper className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Blog Kỹ Thuật
               </button>
-              <button onClick={() => handleDirect("/events")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                📅 Sự Kiện & Workshop
+              <button onClick={() => handleDirect("/events")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <CalendarDays className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Sự Kiện & Workshop
               </button>
-              <button onClick={() => handleDirect("/resources")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                📚 Kho Tài Liệu & Roadmap
+              <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu & Roadmap
               </button>
 
               <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                 Cộng Đồng
               </div>
-              <button onClick={() => handleDirect("/leaderboard")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                🏆 Bảng Xếp Hạng LeetCode
+              <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Trophy className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Bảng Xếp Hạng LeetCode
               </button>
-              <button onClick={() => handleDirect("/member")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                👥 Thành Viên CLB
+              <button onClick={() => handleDirect("/member")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <UsersRound className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Thành Viên CLB
               </button>
-              <button onClick={() => handleDirect("/alumni")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                🎓 Cựu Thành Viên
+              <button onClick={() => handleDirect("/alumni")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <GraduationCap className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cựu Thành Viên
               </button>
 
               <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                 Sản Phẩm & Lab
               </div>
-              <button onClick={() => handleDirect("/project")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                🚀 Tất Cả Dự Án
+              <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Rocket className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Tất Cả Dự Án
               </button>
-              <button onClick={() => handleDirect("/project-lab")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                💡 Project Lab & Tìm Đồng Đội
+              <button onClick={() => handleDirect("/project-lab")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Lightbulb className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Project Lab & Tìm Đồng Đội
               </button>
-              <button onClick={() => handleDirect("/activity")} className="w-full text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                🎪 Hoạt Động CLB
+              <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <Images className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Hoạt Động CLB
               </button>
             </div>
           </motion.div>

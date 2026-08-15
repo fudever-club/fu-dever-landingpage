@@ -1,13 +1,126 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
+import DeverBlogRenderer from "@components/ui/DeverBlogRenderer";
 
 type Props = { params: { slug: string } };
 
+const FALLBACK_POSTS: Record<string, any> = {
+  "lam-chu-nextjs-14-app-router": {
+    slug: "lam-chu-nextjs-14-app-router",
+    title: "Làm Chủ Next.js 14 App Router & Tối Ưu Hóa Server Components",
+    category: "Web & Frontend",
+    tags: ["React", "Next.js", "TypeScript", "Performance"],
+    author: {
+      name: "Lê Đức Anh Phương",
+      role: "Lead Developer FU-DEVER",
+      avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
+    },
+    createdAt: "2026-08-05T08:00:00Z",
+    readTime: "6 phút đọc",
+    excerpt:
+      "Tổng hợp kinh nghiệm thực chiến kiến trúc Next.js 14 App Router, cách quản lý State mượt mà và khắc phục triệt để lỗi HMR useContext trong dự án lớn.",
+    likes: 142,
+    content: `# Giới Thiệu Về Kiến Trúc Next.js 14
+
+Next.js 14 mang đến bước nhảy vọt về hiệu năng nhờ **React Server Components (RSC)** và cơ chế Server Actions hiện đại.
+
+> [!NOTE]
+> Mọi component trong thư mục \`app/\` mặc định là Server Component, giúp giảm tối đa dung lượng JavaScript tải về trình duyệt của người dùng.
+
+## 1. Tối Ưu Hóa State Management & Server Actions
+
+Khi triển khai các ứng dụng quy mô lớn, việc đồng bộ giữa Server State và Client Cache đóng vai trò then chốt:
+
+\`\`\`typescript
+// Thử nghiệm tính năng chạy code trực tiếp trên DEVER
+function calculateOptimization(renderTime: number, cacheHit: boolean) {
+  const result = cacheHit ? renderTime * 0.1 : renderTime;
+  console.log("⚡ Thời gian render sau tối ưu:", result + "ms");
+  return result;
+}
+
+calculateOptimization(120, true);
+\`\`\`
+
+## 2. Bảng So Sánh Hiệu Năng SSR vs CSR
+
+| Cơ Chế Render | Time to Interactive (TTI) | First Contentful Paint (FCP) | SEO Score |
+| :--- | :--- | :--- | :--- |
+| Server-Side Rendering (SSR) | 120ms | 80ms | 100/100 |
+| Client-Side Rendering (CSR) | 450ms | 320ms | 75/100 |
+| Static Site Generation (SSG) | 60ms | 40ms | 100/100 |
+
+> [!TIP]
+> Luôn sử dụng Compound Index trong MongoDB kết hợp với Redis Caching Layer để đạt tốc độ truy vấn P99 < 15ms.
+
+### Kết Luận & Hướng Mở Rộng
+Việc nắm vững Server Actions và cơ chế Suspense Streaming giúp lập trình viên DEVER xây dựng những ứng dụng web đạt chuẩn quốc tế.`,
+  },
+};
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const API_SERVER =
+    process.env.NEXT_PUBLIC_API_SERVER ||
+    "http://localhost:5000";
+
+  try {
+    const response = await fetch(
+      `${API_SERVER}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      { next: { revalidate: 60 } }
+    );
+    if (response.ok) {
+      const payload = await response.json();
+      const post = payload.data;
+      return {
+        title: `${post.title} | FU-DEVER Tech Blog`,
+        description: post.excerpt || "Chia sẻ kiến thức kỹ thuật từ CLB FU-DEVER.",
+        openGraph: {
+          title: post.title,
+          description: post.excerpt,
+          type: "article",
+        },
+      };
+    }
+  } catch (e) {}
+
+  const fallback = FALLBACK_POSTS[params.slug];
+  if (fallback) {
+    return {
+      title: `${fallback.title} | FU-DEVER Tech Blog`,
+      description: fallback.excerpt,
+    };
+  }
+
+  return {
+    title: "Bài viết kỹ thuật | FU-DEVER",
+  };
+}
+
 export default async function BlogDetailPage({ params }: Props) {
-  const response = await fetch(`https://dever-backend-production.up.railway.app/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`, { cache: "no-store" });
-  if (response.status === 404) notFound();
-  if (!response.ok) throw new Error("Không thể tải bài viết");
-  const payload = await response.json();
-  const post = payload.data;
-  return <main className="min-h-screen bg-[#F8FCFF] px-5 pb-20 pt-28"><article className="mx-auto max-w-3xl rounded-3xl border border-blue-100 bg-white p-6 shadow-sm lg:p-12"><Link href="/blog" className="text-sm font-bold text-[#0066CC] hover:underline">← Quay lại Blog</Link><p className="mt-8 text-xs font-extrabold uppercase tracking-wider text-[#0066CC]">{post.category}</p><h1 className="mt-3 text-3xl font-black leading-tight text-slate-950 lg:text-5xl">{post.title}</h1><p className="mt-5 text-base font-medium leading-relaxed text-slate-600">{post.excerpt}</p><div className="my-8 border-t border-blue-100" /><div className="prose prose-slate max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: post.content || "Nội dung bài viết đang được cập nhật." }} /></article></main>;
+  const API_SERVER =
+    process.env.NEXT_PUBLIC_API_SERVER ||
+    "http://localhost:5000";
+
+  try {
+    const response = await fetch(
+      `${API_SERVER}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      { cache: "no-store" }
+    );
+
+    if (response.ok) {
+      const payload = await response.json();
+      if (payload?.data) {
+        return <DeverBlogRenderer post={payload.data} />;
+      }
+    }
+  } catch (error) {
+    // Network fallback
+  }
+
+  const fallbackPost = FALLBACK_POSTS[params.slug];
+  if (fallbackPost) {
+    return <DeverBlogRenderer post={fallbackPost} />;
+  }
+
+  notFound();
 }
