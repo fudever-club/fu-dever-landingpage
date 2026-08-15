@@ -33,6 +33,19 @@ interface EventItem {
   coverImage: string;
 }
 
+function resolveEventImageUrl(url?: string): string {
+  if (!url) return "";
+  const gDriveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (gDriveMatch && gDriveMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${gDriveMatch[1]}`;
+  }
+  const gDriveIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (gDriveIdMatch && gDriveIdMatch[1] && url.includes("drive.google.com")) {
+    return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+  }
+  return url;
+}
+
 const FALLBACK_EVENTS: EventItem[] = [
   {
     id: 1,
@@ -46,7 +59,7 @@ const FALLBACK_EVENTS: EventItem[] = [
     registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_register_form/viewform",
     checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_checkin_form/viewform",
     speakers: "Lê Đức Anh Phương & Trần Văn Bảo Thắng",
-    coverImage: "/images/dever_blog_hero.png",
+    coverImage: "",
   },
   {
     id: 2,
@@ -60,7 +73,7 @@ const FALLBACK_EVENTS: EventItem[] = [
     registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_gen9_form/viewform",
     checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_gen9_checkin/viewform",
     speakers: "Ban Chủ Nhiệm FU-DEVER",
-    coverImage: "/images/dever_roadmap_banner.png",
+    coverImage: "",
   },
 ];
 
@@ -177,25 +190,37 @@ export default function EventsPage() {
         </div>
 
         <div className="space-y-6">
-          {events.map((evt, idx) => (
-            <div
-              key={evt._id || evt.id || idx}
-              className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-md hover:shadow-xl transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center"
-            >
-              <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52">
-                <DeverKnowledgeCanvas kind="event" title={evt.title} />
-                <span
-                  className={`absolute top-3 left-3 font-extrabold text-xs px-3 py-1 rounded-full shadow-sm ${
-                    evt.status === "Đang mở đăng ký"
-                      ? "bg-emerald-700 text-white"
-                      : evt.status === "Sắp diễn ra"
-                      ? "bg-amber-700 text-white"
-                      : "bg-gray-700 text-white"
-                  }`}
-                >
-                  {evt.status}
-                </span>
-              </div>
+          {events.map((evt, idx) => {
+            const resolvedImg = resolveEventImageUrl(evt.coverImage);
+            return (
+              <div
+                key={evt._id || evt.id || idx}
+                className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-md hover:shadow-xl transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center"
+              >
+                <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52 bg-slate-100">
+                  {resolvedImg ? (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={resolvedImg}
+                      alt={evt.title}
+                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <DeverKnowledgeCanvas kind="event" title={evt.title} />
+                  )}
+                  <span
+                    className={`absolute top-3 left-3 font-extrabold text-xs px-3 py-1 rounded-full shadow-sm ${
+                      evt.status === "Đang mở đăng ký"
+                        ? "bg-emerald-700 text-white"
+                        : evt.status === "Sắp diễn ra"
+                        ? "bg-amber-700 text-white"
+                        : "bg-gray-700 text-white"
+                    }`}
+                  >
+                    {evt.status}
+                  </span>
+                </div>
 
               {/* Event Details */}
               <div className="lg:col-span-8 space-y-3">
@@ -237,7 +262,8 @@ export default function EventsPage() {
                 </div>
               </div>
             </div>
-          ))}
+          );
+        })}
         </div>
       </section>
 

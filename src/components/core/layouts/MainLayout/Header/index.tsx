@@ -186,8 +186,8 @@ function Header() {
                   >
                     <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Kho Tài Liệu & Roadmap</div>
-                      <div className="text-xs text-gray-400">Lộ trình học & Slide mẫu</div>
+                      <div className="font-semibold">Kho Tài Liệu Học Thuật</div>
+                      <div className="text-xs text-gray-400">Slide workshop & Mã nguồn mẫu</div>
                     </div>
                   </button>
                 </motion.div>

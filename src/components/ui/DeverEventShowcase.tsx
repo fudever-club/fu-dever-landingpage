@@ -27,6 +27,20 @@ interface EventItem {
   speakers: string;
   category?: string;
   registerUrl?: string;
+  coverImage?: string;
+}
+
+function resolveEventImageUrl(url?: string): string {
+  if (!url) return "";
+  const gDriveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
+  if (gDriveMatch && gDriveMatch[1]) {
+    return `https://lh3.googleusercontent.com/d/${gDriveMatch[1]}`;
+  }
+  const gDriveIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+  if (gDriveIdMatch && gDriveIdMatch[1] && url.includes("drive.google.com")) {
+    return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
+  }
+  return url;
 }
 
 export default function DeverEventShowcase() {
@@ -185,13 +199,25 @@ export default function DeverEventShowcase() {
           {filteredEvents.map((evt) => {
             const id = evt._id || String(evt.id);
             const isProcessing = registeringId === id;
+            const resolvedImg = resolveEventImageUrl(evt.coverImage);
 
             return (
               <div
                 key={id}
-                className="group relative flex flex-col justify-between bg-white dark:bg-slate-900/80 rounded-xl p-5 border border-slate-200 dark:border-slate-800 hover:border-[#0066CC] dark:hover:border-[#0066CC] transition-all duration-200 shadow-sm hover:shadow-md"
+                className="group relative flex flex-col justify-between bg-white dark:bg-slate-900/80 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 hover:border-[#0066CC] dark:hover:border-[#0066CC] transition-all duration-200 shadow-sm hover:shadow-md"
               >
-                <div className="space-y-3">
+                {resolvedImg && (
+                  <div className="relative h-40 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={resolvedImg}
+                      alt={evt.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                )}
+                <div className="p-5 space-y-3">
                   {/* Status Badge */}
                   <div className="flex items-center justify-between">
                     <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
