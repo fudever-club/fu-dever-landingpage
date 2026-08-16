@@ -107,21 +107,38 @@ function Banner() {
         </div>
       </div>
 
+      {/* 4 Floating Members on Mobile (All 4 Corners) */}
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, -10, 0], rotate: [0, 1, 0] }}
+        animate={{ y: [0, -6, 0], rotate: [0, 1.5, 0] }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute top-4 -left-2 z-[1] h-24 w-20 md:hidden opacity-75"
+      >
+        <Image loading="lazy" src={image1} alt="" className="h-full w-full object-contain" />
+      </motion.div>
+      <motion.div
+        aria-hidden="true"
+        animate={{ y: [0, 8, 0], rotate: [0, -1, 0] }}
+        transition={{ duration: 5.0, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -bottom-6 -left-4 z-[1] h-36 w-28 md:hidden"
+      >
+        <Image loading="lazy" src={image2} alt="" className="h-full w-full object-contain" />
+      </motion.div>
+      <motion.div
+        aria-hidden="true"
+        animate={{ y: [0, -6, 0], rotate: [0, -1.5, 0] }}
         transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -bottom-6 -left-5 z-[1] h-36 w-28 md:hidden"
+        className="pointer-events-none absolute top-4 -right-2 z-[1] h-24 w-20 md:hidden opacity-75"
       >
         <Image loading="lazy" src={image3} alt="" className="h-full w-full object-contain" />
       </motion.div>
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, 12, 0], rotate: [0, -1, 0] }}
-        transition={{ duration: 5.2, repeat: Infinity, ease: "easeInOut" }}
-        className="pointer-events-none absolute -bottom-8 -right-7 z-[1] h-48 w-36 md:hidden"
+        animate={{ y: [0, 8, 0], rotate: [0, 1, 0] }}
+        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
+        className="pointer-events-none absolute -bottom-6 -right-4 z-[1] h-36 w-28 md:hidden"
       >
-        <Image loading="lazy" src={image2} alt="" className="h-full w-full object-contain" />
+        <Image loading="lazy" src={image4} alt="" className="h-full w-full object-contain" />
       </motion.div>
 
       <motion.div

@@ -186,7 +186,7 @@ function Header() {
                   >
                     <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Kho Tài Liệu Học Thuật</div>
+                      <div className="font-semibold">Kho Tài Liệu</div>
                       <div className="text-xs text-gray-400">Slide workshop & Mã nguồn mẫu</div>
                     </div>
                   </button>
@@ -381,7 +381,7 @@ function Header() {
                 <CalendarDays className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Sự Kiện & Workshop
               </button>
               <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu & Roadmap
+                <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu
               </button>
 
               <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">

@@ -115,17 +115,17 @@ function Introduction() {
           </div>
         </div>
 
-        {/* Right: Team Photo with smooth gradient blend into background */}
-        <div className="relative z-0 flex w-full justify-center lg:justify-end items-end h-[360px] md:h-[460px] lg:h-[500px]">
-          <span className="absolute h-full w-[80px] md:w-[150px] lg:w-[180px] background_blur_left_to_right left-0 z-10 hidden sm:block pointer-events-none"></span>
-          <span className="absolute h-[80px] w-full background_blur_top_to_bottom top-0 left-0 z-10 block pointer-events-none"></span>
+        {/* Right: Team Photo spanning edge-to-edge full width */}
+        <div className="relative z-0 flex w-[calc(100%+2.5rem)] -mx-5 sm:w-full sm:mx-0 justify-center lg:justify-end items-end h-[320px] sm:h-[390px] md:h-[460px] lg:h-[500px] overflow-hidden">
+          <span className="absolute h-full w-[24px] md:w-[48px] background_blur_left_to_right left-0 z-10 hidden sm:block pointer-events-none opacity-40"></span>
+          <span className="absolute h-[20px] md:h-[30px] w-full background_blur_top_to_bottom top-0 left-0 z-10 block pointer-events-none opacity-30"></span>
           <Image
             loading="lazy"
-            className="h-full w-auto object-cover object-bottom"
+            className="w-full h-full object-cover object-bottom sm:w-auto"
             src={introduction}
             alt="Đội ngũ thành viên FU-DEVER"
           />
-          <span className="absolute h-full w-[60px] md:w-[120px] lg:w-[160px] background_blur_right_to_left right-0 z-10 hidden sm:block pointer-events-none"></span>
+          <span className="absolute h-full w-[20px] md:w-[40px] background_blur_right_to_left right-0 z-10 hidden sm:block pointer-events-none opacity-30"></span>
         </div>
       </div>
 

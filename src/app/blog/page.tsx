@@ -25,6 +25,8 @@ interface BlogPost {
   coverImage: string;
 }
 
+const DEFAULT_BLOG_COVER = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
+
 const FALLBACK_BLOGS: BlogPost[] = [
   {
     id: 1,
@@ -250,16 +252,15 @@ export default function BlogPage() {
               href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
               className="block lg:col-span-5 h-64 overflow-hidden rounded-2xl border border-blue-200 shadow-lg lg:h-80 group cursor-pointer bg-slate-100 relative"
             >
-              {featuredPost.coverImage ? (
-                /* eslint-disable-next-line @next/next/no-img-element */
-                <img
-                  src={featuredPost.coverImage}
-                  alt={featuredPost.title}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                />
-              ) : (
-                <DeverKnowledgeCanvas title={featuredPost.title} className="transition-transform duration-500 group-hover:scale-[1.03]" />
-              )}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={featuredPost.coverImage || DEFAULT_BLOG_COVER}
+                alt={featuredPost.title}
+                onError={(e) => {
+                  e.currentTarget.src = DEFAULT_BLOG_COVER;
+                }}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+              />
             </Link>
           </div>
         </section>
@@ -301,16 +302,15 @@ export default function BlogPage() {
               >
                 <div>
                   <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
-                    {post.coverImage ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img
-                        src={post.coverImage}
-                        alt={post.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                    ) : (
-                      <DeverKnowledgeCanvas title={post.title} className="transition-transform duration-500 group-hover:scale-[1.025]" />
-                    )}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={post.coverImage || DEFAULT_BLOG_COVER}
+                      alt={post.title}
+                      onError={(e) => {
+                        e.currentTarget.src = DEFAULT_BLOG_COVER;
+                      }}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
                     <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-[11px] px-3 py-1 rounded-full shadow-md border border-blue-100">
                       {post.category}
                     </span>

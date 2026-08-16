@@ -16,6 +16,7 @@ export const metadata = {
       "Chào mừng bạn đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT! . Tại FU-DEVER, chúng tôi cố gắng thúc đẩy một cộng đồng sôi động gồm các lập trình viên đầy tham vọng và cung cấp nền tảng để phát triển kỹ năng và cộng tác.",
   },
 };
+
 const getActivity = async () => {
   let config = {
     method: "get",
@@ -30,6 +31,7 @@ const getActivity = async () => {
     return error;
   }
 };
+
 const getAlbum = async () => {
   let config = {
     method: "get",
@@ -44,14 +46,12 @@ const getAlbum = async () => {
     return error;
   }
 };
-import DeverActivityGallery from "@components/ui/DeverActivityGallery";
 
 async function Activity() {
   const data: any = await getActivity();
   const albums: any = await getAlbum();
   return (
-    <div className="max-w-[1440px] mx-auto px-5 md:px-10 xl:px-20 py-8">
-      <DeverActivityGallery />
+    <div>
       <MainActivy data={data?.data?.data} albums={albums?.data?.data} />
     </div>
   );

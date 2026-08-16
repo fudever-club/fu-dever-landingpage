@@ -12,7 +12,11 @@ import {
   CheckCircle2,
   ArrowRight,
   UserCheck,
-  Sparkles
+  Sparkles,
+  Radio,
+  Clock3,
+  History,
+  PauseCircle,
 } from "lucide-react";
 
 interface EventItem {
@@ -41,6 +45,54 @@ function resolveEventImageUrl(url?: string): string {
     return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
   }
   return url;
+}
+
+export function renderShowcaseStatusBadge(status?: string) {
+  switch (status) {
+    case "Đang mở đăng ký":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-[#0066CC] border border-blue-200 shadow-sm">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0066CC]"></span>
+          </span>
+          <CheckCircle2 className="w-3 h-3 text-[#0066CC]" />
+          <span>Đang mở đăng ký</span>
+        </span>
+      );
+    case "Đang diễn ra":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200 shadow-sm">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
+          </span>
+          <Radio className="w-3 h-3 text-rose-600 animate-pulse" />
+          <span>Đang diễn ra</span>
+        </span>
+      );
+    case "Sắp diễn ra":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200 shadow-sm">
+          <Clock3 className="w-3 h-3 text-amber-600" />
+          <span>Sắp diễn ra</span>
+        </span>
+      );
+    case "Tạm hoãn":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200 shadow-sm">
+          <PauseCircle className="w-3 h-3 text-purple-600" />
+          <span>Tạm hoãn</span>
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-700 border border-slate-200 shadow-sm">
+          <History className="w-3 h-3 text-slate-500" />
+          <span>{status || "Đã kết thúc"}</span>
+        </span>
+      );
+  }
 }
 
 export default function DeverEventShowcase() {
@@ -220,9 +272,7 @@ export default function DeverEventShowcase() {
                 <div className="p-5 space-y-3">
                   {/* Status Badge */}
                   <div className="flex items-center justify-between">
-                    <span className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
-                      {evt.status || "Đang mở đăng ký"}
-                    </span>
+                    {renderShowcaseStatusBadge(evt.status)}
                     <span className="text-xs text-slate-400 flex items-center gap-1 font-mono">
                       <Sparkles className="w-3 h-3 text-amber-400" /> Gen 9
                     </span>

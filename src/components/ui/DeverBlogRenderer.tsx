@@ -574,16 +574,17 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             </h1>
 
             {/* Cover Image */}
-            {post.coverImage && (
-              <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={post.coverImage}
-                  alt={post.title}
-                  className="w-full max-h-[380px] object-cover"
-                />
-              </div>
-            )}
+            <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={post.coverImage || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80"}
+                alt={post.title}
+                onError={(e) => {
+                  e.currentTarget.src = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
+                }}
+                className="w-full max-h-[380px] object-cover"
+              />
+            </div>
 
             {/* Excerpt Lead */}
             <p className="text-[15px] sm:text-base font-semibold leading-relaxed text-slate-700 bg-blue-50/60 p-4 lg:p-5 rounded-2xl border-l-4 border-[#0066CC] mb-8 font-sans">

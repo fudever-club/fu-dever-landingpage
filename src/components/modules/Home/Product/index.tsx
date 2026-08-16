@@ -106,15 +106,15 @@ function Product() {
             </motion.div>
           </div>
 
-          {/* Right Column: Title, Description, CTA, Socials */}
-          <div className="flex flex-col items-start lg:items-end text-left lg:text-right space-y-6 order-1 lg:order-2">
+          {/* Right Column: Title, Description, CTA, Socials - Right Aligned on Mobile & Desktop */}
+          <div className="flex flex-col items-end text-right space-y-6 order-1 lg:order-2 w-full">
             <SectionTitle
               title="Sản phẩm"
               subtitle="Phần mềm và dịch vụ"
               textPosition="right"
             />
 
-            <div className="text-slate-600 text-sm md:text-base leading-relaxed space-y-4 max-w-xl">
+            <div className="text-slate-600 text-sm md:text-base leading-relaxed space-y-4 max-w-xl text-right">
               <p>
                 Sản phẩm của chúng tôi mang lại những cải tiến quan trọng, hỗ trợ
                 các ngành công nghiệp và nâng cao trải nghiệm người dùng. Với các
@@ -128,7 +128,7 @@ function Product() {
               </p>
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 flex justify-end w-full">
               <Link
                 href="/project"
                 className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-6 py-3.5 text-sm font-bold text-white shadow-md shadow-blue-600/20 transition-all duration-200 hover:bg-[#004C99] hover:shadow-lg active:scale-[0.98]"
@@ -139,7 +139,7 @@ function Product() {
             </div>
 
             {/* Follow Socials */}
-            <div className="pt-6 border-t border-slate-200/80 flex flex-wrap items-center gap-4">
+            <div className="pt-6 border-t border-slate-200/80 flex flex-wrap items-center justify-end gap-4 w-full">
               <span className="text-sm font-bold text-slate-900 tracking-wide">Follow FU-DEVER:</span>
               <div className="flex items-center gap-3">
                 <a

@@ -5,7 +5,6 @@ import {
   Bolt,
   BrainCircuit,
   CalendarDays,
-  ClipboardList,
   Clock3,
   ExternalLink,
   Flame,
@@ -15,6 +14,14 @@ import {
   Trophy,
   UsersRound,
   X,
+  ClipboardList,
+  CheckCircle2,
+  LayoutGrid,
+  Radio,
+  History,
+  PauseCircle,
+  Search,
+  Sparkles,
 } from "lucide-react";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 
@@ -25,12 +32,22 @@ interface EventItem {
   date: string;
   time: string;
   location: string;
-  status: "Đang mở đăng ký" | "Sắp diễn ra" | "Đã kết thúc" | string;
+  status: "Đang mở đăng ký" | "Đang diễn ra" | "Sắp diễn ra" | "Đã kết thúc" | "Tạm hoãn" | string;
   description: string;
   registerUrl: string;
   checkinUrl: string;
   speakers: string;
   coverImage: string;
+  isFeatured?: boolean;
+}
+
+function sanitizeUrl(url?: string): string {
+  if (!url) return "#";
+  const trimmed = url.trim();
+  if (/^(https?:\/\/)/i.test(trimmed)) {
+    return trimmed;
+  }
+  return "#";
 }
 
 function resolveEventImageUrl(url?: string): string {
@@ -48,6 +65,7 @@ function resolveEventImageUrl(url?: string): string {
 
 const FALLBACK_EVENTS: EventItem[] = [
   {
+    _id: "evt_1",
     id: 1,
     title: "Workshop: Tối Ưu Hóa Lập Trình & Tích Hợp AI Trong Web 2026",
     date: "15/08/2026",
@@ -60,8 +78,10 @@ const FALLBACK_EVENTS: EventItem[] = [
     checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_checkin_form/viewform",
     speakers: "Lê Đức Anh Phương & Trần Văn Bảo Thắng",
     coverImage: "",
+    isFeatured: true,
   },
   {
+    _id: "evt_2",
     id: 2,
     title: "Đợt Tuyển Thành Viên Gen 9 (Khóa K21 - Năm 2026)",
     date: "25/08/2026",
@@ -74,20 +94,73 @@ const FALLBACK_EVENTS: EventItem[] = [
     checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_gen9_checkin/viewform",
     speakers: "Ban Chủ Nhiệm FU-DEVER",
     coverImage: "",
+    isFeatured: false,
   },
 ];
 
+function renderEventStatusBadge(status: string) {
+  switch (status) {
+    case "Đang mở đăng ký":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50/95 text-[#0066CC] border border-blue-200 shadow-sm backdrop-blur-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066CC]"></span>
+          </span>
+          <CheckCircle2 className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />
+          <span>Đang mở đăng ký</span>
+        </span>
+      );
+    case "Đang diễn ra":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-50/95 text-rose-600 border border-rose-200 shadow-sm backdrop-blur-sm">
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
+          </span>
+          <Radio className="h-3.5 w-3.5 text-rose-600 animate-pulse" aria-hidden="true" />
+          <span>Đang diễn ra</span>
+        </span>
+      );
+    case "Sắp diễn ra":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-50/95 text-amber-700 border border-amber-200 shadow-sm backdrop-blur-sm">
+          <Clock3 className="h-3.5 w-3.5 text-amber-600" aria-hidden="true" />
+          <span>Sắp diễn ra</span>
+        </span>
+      );
+    case "Tạm hoãn":
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-purple-50/95 text-purple-700 border border-purple-200 shadow-sm backdrop-blur-sm">
+          <PauseCircle className="h-3.5 w-3.5 text-purple-600" aria-hidden="true" />
+          <span>Tạm hoãn</span>
+        </span>
+      );
+    default:
+      return (
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-slate-100/95 text-slate-700 border border-slate-200 shadow-sm backdrop-blur-sm">
+          <History className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
+          <span>{status || "Đã kết thúc"}</span>
+        </span>
+      );
+  }
+}
+
 export default function EventsPage() {
   const [events, setEvents] = useState<EventItem[]>(FALLBACK_EVENTS);
+  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
+
+  const API_SERVER =
+    process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
 
   useEffect(() => {
     async function fetchEvents() {
       try {
-        const apiUrl = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-        const res = await fetch(`${apiUrl}/api/v1/events`);
+        const res = await fetch(`${API_SERVER}/api/v1/events`);
         const json = await res.json();
-        if (json.data && json.data.length > 0) {
+        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
           setEvents(json.data);
         }
       } catch (err) {
@@ -95,19 +168,68 @@ export default function EventsPage() {
       }
     }
     fetchEvents();
-  }, []);
+  }, [API_SERVER]);
+
+  const filterTabs = [
+    {
+      key: "all",
+      label: "Tất cả",
+      icon: <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />,
+      count: events.length,
+    },
+    {
+      key: "Đang mở đăng ký",
+      label: "Đang mở đăng ký",
+      icon: <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" aria-hidden="true" />,
+      count: events.filter((e) => e.status === "Đang mở đăng ký").length,
+    },
+    {
+      key: "Đang diễn ra",
+      label: "Đang diễn ra",
+      icon: <Radio className="h-3.5 w-3.5 text-rose-500 animate-pulse" aria-hidden="true" />,
+      count: events.filter((e) => e.status === "Đang diễn ra").length,
+    },
+    {
+      key: "Sắp diễn ra",
+      label: "Sắp diễn ra",
+      icon: <Clock3 className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />,
+      count: events.filter((e) => e.status === "Sắp diễn ra").length,
+    },
+    {
+      key: "Đã kết thúc",
+      label: "Đã kết thúc",
+      icon: <History className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />,
+      count: events.filter((e) => e.status === "Đã kết thúc").length,
+    },
+    {
+      key: "Tạm hoãn",
+      label: "Tạm hoãn",
+      icon: <PauseCircle className="h-3.5 w-3.5 text-purple-500" aria-hidden="true" />,
+      count: events.filter((e) => e.status === "Tạm hoãn").length,
+    },
+  ];
+
+  const filteredEvents = events.filter((evt) => {
+    const matchStatus = filterStatus === "all" || evt.status === filterStatus;
+    const matchSearch =
+      searchQuery.trim() === "" ||
+      evt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      evt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      evt.location.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+
+  const featuredEvent = events.find((e) => e.isFeatured);
 
   return (
     <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
       {/* Modern Premium Banner Section */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-14">
+      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-10">
         <div className="relative bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] rounded-3xl p-8 lg:p-12 text-white shadow-2xl overflow-hidden border border-blue-400/30">
-          {/* Subtle Ambient Lighting Circles */}
           <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-cyan-400/15 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Banner Text Info */}
             <div className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
                 <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -140,36 +262,70 @@ export default function EventsPage() {
               </div>
             </div>
 
-            {/* Right Featured Event Highlight Card */}
-            {events.length > 0 && (
+            {/* Right Hero: Featured Event OR Dever Ecosystem Stats Card */}
+            {featuredEvent ? (
               <div className="lg:col-span-5">
                 <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-amber-300/60 transition-all">
-                  <div className="flex items-center justify-between mb-3">
+                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                     <span className="bg-amber-400 text-gray-950 font-black text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
                       <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> SỰ KIỆN NỔI BẬT
                     </span>
-                    <span className="text-xs text-blue-100 font-bold">{events[0].status}</span>
+                    {renderEventStatusBadge(featuredEvent.status)}
                   </div>
 
                   <h3 className="text-lg font-extrabold text-white mb-2 leading-snug">
-                    {events[0].title}
+                    {featuredEvent.title}
                   </h3>
                   <p className="text-xs text-blue-100 font-medium mb-3 leading-relaxed line-clamp-2">
-                    {events[0].description}
+                    {featuredEvent.description}
                   </p>
 
                   <div className="bg-black/20 rounded-xl p-3 text-xs text-blue-100 font-semibold space-y-1 border border-white/10 mb-4">
-                    <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Thời gian:</strong> {events[0].date} ({events[0].time})</span></p>
-                    <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Địa điểm:</strong> {events[0].location}</span></p>
+                    <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Thời gian:</strong> {featuredEvent.date} ({featuredEvent.time})</span></p>
+                    <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Địa điểm:</strong> {featuredEvent.location}</span></p>
                   </div>
 
                   <button
-                    onClick={() => setSelectedRegisterEvent(events[0])}
+                    onClick={() => setSelectedRegisterEvent(featuredEvent)}
                     type="button"
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-gray-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-gray-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 active:scale-95"
                   >
                     <Rocket className="h-4 w-4" aria-hidden="true" /> Đăng Ký Tham Gia Ngay <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
                   </button>
+                </div>
+              </div>
+            ) : (
+              <div className="lg:col-span-5">
+                <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 shadow-2xl space-y-4">
+                  <div className="flex items-center justify-between">
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-cyan-400/20 text-cyan-200 border border-cyan-300/30">
+                      <Sparkles className="h-3.5 w-3.5 text-cyan-300" /> HỆ SINH THÁI DEVER 2026
+                    </span>
+                    <span className="text-xs text-blue-200 font-semibold">FPT University</span>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2.5 pt-1">
+                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
+                      <div className="text-2xl font-black text-amber-300">50+</div>
+                      <div className="text-[11px] text-blue-100 font-semibold">Workshop Chuyên Sâu</div>
+                    </div>
+                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
+                      <div className="text-2xl font-black text-cyan-300">1000+</div>
+                      <div className="text-[11px] text-blue-100 font-semibold">Lượt Tham Gia</div>
+                    </div>
+                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
+                      <div className="text-2xl font-black text-emerald-300">100%</div>
+                      <div className="text-[11px] text-blue-100 font-semibold">Dự Án Thực Chiến</div>
+                    </div>
+                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
+                      <div className="text-2xl font-black text-purple-300">Gen 9</div>
+                      <div className="text-[11px] text-blue-100 font-semibold">Thế Hệ Kế Thừa</div>
+                    </div>
+                  </div>
+
+                  <p className="text-xs text-blue-100/90 leading-relaxed font-medium">
+                    Chọn một sự kiện bên dưới để đăng ký giữ chỗ và trải nghiệm không gian học thuật đỉnh cao cùng FU-DEVER.
+                  </p>
                 </div>
               </div>
             )}
@@ -177,97 +333,137 @@ export default function EventsPage() {
         </div>
       </section>
 
-      {/* Events List */}
+      {/* Events List & Filter Section */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20">
-        <div className="flex items-center justify-between mb-8 border-b border-blue-200 pb-4">
-          <div>
-            <h2 className="text-2xl font-black text-gray-950">Danh Sách Sự Kiện Đang & Sắp Diễn Ra</h2>
-            <p className="text-xs text-gray-700 font-semibold mt-1">Bấm <span className="font-black text-[#004C99]">Đăng Ký Tham Gia</span> để gửi thông tin đăng ký tham dự sự kiện</p>
-          </div>
-          <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3.5 py-1.5 rounded-full border border-blue-200">
-            {events.length} Sự Kiện
-          </span>
-        </div>
+        <div className="bg-white rounded-3xl border border-blue-100 p-6 lg:p-8 shadow-sm mb-8 space-y-6">
+          {/* Header Bar */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <h2 className="text-2xl font-black text-gray-950">Danh Sách Sự Kiện & Workshop</h2>
+              <p className="text-xs text-gray-600 font-semibold mt-1">
+                Lọc nhanh sự kiện theo trạng thái và bấm <span className="font-black text-[#0066CC]">Đăng Ký Tham Gia</span> để giữ chỗ.
+              </p>
+            </div>
 
-        <div className="space-y-6">
-          {events.map((evt, idx) => {
-            const resolvedImg = resolveEventImageUrl(evt.coverImage);
-            return (
-              <div
-                key={evt._id || evt.id || idx}
-                className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-md hover:shadow-xl transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center"
-              >
-                <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52 bg-slate-100">
-                  {resolvedImg ? (
-                    /* eslint-disable-next-line @next/next/no-img-element */
-                    <img
-                      src={resolvedImg}
-                      alt={evt.title}
-                      className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                      loading="lazy"
-                    />
-                  ) : (
-                    <DeverKnowledgeCanvas kind="event" title={evt.title} />
-                  )}
+            {/* Search Input */}
+            <div className="relative w-full md:w-72">
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+              <input
+                type="text"
+                placeholder="Tìm sự kiện, địa điểm..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-9 pr-4 py-2 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0066CC] transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Segmented Filter Pills (SVG Icons & Glassmorphism) */}
+          <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-100 no-scrollbar">
+            {filterTabs.map((tab) => {
+              const isActive = filterStatus === tab.key;
+              return (
+                <button
+                  key={tab.key}
+                  type="button"
+                  onClick={() => setFilterStatus(tab.key)}
+                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer active:scale-95 ${
+                    isActive
+                      ? "bg-[#0066CC] text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-500/20"
+                      : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/80"
+                  }`}
+                >
+                  <span className={isActive ? "text-white" : ""}>{tab.icon}</span>
+                  <span>{tab.label}</span>
                   <span
-                    className={`absolute top-3 left-3 font-extrabold text-xs px-3 py-1 rounded-full shadow-sm ${
-                      evt.status === "Đang mở đăng ký"
-                        ? "bg-emerald-700 text-white"
-                        : evt.status === "Sắp diễn ra"
-                        ? "bg-amber-700 text-white"
-                        : "bg-gray-700 text-white"
+                    className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
+                      isActive ? "bg-white/20 text-white" : "bg-slate-200/70 text-slate-600"
                     }`}
                   >
-                    {evt.status}
+                    {tab.count}
                   </span>
-                </div>
+                </button>
+              );
+            })}
+          </div>
 
-              {/* Event Details */}
-              <div className="lg:col-span-8 space-y-3">
-                <div className="flex flex-wrap items-center gap-4 text-xs font-bold text-gray-700">
-                  <span className="flex items-center gap-1 text-[#004C99]"><CalendarDays className="h-3.5 w-3.5" />{evt.date}</span>
-                  <span className="flex items-center gap-1"><Clock3 className="h-3.5 w-3.5" />{evt.time}</span>
-                  <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{evt.location}</span>
-                </div>
-
-                <h2 className="text-xl lg:text-2xl font-extrabold text-gray-950 leading-snug">
-                  {evt.title}
-                </h2>
-
-                <p className="text-gray-700 text-xs lg:text-sm leading-relaxed font-medium">
-                  {evt.description}
-                </p>
-
-                <div className="pt-2 flex flex-wrap items-center justify-between gap-4">
-                  <div className="text-xs text-gray-700 font-semibold">
-                    <span className="inline-flex items-center gap-1.5"><UsersRound className="h-3.5 w-3.5 text-[#0066CC]" /><strong>Diễn giả:</strong> {evt.speakers}</span>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    {/* Register Button */}
-                    {evt.status !== "Đã kết thúc" ? (
-                      <button
-                        type="button"
-                        onClick={() => setSelectedRegisterEvent(evt)}
-                        className="px-5 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-1.5"
-                      >
-                        Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                      </button>
-                    ) : (
-                      <span className="px-4 py-2 bg-gray-200 text-gray-700 text-xs font-extrabold rounded-xl">
-                        Đã Khép Lại
-                      </span>
-                    )}
-                  </div>
-                </div>
-              </div>
+          {/* Events Grid / List */}
+          {filteredEvents.length === 0 ? (
+            <div className="text-center py-12 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
+              <CalendarDays className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+              <p className="text-sm font-bold text-slate-700">Không tìm thấy sự kiện nào phù hợp</p>
+              <p className="text-xs text-slate-500 mt-1">Vui lòng chọn bộ lọc khác hoặc nhập từ khóa tìm kiếm</p>
             </div>
-          );
-        })}
+          ) : (
+            <div className="space-y-6">
+              {filteredEvents.map((evt, idx) => {
+                const resolvedImg = resolveEventImageUrl(evt.coverImage);
+                return (
+                  <div
+                    key={evt._id || evt.id || idx}
+                    className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm hover:shadow-xl transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center group"
+                  >
+                    <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52 bg-slate-100">
+                      {resolvedImg ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img
+                          src={resolvedImg}
+                          alt={evt.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <DeverKnowledgeCanvas kind="event" title={evt.title} />
+                      )}
+                      <div className="absolute top-3 left-3">
+                        {renderEventStatusBadge(evt.status)}
+                      </div>
+                    </div>
+
+                    <div className="lg:col-span-8 flex flex-col justify-between h-full space-y-4">
+                      <div>
+                        <h3 className="text-xl font-extrabold text-gray-950 mb-2 leading-tight group-hover:text-[#0066CC] transition-colors">
+                          {evt.title}
+                        </h3>
+                        <p className="text-xs text-gray-700 leading-relaxed font-medium line-clamp-3">
+                          {evt.description}
+                        </p>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-900 font-semibold bg-[#F0F7FF] p-3 rounded-xl border border-blue-100">
+                        <p className="flex items-center gap-2">
+                          <CalendarDays className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
+                          <span>{evt.date} ({evt.time})</span>
+                        </p>
+                        <p className="flex items-center gap-2">
+                          <MapPin className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
+                          <span className="truncate">{evt.location}</span>
+                        </p>
+                        <p className="flex items-center gap-2 sm:col-span-2">
+                          <UsersRound className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
+                          <span>Diễn giả: {evt.speakers || "Ban Chuyên Môn FU-DEVER"}</span>
+                        </p>
+                      </div>
+
+                      <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
+                        <button
+                          onClick={() => setSelectedRegisterEvent(evt)}
+                          type="button"
+                          className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white font-extrabold text-xs shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-[0.98]"
+                        >
+                          Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
-      {/* Modal Option A: Register via Google Form */}
+      {/* Modal: Register via Google Form with Sanitized Safe URL */}
       {selectedRegisterEvent && (
         <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 lg:p-8 shadow-2xl space-y-5">
@@ -308,10 +504,10 @@ export default function EventsPage() {
                 Đóng
               </button>
               <a
-                href={selectedRegisterEvent.registerUrl}
+                href={sanitizeUrl(selectedRegisterEvent.registerUrl)}
                 target="_blank"
-                rel="noreferrer"
-                className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2"
+                rel="noreferrer noopener"
+                className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
               >
                 Mở Google Form Đăng Ký <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
               </a>
@@ -319,8 +515,6 @@ export default function EventsPage() {
           </div>
         </div>
       )}
-
-
     </main>
   );
 }

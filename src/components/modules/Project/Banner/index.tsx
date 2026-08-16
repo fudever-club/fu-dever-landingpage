@@ -89,12 +89,12 @@ const Blogs = () => {
               </p>
             </div>
 
-            <div className="w-[100%]  absolute sm:top-[180px] md:top-[180px] lg:top-[220px] xl:top-[240px]">
+            <div className="w-[100%] absolute top-[215px] sm:top-[220px] md:top-[235px] lg:top-[265px] xl:top-[285px]">
               <div className="absolute bg-white sm:hidden md:block md:top-[10px] lg:top-[16px] md:w-[117px] lg:w-[167px] md:h-[31px] lg:h-[51px] xl:h-[56px] border-solid border-[3px] border-black "></div>
               <Link
                 href="/project#projects"
                 scroll={false}
-                className="absolute active:left-0 duration-0 active:top-[16px] transition-all   sm:left-1/2 transform sm:-translate-x-1/2 sm:-translate-x-123 md:left-0 md:translate-x-0 lg:left-[-12px] xl:left-[-16px] text-white bg-primary sm:w-[123px] md:w-[117px] lg:w-[167px] sm:h-[39px] md:h-[31px] lg:h-[51px] xl:h-[56px]  md:py-[8px] lg:py-[16px] md:px-[20px] lg:px-[32px] md:text-[12px] lg:text-[16px] flex items-center justify-center  "
+                className="absolute active:left-0 duration-0 active:top-[16px] transition-all sm:left-1/2 transform sm:-translate-x-1/2 md:left-0 md:translate-x-0 lg:left-[-12px] xl:left-[-16px] text-white bg-primary sm:w-[123px] md:w-[117px] lg:w-[167px] sm:h-[39px] md:h-[31px] lg:h-[51px] xl:h-[56px] md:py-[8px] lg:py-[16px] md:px-[20px] lg:px-[32px] md:text-[12px] lg:text-[16px] flex items-center justify-center rounded-sm shadow-md"
               >
                 Xem dự án
               </Link>
