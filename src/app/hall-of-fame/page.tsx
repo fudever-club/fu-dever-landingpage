@@ -77,6 +77,8 @@ const BADGE_DEFINITIONS = [
   },
 ];
 
+export const dynamic = "force-dynamic";
+
 async function fetchHallOfFame(): Promise<{
   podium: { first: LeaderMember | null; second: LeaderMember | null; third: LeaderMember | null };
   data: LeaderMember[];
@@ -86,10 +88,13 @@ async function fetchHallOfFame(): Promise<{
 
   for (const url of [apiServer, fallbackApi]) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
       const res = await fetch(`${url}/api/v1/gamification/hall-of-fame`, {
         cache: "no-store",
-        next: { revalidate: 30 },
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
       if (res.ok) {
         const payload = await res.json();
         if (payload?.data && payload.data.length > 0) {
