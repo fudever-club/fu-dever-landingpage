@@ -409,6 +409,26 @@ function Header() {
               <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
                 <Images className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Hoạt Động CLB
               </button>
+
+              {/* Mobile Ecosystem Links */}
+              <div className="pt-3 mt-1 border-t border-slate-100 flex flex-col gap-2">
+                <a
+                  href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-50 text-[#0066CC] font-bold text-xs border border-blue-200 transition-colors"
+                >
+                  <UserRound className="h-4 w-4" aria-hidden="true" /> Cổng Thành Viên (Member Portal)
+                </a>
+                <a
+                  href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"
+                >
+                  <ShieldCheck className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cổng Quản Trị (Admin Portal)
+                </a>
+              </div>
             </div>
           </motion.div>
         )}
