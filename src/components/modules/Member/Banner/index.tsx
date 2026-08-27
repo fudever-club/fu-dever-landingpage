@@ -1,19 +1,20 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import arrow from "@icons/pages/member/banner/arrow.svg";
-import Sekeleton from "@/src/components/core/common/Sekeleton";
+
 const parent: any = {
   show: {
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.1,
       type: "spring",
       duration: 0.5,
       bounce: 0.8,
     },
   },
 };
+
 const child: any = {
   hidden: (index: number) => ({
     x: -20 * (index + 1),
@@ -24,59 +25,95 @@ const child: any = {
     opacity: 1,
   },
 };
-const initialData = Array(6).fill(null);
 
-const TopTypical = ({ data = initialData }: { data: any }) => {
+function MemberCardImage({ user }: { user: any }) {
+  const [imgError, setImgError] = useState(false);
+  const fullName =
+    [user?.firstname, user?.lastname].filter(Boolean).join(" ") ||
+    "Thành viên DEVER";
+  const initials =
+    fullName
+      .split(" ")
+      .filter(Boolean)
+      .slice(-2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() || "DV";
+
+  if (!user || !user.avatar || imgError) {
+    return (
+      <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100/70 p-2 sm:p-3 text-center border border-blue-200/80 shadow-xs select-none">
+        <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0066CC] to-[#0080FF] text-white font-black text-xs sm:text-sm shadow-md mb-1.5 sm:mb-2">
+          {initials}
+        </div>
+        <span className="text-[11px] sm:text-xs font-bold text-slate-800 line-clamp-1 leading-tight">
+          {fullName}
+        </span>
+        <span className="text-[9px] sm:text-[10px] font-bold text-[#0066CC] mt-0.5">
+          {user?.position?.name || "Tiêu biểu"}
+        </span>
+      </div>
+    );
+  }
+
   return (
-    <article className="xl:max-w-[1440px] mx-[auto]">
-      <div className="xl:px-[80px] md:px-[40px] sm:px-[20px] flex flex-col text-center">
-        <h1
-          className="font-[800]  text-[#0098FF] drop-shadow-[0_4px_4px_rgba(0,0,0,0.25)]
-       uppercase lg:text-[40px] md:text-[38px] sm:text-[24px] md:leading-[45.99px] sm:leading-[29.05px]  mx-[auto] not-italic backdrog-blur-[2px]
-        "
-        >
+    <img
+      loading="lazy"
+      className="pointer-events-none object-cover rounded-2xl w-full h-full shadow-sm border border-slate-200"
+      alt=""
+      aria-hidden="true"
+      src={user.avatar}
+      onError={() => setImgError(true)}
+    />
+  );
+}
+
+const TopTypical = ({ data }: { data: any }) => {
+  // Only display valid users or up to 5 items
+  const displayList = Array.isArray(data) && data.length > 0 ? data.slice(0, 5) : [];
+
+  return (
+    <article className="xl:max-w-[1440px] mx-auto">
+      <div className="xl:px-[80px] md:px-[40px] sm:px-[20px] px-4 flex flex-col text-center">
+        <h1 className="font-black text-[#0098FF] drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-tight mx-auto">
           TRONG FU - DEVER CÓ AI?
         </h1>
-        <p className="text-[#0065A9] font-[700] not-italic lg:text-[20px] md:text-[16px] sm:text-[14px]  xl:mt-[28px] lg:mt-[25px] md:mt-[23px] sm:mt-[20px]">
-          2024 - Những gương mặt tiêu biểu của câu lạc bộ
+        <p className="text-[#0065A9] font-bold text-xs sm:text-sm md:text-base lg:text-lg mt-3 sm:mt-4 mb-2">
+          2026 - Những gương mặt tiêu biểu của câu lạc bộ
         </p>
-        <motion.ul
-          initial="hidden"
-          whileInView={"show"}
-          variants={parent}
-          className="flex-wrap xl:content-normal md:justify-between md:flex-nowrap sm:flex-wrap sm:justify-center xl:gap-[40px] lg:gap-[34px] sm:gap-[20px] mx-0 content-center flex lg:mt-[40px] md:mt-[25px] sm:mt-[20px] w-[100%] item-center "
-        >
-          {data?.map((user: any, index: any) => (
-            <motion.li
-              custom={index}
-              variants={child}
-              key={index}
-              className={`lg:w-[calc((100%-30px*4)/5)]  xl:aspect-[9/14]   lg:aspect-[129/200] md:w-[calc((100%-30px*2)/3)] md:aspect-[90/136] sm:w-[calc((100%-20px*2)/3)] sm:aspect-[65/95] `}
-            >
-              <Image
-                loading="lazy"
-                width={180}
-                height={280}
-                className="pointer-events-none object-cover  lg:rounded-tl-[20px] lg:rounded-br-[20px] md:rounded-tl-[10px] md:rounded-br-[10px] sm:rounded-tl-[5px] sm:rounded-br-[5px] w-[100%] h-[100%]  "
-                alt={`${user?.firstname} ${user?.lastname} là một thanh viên tiêu biểu của dever`}
-                src={user?.avatar}
-              ></Image>
-            </motion.li>
-          ))}
-        </motion.ul>
-        <p className="lg:mt-[40px] md:mt-[25px] sm:mt-[20px] lg:text-[20px] md:text-[16px] sm:text-[14px] text-[#0065A9] not-italic font-[700] ">
-          Mỗi thành viên là một phần nhỏ trong sự phát triển thành công của câu
-          lạc bộ.
+
+        {displayList.length > 0 && (
+          <motion.ul
+            initial="hidden"
+            whileInView={"show"}
+            variants={parent}
+            className="flex flex-wrap justify-center items-stretch gap-2.5 sm:gap-4 lg:gap-6 my-6 w-full"
+          >
+            {displayList.map((user: any, index: any) => (
+              <motion.li
+                custom={index}
+                variants={child}
+                key={user?._id || index}
+                className="w-[calc((100%-20px)/2)] sm:w-[calc((100%-32px)/3)] md:w-[calc((100%-48px)/4)] lg:w-[calc((100%-96px)/5)] aspect-[3/4] sm:aspect-[9/13]"
+              >
+                <MemberCardImage user={user} />
+              </motion.li>
+            ))}
+          </motion.ul>
+        )}
+
+        <p className="mt-4 text-xs sm:text-sm md:text-base text-[#0065A9] font-bold">
+          Mỗi thành viên là một phần nhỏ trong sự phát triển thành công của câu lạc bộ.
         </p>
-        <div className="lg:mt-[12px] md:mt-[25px] sm:mt-[8px] mx-[auto] xl:w-[1115px] lg:w-[944px] md:w-[688px] sm:w-[320px] bg-[#0098FF] lg:h-[8px] md:h-[6px] sm:h-[4px] "></div>
+        <div className="mt-3 mx-auto w-48 sm:w-80 md:w-96 lg:w-[500px] bg-[#0098FF] h-1 rounded-full"></div>
         <Image
           loading="lazy"
-          className="pointer-events-none md:w-[24px] lg:h-[40px] md:h-[36px] sm:w-[20px] sm:h-[28px] mx-[auto] lg:my-[12px] md:my-[8px] sm:my-[9px]"
+          className="pointer-events-none w-5 h-7 sm:w-6 sm:h-9 mx-auto my-3"
           src={arrow}
-          alt="{group1498 }"
+          alt=""
           width={24}
-          height={40}
-        ></Image>
+          height={36}
+        />
       </div>
     </article>
   );

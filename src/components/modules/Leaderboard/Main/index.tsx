@@ -36,6 +36,42 @@ interface LeaderboardModuleProps {
   hasLoadError?: boolean;
 }
 
+// Dedicated safe LeaderboardAvatar with graceful error fallback
+function LeaderboardAvatar({
+  src,
+  name,
+}: {
+  src?: string | null;
+  name: string;
+}) {
+  const [imgError, setImgError] = useState(false);
+  const initials =
+    name
+      .split(" ")
+      .filter(Boolean)
+      .slice(-2)
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase() || "DV";
+
+  return (
+    <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[#0066CC] font-bold text-xs border border-blue-200 overflow-hidden select-none">
+      {!imgError && src ? (
+        <img
+          src={src}
+          alt=""
+          aria-hidden="true"
+          className="h-full w-full object-cover"
+          onError={() => setImgError(true)}
+          loading="lazy"
+        />
+      ) : (
+        <span className="font-extrabold tracking-tight">{initials}</span>
+      )}
+    </div>
+  );
+}
+
 export default function LeaderboardModule({
   leaderboardData = [],
   hasLoadError = false,
@@ -245,11 +281,15 @@ export default function LeaderboardModule({
           </div>
 
           {/* Table Header Row */}
-          <div className="hidden sm:grid grid-cols-12 gap-3 px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-            <div className="col-span-1 text-center">Hạng</div>
-            <div className="col-span-6">Thành viên</div>
-            <div className="col-span-3 text-center">LeetCode ID</div>
-            <div className="col-span-2 text-right">Điểm số</div>
+          <div className="flex items-center justify-between px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <div className="flex items-center gap-3 sm:gap-4">
+              <span className="w-7 sm:w-8 text-center shrink-0">Hạng</span>
+              <span>Thành viên</span>
+            </div>
+            <div className="flex items-center gap-6 sm:gap-8">
+              <span className="hidden md:inline-block">LeetCode ID</span>
+              <span className="text-right">Điểm số (AC)</span>
+            </div>
           </div>
 
           {/* Error State */}
@@ -276,17 +316,18 @@ export default function LeaderboardModule({
 
           {/* User Rows */}
           {!hasLoadError && (
-            <div className="space-y-2">
+            <div className="space-y-2.5">
               {filteredList.map((entry, index) => {
                 const rank = index + 1;
                 const profileKey = entry?.user?.profileKey;
                 const isTop1 = rank === 1;
                 const isTop2 = rank === 2;
                 const isTop3 = rank === 3;
+                const fullName = getFullName(entry?.user);
 
                 const rowContent = (
                   <div
-                    className={`flex items-center justify-between p-3 sm:p-4 rounded-2xl border transition-all duration-200 ${
+                    className={`flex items-center justify-between gap-3 p-3 sm:p-4 rounded-2xl border transition-all duration-200 ${
                       isTop1
                         ? "bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700/50 shadow-sm"
                         : isTop2
@@ -297,7 +338,7 @@ export default function LeaderboardModule({
                     } hover:shadow-md active:scale-[0.99]`}
                   >
                     {/* Left: Rank & Avatar & Name */}
-                    <div className="flex items-center gap-2.5 sm:gap-4 min-w-0 flex-1">
+                    <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
                       {/* Rank Number */}
                       <span
                         className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
@@ -313,39 +354,31 @@ export default function LeaderboardModule({
                         {rank}
                       </span>
 
-                      {/* Avatar */}
-                      <div className="relative w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden shrink-0 border border-slate-200 dark:border-slate-700">
-                        <Image
-                          src={entry?.user?.avatar || avatar_default}
-                          alt={getFullName(entry?.user)}
-                          fill
-                          sizes="44px"
-                          className="object-cover"
-                        />
-                      </div>
+                      {/* Safe Avatar with Error Handling */}
+                      <LeaderboardAvatar src={entry?.user?.avatar} name={fullName} />
 
                       {/* Name & Subtitle */}
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5">
-                          {getFullName(entry?.user)}
+                        <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5 m-0">
+                          <span>{fullName}</span>
                           {isTop1 && <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
                         </p>
-                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate">
+                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5">
                           {entry?.user?.major || "Chuyên ngành KTMT/SE"} • K{entry?.user?.gen || "21"}
                         </p>
                       </div>
                     </div>
 
                     {/* Center: LeetCode ID */}
-                    <div className="hidden sm:block text-center px-4">
+                    <div className="hidden md:block text-center shrink-0 px-2">
                       <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
-                        {entry?.leetcodeUsername || "N/A"}
+                        @{entry?.leetcodeUsername || "member"}
                       </span>
                     </div>
 
                     {/* Right: Points & Solved Count */}
                     <div className="text-right shrink-0 pl-2">
-                      <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400">
+                      <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
                         {getPoints(entry)} pts
                       </div>
                       <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
@@ -355,7 +388,7 @@ export default function LeaderboardModule({
 
                     {/* Navigation Arrow */}
                     {profileKey && (
-                      <ChevronRight className="w-4 h-4 text-slate-400 ml-2 hidden sm:block" />
+                      <ChevronRight className="w-4 h-4 text-slate-400 ml-1 hidden sm:block shrink-0" />
                     )}
                   </div>
                 );

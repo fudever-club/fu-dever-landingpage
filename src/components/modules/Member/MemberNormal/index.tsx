@@ -104,7 +104,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
               <motion.li
                 variants={child}
                 key={user?.profileKey || user?._id || `member-${index}`}
-                className="xl:w-[calc((100%-40px*3)/4)] md:w-[calc((100%-35px*3)/4)] xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204] sm:aspect-[93/123] sm:w-[calc((100%-20px*1)/2)] cursor-pointer relative"
+                className="w-full sm:w-[calc((100%-20px*1)/2)] md:w-[calc((100%-35px*3)/4)] xl:w-[calc((100%-40px*3)/4)] aspect-[3/4] sm:aspect-[93/123] md:aspect-[146/204] lg:aspect-[7/10] xl:aspect-[29/40] cursor-pointer relative"
               >
                 <Link href={memberLink} className="block w-full h-full">
                   <TiltedCard
