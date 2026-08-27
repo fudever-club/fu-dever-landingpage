@@ -85,7 +85,7 @@ export default function DeverCircuitBackground({
       />
 
       {/* Symmetrical Left Circuit Wing */}
-      <div className="pointer-events-none absolute top-0 left-0 bottom-0 w-64 md:w-80 lg:w-96 z-0 select-none overflow-hidden opacity-60">
+      <div className="pointer-events-none absolute top-0 left-0 bottom-0 w-28 sm:w-56 md:w-80 lg:w-96 z-0 select-none overflow-hidden opacity-40 sm:opacity-60">
         <svg
           className="h-full w-full"
           viewBox="0 0 320 1800"
@@ -118,15 +118,15 @@ export default function DeverCircuitBackground({
           {/* Animated Light Pulses (Left) */}
           <g stroke="url(#leftCircuitGrad)" strokeWidth="2" fill="none" strokeLinecap="round">
             <path d="M 0,80 L 120,80 L 170,130 L 170,350 L 220,400 L 300,400" className="circuit-pulse-left" />
-            <path d="M 0,600 L 90,600 L 140,650 L 140,950 L 200,1010 L 280,1010" className="circuit-pulse-left" />
-            <path d="M 0,1150 L 80,1150 L 130,1200 L 130,1450 L 180,1500 L 270,1500" className="circuit-pulse-left" />
+            <path d="M 0,600 L 90,600 L 140,650 L 140,950 L 200,1010 L 280,1010" className="circuit-pulse-left" style={{ animationDelay: "2s" }} />
+            <path d="M 0,1150 L 80,1150 L 130,1200 L 130,1450 L 180,1500 L 270,1500" className="circuit-pulse-left" style={{ animationDelay: "4s" }} />
           </g>
 
-          {/* Node Pads (Left) */}
-          <g fill="#0080FF" stroke="#0066CC" strokeWidth="1">
-            <circle cx="300" cy="400" r="3" className="chip-pulse-dot" />
+          {/* Terminating Chip Nodes */}
+          <g fill="#0080FF" opacity="0.6">
+            <circle cx="300" cy="400" r="3.5" className="chip-pulse-dot" />
             <circle cx="70" cy="750" r="3" />
-            <circle cx="280" cy="1010" r="3" className="chip-pulse-dot" />
+            <circle cx="280" cy="1010" r="3.5" className="chip-pulse-dot" />
             <circle cx="260" cy="1250" r="3" />
             <circle cx="270" cy="1500" r="3" className="chip-pulse-dot" />
           </g>
@@ -134,7 +134,7 @@ export default function DeverCircuitBackground({
       </div>
 
       {/* Symmetrical Right Circuit Wing */}
-      <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-64 md:w-80 lg:w-96 z-0 select-none overflow-hidden opacity-60">
+      <div className="pointer-events-none absolute top-0 right-0 bottom-0 w-28 sm:w-56 md:w-80 lg:w-96 z-0 select-none overflow-hidden opacity-40 sm:opacity-60">
         <svg
           className="h-full w-full scale-x-[-1]"
           viewBox="0 0 320 1800"
