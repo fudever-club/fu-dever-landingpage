@@ -3,9 +3,9 @@ import React, { useEffect, useState, Suspense } from "react";
 import Logo from "@images/header/logo.svg";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import { AppProgressBar, useRouter } from "next-nprogress-bar";
+import { AppProgressBar } from "next-nprogress-bar";
 import "./style.css";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   CalendarDays,
@@ -26,32 +26,6 @@ import {
   X,
 } from "lucide-react";
 
-const animationHeader: any = {
-  down: {
-    y: 0,
-    opacity: [0, 1],
-    backgroundColor: "#fff",
-    boxShadow: "0px 4px 20px 0px rgba(0, 152, 255, 0.12)",
-    scale: 1,
-    transition: {
-      type: "spring",
-      bounce: 0,
-      duration: 0.8,
-    },
-  },
-  up: {
-    y: 0,
-    boxShadow: "none",
-    scale: 1,
-    opacity: 1,
-    transition: {
-      type: "spring",
-      bounce: 0.5,
-      duration: 0.8,
-    },
-  },
-};
-
 function Header() {
   const [isOpenMenu, setOpenMenu] = useState<boolean>(false);
   const [isScrollHeader, setScrollHeader] = useState<boolean>(false);
@@ -59,26 +33,28 @@ function Header() {
   const pathname = usePathname();
   const router = useRouter();
 
-  const handleScroll = () => {
-    setOpenMenu(false);
-    setActiveDropdown(null);
-    const y = document.documentElement.scrollTop;
-    if (y > 64) setScrollHeader(true);
-    else setScrollHeader(false);
-  };
-
+  // Scroll listener for sticky header styling
   useEffect(() => {
+    const handleScroll = () => {
+      const y = window.scrollY || document.documentElement.scrollTop;
+      setScrollHeader(y > 20);
+    };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
+  // Close menu on route change
+  useEffect(() => {
+    setOpenMenu(false);
+    setActiveDropdown(null);
+  }, [pathname]);
+
   const handleDirect = (url: string) => {
     setOpenMenu(false);
     setActiveDropdown(null);
     router.push(url);
-    router.refresh();
   };
 
   const isGroupActive = (paths: string[]) => {
@@ -86,10 +62,12 @@ function Header() {
   };
 
   return (
-    <motion.div
-      animate={isScrollHeader ? "down" : "up"}
-      variants={animationHeader}
-      className="left-0 right-0 top-0 fixed z-[100] bg-white/90 backdrop-blur-md border-b border-blue-50/50"
+    <header
+      className={`fixed top-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-b transition-all duration-200 ${
+        isScrollHeader
+          ? "border-blue-100/80 shadow-md shadow-blue-500/5 bg-white"
+          : "border-slate-100/80 shadow-xs"
+      }`}
     >
       <Suspense fallback={null}>
         <AppProgressBar
@@ -174,7 +152,7 @@ function Header() {
                   >
                     <CalendarDays className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Sự Kiện & Workshop</div>
+                      <div className="font-semibold">Sự Kiện &amp; Workshop</div>
                       <div className="text-xs text-gray-400">Lịch trình hội thảo CLB</div>
                     </div>
                   </button>
@@ -186,7 +164,7 @@ function Header() {
                     <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Kho Tài Liệu</div>
-                      <div className="text-xs text-gray-400">Slide workshop & Mã nguồn mẫu</div>
+                      <div className="text-xs text-gray-400">Slide workshop &amp; Mã nguồn mẫu</div>
                     </div>
                   </button>
                 </motion.div>
@@ -238,7 +216,7 @@ function Header() {
                     <UsersRound className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Thành Viên CLB</div>
-                      <div className="text-xs text-gray-400">Danh sách ban chủ nhiệm & thành viên</div>
+                      <div className="text-xs text-gray-400">Danh sách ban chủ nhiệm &amp; thành viên</div>
                     </div>
                   </button>
 
@@ -270,7 +248,7 @@ function Header() {
                   : "text-gray-700"
               } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
             >
-              Sản Phẩm & Lab
+              Sản Phẩm &amp; Lab
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "projects" ? "rotate-180" : ""}`} aria-hidden="true" />
             </button>
 
@@ -301,7 +279,7 @@ function Header() {
                     <Lightbulb className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Project Lab</div>
-                      <div className="text-xs text-gray-400">Gợi ý ý tưởng & Ghép đội</div>
+                      <div className="text-xs text-gray-400">Gợi ý ý tưởng &amp; Ghép đội</div>
                     </div>
                   </button>
 
@@ -312,7 +290,7 @@ function Header() {
                     <Images className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Hoạt Động CLB</div>
-                      <div className="text-xs text-gray-400">Hình ảnh & Kỷ niệm DEVER</div>
+                      <div className="text-xs text-gray-400">Hình ảnh &amp; Kỷ niệm DEVER</div>
                     </div>
                   </button>
                 </motion.div>
@@ -360,108 +338,119 @@ function Header() {
             aria-label={isOpenMenu ? "Đóng điều hướng" : "Mở điều hướng"}
             aria-expanded={isOpenMenu}
             onClick={() => setOpenMenu(!isOpenMenu)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 lg:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 lg:hidden active:scale-95 transition-transform"
           >
             {isOpenMenu ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile Drawer Navigation */}
+      {/* Mobile Drawer Navigation with Backdrop Overlay */}
       <AnimatePresence>
         {isOpenMenu && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
-          >
-            <div className="p-4 flex flex-col gap-2 max-h-[80vh] overflow-y-auto text-sm">
-              {/* Quick Search in Drawer */}
-              <button
-                onClick={() => {
-                  setOpenMenu(false);
-                  window.dispatchEvent(new Event("open-command-palette"));
-                }}
-                className="flex w-full items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-medium text-xs mb-1"
-              >
-                <div className="flex items-center gap-2">
-                  <Search className="h-4 w-4 text-[#0066CC]" />
-                  <span>Tìm kiếm nhanh bài viết, sự kiện...</span>
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setOpenMenu(false)}
+              className="lg:hidden fixed inset-0 top-[64px] bg-slate-950/40 backdrop-blur-xs z-[90]"
+              aria-hidden="true"
+            />
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2, ease: "easeOut" }}
+              className="lg:hidden fixed left-0 right-0 top-[64px] bg-white border-b border-slate-200 shadow-2xl z-[95] max-h-[calc(100vh-72px)] overflow-y-auto"
+            >
+              <div className="p-4 flex flex-col gap-1.5 text-sm pb-8">
+                {/* Quick Search in Drawer */}
+                <button
+                  onClick={() => {
+                    setOpenMenu(false);
+                    window.dispatchEvent(new Event("open-command-palette"));
+                  }}
+                  className="flex w-full items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-medium text-xs mb-2"
+                >
+                  <div className="flex items-center gap-2">
+                    <Search className="h-4 w-4 text-[#0066CC]" />
+                    <span>Tìm kiếm nhanh bài viết, sự kiện...</span>
+                  </div>
+                  <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">⌘K</kbd>
+                </button>
+
+                <button
+                  onClick={() => handleDirect("/")}
+                  className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
+                >
+                  <Home className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Trang chủ
+                </button>
+
+                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                  Góc Học Tập
                 </div>
-                <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">⌘K</kbd>
-              </button>
+                <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Newspaper className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Blog Kỹ Thuật
+                </button>
+                <button onClick={() => handleDirect("/events")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <CalendarDays className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Sự Kiện &amp; Workshop
+                </button>
+                <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu
+                </button>
 
-              <button
-                onClick={() => handleDirect("/")}
-                className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
-              >
-                <Home className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Trang chủ
-              </button>
+                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                  Cộng Đồng
+                </div>
+                <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Trophy className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Bảng Xếp Hạng LeetCode
+                </button>
+                <button onClick={() => handleDirect("/member")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <UsersRound className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Thành Viên CLB
+                </button>
+                <button onClick={() => handleDirect("/alumni")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <GraduationCap className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cựu Thành Viên
+                </button>
 
-              <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
-                Góc Học Tập
+                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                  Sản Phẩm &amp; Lab
+                </div>
+                <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Rocket className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Tất Cả Dự Án
+                </button>
+                <button onClick={() => handleDirect("/project-lab")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Lightbulb className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Project Lab &amp; Tìm Đồng Đội
+                </button>
+                <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                  <Images className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Hoạt Động CLB
+                </button>
+
+                {/* Mobile Ecosystem Links */}
+                <div className="pt-3 mt-1 border-t border-slate-100 flex flex-col gap-2">
+                  <a
+                    href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-50 text-[#0066CC] font-bold text-xs border border-blue-200 transition-colors"
+                  >
+                    <UserRound className="h-4 w-4" aria-hidden="true" /> Cổng Thành Viên (Member Portal)
+                  </a>
+                  <a
+                    href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"
+                  >
+                    <ShieldCheck className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cổng Quản Trị (Admin Portal)
+                  </a>
+                </div>
               </div>
-              <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Newspaper className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Blog Kỹ Thuật
-              </button>
-              <button onClick={() => handleDirect("/events")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <CalendarDays className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Sự Kiện & Workshop
-              </button>
-              <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu
-              </button>
-
-              <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
-                Cộng Đồng
-              </div>
-              <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Trophy className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Bảng Xếp Hạng LeetCode
-              </button>
-              <button onClick={() => handleDirect("/member")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <UsersRound className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Thành Viên CLB
-              </button>
-              <button onClick={() => handleDirect("/alumni")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <GraduationCap className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cựu Thành Viên
-              </button>
-
-              <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
-                Sản Phẩm & Lab
-              </div>
-              <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Rocket className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Tất Cả Dự Án
-              </button>
-              <button onClick={() => handleDirect("/project-lab")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Lightbulb className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Project Lab & Tìm Đồng Đội
-              </button>
-              <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
-                <Images className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Hoạt Động CLB
-              </button>
-
-              {/* Mobile Ecosystem Links */}
-              <div className="pt-3 mt-1 border-t border-slate-100 flex flex-col gap-2">
-                <a
-                  href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-50 text-[#0066CC] font-bold text-xs border border-blue-200 transition-colors"
-                >
-                  <UserRound className="h-4 w-4" aria-hidden="true" /> Cổng Thành Viên (Member Portal)
-                </a>
-                <a
-                  href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"
-                >
-                  <ShieldCheck className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cổng Quản Trị (Admin Portal)
-                </a>
-              </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
-    </motion.div>
+    </header>
   );
 }
 
