@@ -86,7 +86,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
           initial="hidden"
           animate="show"
           variants={parent}
-          className="xl:mt-[28px] w-[100%] md:mt-[40px] sm:mt-[20px] xl:gap-[40px] md:gap-[35px] sm:gap-[20px] flex-wrap flex justify-start"
+          className="mt-6 sm:mt-8 md:mt-10 xl:mt-7 w-full gap-3.5 sm:gap-5 md:gap-8 xl:gap-10 flex-wrap flex justify-center sm:justify-start"
         >
           {data?.map((user: any, index: number) => {
             if (!user) return null;

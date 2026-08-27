@@ -179,9 +179,10 @@ export const TiltedCard = ({
         )}
       </motion.div>
 
+      {/* Desktop Tooltip Only (Safely isolated to prevent mobile viewport overflow) */}
       {showTooltip && captionText && (
         <motion.figcaption
-          className="pointer-events-none absolute left-0 top-0 rounded-lg bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-2.5 py-1 text-[11px] font-mono font-bold text-white shadow-2xl opacity-0 z-[10] hidden sm:block whitespace-nowrap"
+          className="pointer-events-none absolute left-0 top-0 rounded-lg bg-slate-900/90 backdrop-blur-md border border-slate-700/80 px-2.5 py-1 text-[11px] font-mono font-bold text-white shadow-2xl z-[10] max-w-[280px] truncate hidden md:block select-none"
           style={{
             x,
             y,
