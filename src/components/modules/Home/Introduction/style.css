@@ -1,11 +1,30 @@
 .background_blur_left_to_right {
-    background-image: linear-gradient(to right, #F8FCFF, #ffffff00);
+  background-image: linear-gradient(to right, #F8FCFF, #ffffff00);
 }
 
 .background_blur_right_to_left {
-    background-image: linear-gradient(to left, #F8FCFF, #ffffff00);
+  background-image: linear-gradient(to left, #F8FCFF, #ffffff00);
 }
 
 .background_blur_top_to_bottom {
-    background-image: linear-gradient(to bottom, #F8FCFF, #ffffff00);
+  background-image: linear-gradient(to bottom, #F8FCFF, #ffffff00);
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee-ribbon {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 25s linear infinite;
+}
+
+.animate-marquee-ribbon:hover {
+  animation-play-state: paused;
 }

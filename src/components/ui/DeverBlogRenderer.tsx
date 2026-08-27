@@ -594,8 +594,16 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             {/* Author Byline Card */}
             <div className="flex items-center justify-between pb-6 mb-8 border-b border-slate-100 font-sans">
               <div className="flex items-center gap-3.5">
-                <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-[#004C99] to-[#0080FF] text-white font-extrabold text-sm flex items-center justify-center shadow-md font-sans">
-                  {post.author?.name ? post.author.name.slice(0, 2).toUpperCase() : "DV"}
+                <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-[#004C99] to-[#0080FF] text-white font-extrabold text-sm flex items-center justify-center shadow-md font-sans overflow-hidden border border-blue-200">
+                  {post.author?.avatar ? (
+                    <img
+                      src={post.author.avatar}
+                      alt={post.author.name || "Tác giả"}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    post.author?.name ? post.author.name.slice(0, 2).toUpperCase() : "DV"
+                  )}
                 </div>
                 <div className="font-sans">
                   <h4 className="text-sm lg:text-base font-extrabold text-slate-900 font-sans">

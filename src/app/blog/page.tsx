@@ -3,7 +3,8 @@
 import React, { useState, useEffect } from "react";
 import { Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
-import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
+import DeverBlogPreview from "@components/ui/DeverBlogPreview";
+import DeverCircuitBackground from "@components/ui/DeverCircuitBackground";
 
 interface BlogPost {
   _id?: string;
@@ -86,14 +87,29 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
     .slice(-2)
     .map((part) => part[0])
     .join("")
-    .toUpperCase();
+    .toUpperCase() || "D";
   const avatarSize = size === "large" ? "h-11 w-11 text-xs" : "h-8 w-8 text-[10px]";
+  const [imgError, setImgError] = useState(false);
+
+  const avatarUrl = author?.avatar;
+  const showImage = Boolean(avatarUrl && !imgError);
 
   return (
     <div className="flex items-center gap-2.5">
-      <span className={`grid shrink-0 place-items-center rounded-full border-2 border-white bg-gradient-to-br from-[#0066CC] to-cyan-500 font-black text-white shadow-md shadow-blue-900/20 ${avatarSize}`}>
-        {initials || "D"}
-      </span>
+      <div className={`relative shrink-0 overflow-hidden rounded-full border-2 border-white bg-gradient-to-br from-[#0066CC] to-cyan-500 shadow-md shadow-blue-900/15 ${avatarSize}`}>
+        {showImage ? (
+          <img
+            src={avatarUrl}
+            alt={name}
+            onError={() => setImgError(true)}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <span className="grid w-full h-full place-items-center font-black text-white">
+            {initials}
+          </span>
+        )}
+      </div>
       <div className="min-w-0">
         <h4 className="truncate font-extrabold text-sm text-gray-900">{name}</h4>
         <p className="truncate text-xs font-medium text-gray-600">{author?.role || "DEVER Member"}</p>
@@ -103,7 +119,7 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
 }
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [blogs, setBlogs] = useState<BlogPost[]>(FALLBACK_BLOGS);
   const [loadError, setLoadError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [searchQuery, setSearchQuery] = useState("");
@@ -114,15 +130,15 @@ export default function BlogPage() {
       try {
         const res = await fetch(`${API_SERVER}/api/v1/blogs`);
         const json = await res.json();
-        if (Array.isArray(json.data)) setBlogs(json.data);
+        if (Array.isArray(json.data) && json.data.length > 0) {
+          setBlogs(json.data);
+        }
       } catch (err) {
-        setLoadError(true);
+        // use fallback blogs cleanly
       }
     }
     fetchBlogs();
   }, []);
-
-  const featuredPost = blogs.find((p) => p.featured) || blogs[0];
 
   const filteredPosts = blogs.filter((post) => {
     const matchesCategory =
@@ -161,112 +177,42 @@ export default function BlogPage() {
 
   return (
     <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
-      {/* Header Title & Intro */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-blue-200 pb-8 gap-4">
-          <div>
-            <span className="inline-block bg-[#0055B8]/10 text-[#0055B8] text-xs font-extrabold tracking-wider uppercase px-3.5 py-1.5 rounded-full mb-3 border border-[#0055B8]/20">
-              DEVER TECH BLOG & INSIGHTS
-            </span>
-            <h1 className="text-3xl lg:text-5xl font-black text-gray-950 tracking-tight">
-              Góc Kiến Thức & Chia Sẻ Công Nghệ
-            </h1>
-            <p className="text-gray-700 text-base mt-2 max-w-2xl font-medium">
-              Nơi lưu trữ bài viết chuyên sâu, kinh nghiệm thi đấu và lộ trình thực chiến từ Ban Chuyên Môn & Cựu thành viên FU-DEVER.
-            </p>
-          </div>
-
-          {/* Search Bar */}
-          <div className="relative w-full md:w-80">
-            <input
-              type="text"
-              aria-label="Tìm kiếm bài viết"
-              placeholder="Tìm kiếm bài viết..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#0066CC] shadow-sm text-gray-900 placeholder-gray-500 font-medium"
-            />
-            <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0066CC]" />
-          </div>
-        </div>
-      </section>
-
-      {/* Featured Article Hero */}
-      {selectedCategory === "Tất cả" && !searchQuery && featuredPost && (
-        <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-14">
-          <div className="bg-white rounded-3xl p-6 lg:p-8 shadow-xl border border-blue-100 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center hover:border-blue-300 transition-all">
-            <div className="lg:col-span-7 space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="bg-amber-100 text-amber-900 font-extrabold text-xs px-3 py-1 rounded-full border border-amber-300">
-                  <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> BÀI VIẾT NỔI BẬT
-                </span>
-                <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full">
-                  {featuredPost.category}
-                </span>
-              </div>
-
-              <Link
-                href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
-                className="block text-2xl lg:text-4xl font-extrabold text-gray-950 leading-snug hover:text-[#0066CC] transition-colors"
-              >
-                {featuredPost.title}
-              </Link>
-
-              <p className="text-gray-700 text-sm lg:text-base leading-relaxed font-medium">
-                {featuredPost.excerpt}
+      {/* Full-Page Cyber Circuit Background */}
+      <DeverCircuitBackground className="pb-10">
+        {/* Header Title & Intro */}
+        <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between border-b border-blue-200 pb-8 gap-4">
+            <div>
+              <span className="inline-block bg-[#0055B8]/10 text-[#0055B8] text-xs font-extrabold tracking-wider uppercase px-3.5 py-1.5 rounded-full mb-3 border border-[#0055B8]/20">
+                DEVER TECH BLOG &amp; INSIGHTS
+              </span>
+              <h1 className="text-3xl lg:text-5xl font-black text-gray-950 tracking-tight">
+                Góc Kiến Thức &amp; Chia Sẻ Công Nghệ
+              </h1>
+              <p className="text-gray-700 text-base mt-2 max-w-2xl font-medium">
+                Nơi lưu trữ bài viết chuyên sâu, kinh nghiệm thi đấu và lộ trình thực chiến từ Ban Chuyên Môn &amp; Cựu thành viên FU-DEVER.
               </p>
-
-              <div className="flex flex-wrap items-center justify-between gap-4 border-t border-gray-200 pt-4">
-                <div className="flex items-center gap-3">
-                  <AuthorBadge author={featuredPost.author} size="large" />
-                </div>
-
-                <div className="flex flex-wrap items-center gap-3 text-xs text-gray-700 font-semibold">
-                  <span className="flex items-center gap-1">
-                    <Clock3 className="h-3.5 w-3.5" /> {featuredPost.readTime || "5 phút đọc"}
-                  </span>
-                  <Link
-                    href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
-                    className="inline-flex items-center gap-1 font-bold text-[#0066CC] hover:text-[#004C99] transition-colors"
-                  >
-                    Đọc bài viết →
-                  </Link>
-                  <button
-                    type="button"
-                    onClick={(e) => handleLike(featuredPost, e)}
-                    aria-pressed={Boolean(likedPosts[featuredPost._id || featuredPost.id || ""])}
-                    aria-label={`Yêu thích ${featuredPost.title}`}
-                    className={`flex items-center gap-1 font-bold px-3 py-1.5 rounded-full border transition-all ${
-                      likedPosts[featuredPost._id || featuredPost.id || ""]
-                        ? "bg-rose-100 text-rose-800 border-rose-300"
-                        : "bg-gray-100 text-gray-800 border-gray-300 hover:bg-rose-100 hover:text-rose-800"
-                    }`}
-                  >
-                    <Heart className={`h-3.5 w-3.5 ${likedPosts[featuredPost._id || featuredPost.id || ""] ? "fill-current" : ""}`} /> {featuredPost.likes}
-                  </button>
-                </div>
-              </div>
             </div>
 
-            <Link
-              href={`/blog/${encodeURIComponent(featuredPost.slug || featuredPost._id || "")}`}
-              className="block lg:col-span-5 h-64 overflow-hidden rounded-2xl border border-blue-200 shadow-lg lg:h-80 group cursor-pointer bg-slate-100 relative"
-            >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={featuredPost.coverImage || DEFAULT_BLOG_COVER}
-                alt={featuredPost.title}
-                onError={(e) => {
-                  e.currentTarget.src = DEFAULT_BLOG_COVER;
-                }}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            {/* Search Bar */}
+            <div className="relative w-full md:w-80">
+              <input
+                type="text"
+                aria-label="Tìm kiếm bài viết"
+                placeholder="Tìm kiếm bài viết..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white border border-gray-300 rounded-xl py-3 pl-10 pr-4 text-sm focus:outline-none focus:border-[#0066CC] shadow-sm text-gray-900 placeholder-gray-500 font-medium"
               />
-            </Link>
+              <Search aria-hidden="true" className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#0066CC]" />
+            </div>
           </div>
         </section>
-      )}
-      {loadError && <p role="status" className="mx-auto mt-10 max-w-2xl rounded-xl border border-blue-100 bg-white p-5 text-center text-sm text-[#0066CC]">Không thể tải bài viết lúc này. Vui lòng thử lại sau.</p>}
-      {!loadError && blogs.length === 0 && <p role="status" className="mx-auto mt-10 max-w-2xl rounded-xl border border-blue-100 bg-white p-5 text-center text-sm text-[#0066CC]">Chưa có bài viết được xuất bản.</p>}
+
+        {/* 1. Interactive GlowingEdgeCard Blog Spotlight Section */}
+        {selectedCategory === "Tất cả" && !searchQuery && (
+          <DeverBlogPreview />
+        )}
 
       {/* Category Filter Pills */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-10">
@@ -366,6 +312,7 @@ export default function BlogPage() {
           </div>
         )}
       </section>
+      </DeverCircuitBackground>
     </main>
   );
 }

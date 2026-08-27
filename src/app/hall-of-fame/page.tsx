@@ -165,115 +165,115 @@ export default async function HallOfFamePage() {
       <div className="mx-auto max-w-7xl">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
-          <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-700 shadow-sm">
-            <Sparkles className="h-4 w-4 text-amber-500" />
-            <span>ĐẤU TRƯỜNG & DANH VỌNG DEVER</span>
-          </div>
-
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
-            Bảng Vàng <span className="text-[#0066CC]">Hall of Fame</span>
-          </h1>
-
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-            Vinh danh những thành viên xuất sắc nhất của Câu lạc bộ FU-DEVER qua chuỗi ngày rèn luyện
-            thuật toán, đóng góp dự án mã nguồn mở và chia sẻ tri thức công nghệ.
-          </p>
-        </div>
-
-        {/* 3D Podium for Top 3 */}
-        {podium.first && (
-          <div className="mb-20 grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-5xl mx-auto">
-            {/* Rank 2 (Silver) */}
-            {podium.second && (
-              <div className="order-2 md:order-1 flex flex-col items-center">
-                <div className="relative mb-3 flex flex-col items-center">
-                  <div className="relative">
-                    <img
-                      src={podium.second.avatar || "/icons/layout/logo.png"}
-                      alt={podium.second.name}
-                      className="h-20 w-20 rounded-full object-cover ring-4 ring-slate-300 shadow-lg"
-                    />
-                    <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-700 font-black shadow ring-2 ring-white">
-                      2
-                    </span>
-                  </div>
-                  <h3 className="mt-3 font-bold text-slate-900 text-base text-center">
-                    {podium.second.name}
-                  </h3>
-                  <span className="text-xs text-slate-500">{podium.second.title}</span>
-                  <div className="mt-1 flex items-center gap-1 text-xs font-bold text-[#0066CC]">
-                    <Zap className="h-3.5 w-3.5" /> {podium.second.exp} EXP
-                  </div>
-                </div>
-                <div className="h-40 w-full rounded-t-3xl border-t-4 border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
-                  <Medal className="h-8 w-8 text-slate-400 mb-1" />
-                  <span className="text-sm font-extrabold text-slate-700">Á QUÂN</span>
-                  <span className="text-xs text-slate-500">Level {podium.second.level}</span>
-                </div>
-              </div>
-            )}
-
-            {/* Rank 1 (Gold - Elevated) */}
-            <div className="order-1 md:order-2 flex flex-col items-center">
-              <div className="relative mb-4 flex flex-col items-center">
-                <Crown className="h-10 w-10 text-amber-500 mb-1 animate-bounce" />
-                <div className="relative">
-                  <img
-                    src={podium.first.avatar || "/icons/layout/logo.png"}
-                    alt={podium.first.name}
-                    className="h-24 w-24 rounded-full object-cover ring-4 ring-amber-400 shadow-2xl"
-                  />
-                  <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-white font-black shadow-lg ring-2 ring-white text-lg">
-                    1
-                  </span>
-                </div>
-                <h3 className="mt-3 font-extrabold text-slate-900 text-lg text-center">
-                  {podium.first.name}
-                </h3>
-                <span className="text-xs font-semibold text-amber-600">{podium.first.title}</span>
-                <div className="mt-1 flex items-center gap-1 text-sm font-black text-amber-600 bg-amber-50 px-3 py-0.5 rounded-full border border-amber-200">
-                  <Zap className="h-4 w-4 fill-amber-500 text-amber-500" /> {podium.first.exp} EXP
-                </div>
-              </div>
-              <div className="h-52 w-full rounded-t-3xl border-t-4 border-amber-400 bg-gradient-to-b from-amber-100 via-amber-50 to-white p-4 text-center shadow-xl flex flex-col justify-center items-center">
-                <Trophy className="h-10 w-10 text-amber-500 mb-1" />
-                <span className="text-base font-black text-amber-700">QUÁN QUÂN</span>
-                <span className="text-xs font-semibold text-amber-600">Level {podium.first.level}</span>
-                <span className="text-[11px] text-slate-500 mt-1">🔥 {podium.first.streakDays} ngày liên tiếp</span>
-              </div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-semibold text-amber-700 shadow-sm">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              <span>ĐẤU TRƯỜNG & DANH VỌNG DEVER</span>
             </div>
 
-            {/* Rank 3 (Bronze) */}
-            {podium.third && (
-              <div className="order-3 flex flex-col items-center">
-                <div className="relative mb-3 flex flex-col items-center">
+            <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-slate-900">
+              Bảng Vàng <span className="text-[#0066CC]">Hall of Fame</span>
+            </h1>
+
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+              Vinh danh những thành viên xuất sắc nhất của Câu lạc bộ FU-DEVER qua chuỗi ngày rèn luyện
+              thuật toán, đóng góp dự án mã nguồn mở và chia sẻ tri thức công nghệ.
+            </p>
+          </div>
+
+          {/* 3D Podium for Top 3 */}
+          {podium.first && (
+            <div className="mb-20 grid grid-cols-1 md:grid-cols-3 gap-6 items-end max-w-5xl mx-auto">
+              {/* Rank 2 (Silver) */}
+              {podium.second && (
+                <div className="order-2 md:order-1 flex flex-col items-center">
+                  <div className="relative mb-3 flex flex-col items-center">
+                    <div className="relative">
+                      <img
+                        src={podium.second.avatar || "/icons/layout/logo.png"}
+                        alt={podium.second.name}
+                        className="h-20 w-20 rounded-full object-cover ring-4 ring-slate-300 shadow-lg"
+                      />
+                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-700 font-black shadow ring-2 ring-white">
+                        2
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-bold text-slate-900 text-base text-center">
+                      {podium.second.name}
+                    </h3>
+                    <span className="text-xs text-slate-500">{podium.second.title}</span>
+                    <div className="mt-1 flex items-center gap-1 text-xs font-bold text-[#0066CC]">
+                      <Zap className="h-3.5 w-3.5" /> {podium.second.exp} EXP
+                    </div>
+                  </div>
+                  <div className="h-40 w-full rounded-t-3xl border-t-4 border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
+                    <Medal className="h-8 w-8 text-slate-400 mb-1" />
+                    <span className="text-sm font-extrabold text-slate-700">Á QUÂN</span>
+                    <span className="text-xs text-slate-500">Level {podium.second.level}</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Rank 1 (Gold - Elevated) */}
+              <div className="order-1 md:order-2 flex flex-col items-center">
+                <div className="relative mb-4 flex flex-col items-center">
+                  <Crown className="h-10 w-10 text-amber-500 mb-1 animate-bounce" />
                   <div className="relative">
                     <img
-                      src={podium.third.avatar || "/icons/layout/logo.png"}
-                      alt={podium.third.name}
-                      className="h-20 w-20 rounded-full object-cover ring-4 ring-amber-700/40 shadow-lg"
+                      src={podium.first.avatar || "/icons/layout/logo.png"}
+                      alt={podium.first.name}
+                      className="h-24 w-24 rounded-full object-cover ring-4 ring-amber-400 shadow-2xl"
                     />
-                    <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-amber-800 text-white font-black shadow ring-2 ring-white">
-                      3
+                    <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-white font-black shadow-lg ring-2 ring-white text-lg">
+                      1
                     </span>
                   </div>
-                  <h3 className="mt-3 font-bold text-slate-900 text-base text-center">
-                    {podium.third.name}
+                  <h3 className="mt-3 font-extrabold text-slate-900 text-lg text-center">
+                    {podium.first.name}
                   </h3>
-                  <span className="text-xs text-slate-500">{podium.third.title}</span>
-                  <div className="mt-1 flex items-center gap-1 text-xs font-bold text-[#0066CC]">
-                    <Zap className="h-3.5 w-3.5" /> {podium.third.exp} EXP
+                  <span className="text-xs font-semibold text-amber-600">{podium.first.title}</span>
+                  <div className="mt-1 flex items-center gap-1 text-sm font-black text-amber-600 bg-amber-50 px-3 py-0.5 rounded-full border border-amber-200">
+                    <Zap className="h-4 w-4 fill-amber-500 text-amber-500" /> {podium.first.exp} EXP
                   </div>
                 </div>
-                <div className="h-32 w-full rounded-t-3xl border-t-4 border-amber-700/50 bg-gradient-to-b from-amber-50 to-orange-100/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
-                  <Shield className="h-7 w-7 text-amber-800 mb-1" />
-                  <span className="text-sm font-extrabold text-amber-900">QUÝ QUÂN</span>
-                  <span className="text-xs text-slate-500">Level {podium.third.level}</span>
+                <div className="h-52 w-full rounded-t-3xl border-t-4 border-amber-400 bg-gradient-to-b from-amber-100 via-amber-50 to-white p-4 text-center shadow-xl flex flex-col justify-center items-center">
+                  <Trophy className="h-10 w-10 text-amber-500 mb-1" />
+                  <span className="text-base font-black text-amber-700">QUÁN QUÂN</span>
+                  <span className="text-xs font-semibold text-amber-600">Level {podium.first.level}</span>
+                  <span className="text-[11px] text-slate-500 mt-1">🔥 {podium.first.streakDays} ngày liên tiếp</span>
                 </div>
               </div>
-            )}
-          </div>
-        )}
+
+              {/* Rank 3 (Bronze) */}
+              {podium.third && (
+                <div className="order-3 flex flex-col items-center">
+                  <div className="relative mb-3 flex flex-col items-center">
+                    <div className="relative">
+                      <img
+                        src={podium.third.avatar || "/icons/layout/logo.png"}
+                        alt={podium.third.name}
+                        className="h-20 w-20 rounded-full object-cover ring-4 ring-amber-700/40 shadow-lg"
+                      />
+                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-amber-800 text-white font-black shadow ring-2 ring-white">
+                        3
+                      </span>
+                    </div>
+                    <h3 className="mt-3 font-bold text-slate-900 text-base text-center">
+                      {podium.third.name}
+                    </h3>
+                    <span className="text-xs text-slate-500">{podium.third.title}</span>
+                    <div className="mt-1 flex items-center gap-1 text-xs font-bold text-[#0066CC]">
+                      <Zap className="h-3.5 w-3.5" /> {podium.third.exp} EXP
+                    </div>
+                  </div>
+                  <div className="h-32 w-full rounded-t-3xl border-t-4 border-amber-700/50 bg-gradient-to-b from-amber-50 to-orange-100/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
+                    <Shield className="h-7 w-7 text-amber-800 mb-1" />
+                    <span className="text-sm font-extrabold text-amber-900">QUÝ QUÂN</span>
+                    <span className="text-xs text-slate-500">Level {podium.third.level}</span>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
         {/* Top 10 Leaderboard Table */}
         <div className="mb-20 rounded-3xl border border-slate-200/80 bg-white/90 p-6 sm:p-8 shadow-xl backdrop-blur-md">

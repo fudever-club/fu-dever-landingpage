@@ -1,69 +1,25 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import introduction from "@images/pages/home/introduction/introduce.png";
 import SectionTitle from "@components/core/common/SectionTitle";
 import arrowRight from "@icons/pages/home/introduction/Chevron Down.svg";
-import VisibilitySensor from "react-visibility-sensor";
 
 import "./style.css";
 
-function Counter({
-  initialValue,
-  maxValue,
-  speed,
-  startCounting,
-}: {
-  initialValue: number;
-  maxValue: number;
-  speed: number;
-  startCounting: boolean;
-}): JSX.Element {
-  const [count, setCount] = useState<number>(0);
-
-  useEffect(() => {
-    if (startCounting && count < maxValue) {
-      const timer = setTimeout(() => {
-        setCount(count + 1);
-      }, speed);
-      return () => clearTimeout(timer);
-    }
-  }, [count, maxValue, speed, startCounting]);
-
-  useEffect(() => {
-    if (count === 0) {
-      setCount(1);
-    }
-  }, [count, maxValue]);
-  return <p>{count}+</p>;
-}
+const MARQUEE_ITEMS = [
+  { number: "50+", label: "Thành viên nòng cốt" },
+  { number: "9+", label: "Năm hoạt động bền vững" },
+  { number: "15+", label: "Dự án thực chiến" },
+  { number: "20+", label: "Giải thưởng ICPC & Hackathon" },
+  { number: "1.2k+", label: "Lượt sinh viên tham gia" },
+  { number: "Top 1", label: "CLB Học thuật FPTU" },
+  { number: "100%", label: "Dự án thực tế" },
+  { number: "Gen 9", label: "Thế hệ kế thừa" },
+];
 
 function Introduction() {
   const [isReadMore, setReadMore] = useState<boolean>(false);
-  const [hasCounted, setHasCounted] = useState<boolean>(false);
-
-  const data = [
-    {
-      number: 50,
-      tittle: "Thành viên",
-      speed: 30,
-    },
-    {
-      number: 9,
-      tittle: "Năm hoạt động",
-      speed: 300,
-    },
-    {
-      number: 15,
-      tittle: "Dự án",
-      speed: 250,
-    },
-    {
-      number: 20,
-      tittle: "Giải thưởng",
-      speed: 150,
-    },
-  ];
 
   const handleReadMore = () => {
     setReadMore((prev) => !prev);
@@ -72,7 +28,7 @@ function Introduction() {
   return (
     <section id="gioi-thieu" className="bg-[#F8FCFF] text-[#000000] overflow-hidden">
       {/* 2-Column Responsive Layout with blended image styling */}
-      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 px-5 md:px-10 xl:px-20 pt-12 pb-8 lg:pt-16 lg:pb-0">
+      <div className="max-w-[1440px] mx-auto grid grid-cols-1 lg:grid-cols-2 items-center gap-8 lg:gap-12 px-5 md:px-10 xl:px-20 pt-12 pb-8 lg:pt-16 lg:pb-4">
         {/* Left: Text Content */}
         <div className="space-y-6 z-10 py-4 lg:py-8">
           <SectionTitle
@@ -80,7 +36,7 @@ function Introduction() {
             subtitle="Mục tiêu thành lập và phát triển"
             textPosition="left"
           />
-          <div className="text-sm md:text-base leading-relaxed text-slate-700 space-y-4">
+          <div className="text-sm md:text-base leading-relaxed text-slate-700 space-y-4 font-medium">
             <p>
               Chào mừng đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT!
               Với hành trình hơn 9+ năm xây dựng và phát triển, chúng tôi tạo ra một cộng đồng học thuật năng động cho những lập
@@ -129,31 +85,41 @@ function Introduction() {
         </div>
       </div>
 
-      {/* Stats Counter Ribbon */}
-      <div className="bg-gradient-to-r from-[#004C99] via-[#0066CC] to-[#004C99] text-white shadow-inner relative z-10">
-        <div className="max-w-[1440px] mx-auto px-5 md:px-10 xl:px-20 py-8 md:py-10 grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-          {data.map((item, index) => (
-            <VisibilitySensor key={index} partialVisibility>
-              {({ isVisible }: { isVisible: boolean }) => (
-                <div className="flex flex-col items-center justify-center p-2">
-                  <div className="text-3xl md:text-4xl xl:text-5xl font-black tracking-tight text-white mb-1">
-                    {isVisible && !hasCounted ? (
-                      <Counter
-                        initialValue={0}
-                        maxValue={item.number}
-                        speed={item.speed}
-                        startCounting={isVisible}
-                      />
-                    ) : (
-                      <p>{item.number}+</p>
-                    )}
-                  </div>
-                  <span className="text-xs md:text-sm font-bold text-blue-100 tracking-wide uppercase">
-                    {item.tittle}
-                  </span>
-                </div>
-              )}
-            </VisibilitySensor>
+      {/* Infinite Horizontal Running Marquee Ribbon */}
+      <div className="relative w-full overflow-hidden bg-gradient-to-r from-[#003B80] via-[#0066CC] to-[#003B80] py-4 md:py-5 text-white shadow-lg select-none border-y border-blue-400/30">
+        {/* Subtle Edge Fade Masks */}
+        <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 md:w-32 bg-gradient-to-r from-[#003B80] to-transparent" />
+        <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 md:w-32 bg-gradient-to-l from-[#003B80] to-transparent" />
+
+        <div className="animate-marquee-ribbon flex items-center">
+          {/* Loop 1 */}
+          {MARQUEE_ITEMS.map((item, idx) => (
+            <div key={`m1-${idx}`} className="flex items-center shrink-0">
+              <div className="flex items-baseline gap-2.5 px-6">
+                <span className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-xs">
+                  {item.number}
+                </span>
+                <span className="text-xs md:text-sm font-bold text-blue-100 uppercase tracking-wider whitespace-nowrap">
+                  {item.label}
+                </span>
+              </div>
+              <span className="text-cyan-300/40 text-sm font-bold select-none">•</span>
+            </div>
+          ))}
+
+          {/* Loop 2 (Duplicate for Seamless Continuous Loop) */}
+          {MARQUEE_ITEMS.map((item, idx) => (
+            <div key={`m2-${idx}`} className="flex items-center shrink-0">
+              <div className="flex items-baseline gap-2.5 px-6">
+                <span className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-xs">
+                  {item.number}
+                </span>
+                <span className="text-xs md:text-sm font-bold text-blue-100 uppercase tracking-wider whitespace-nowrap">
+                  {item.label}
+                </span>
+              </div>
+              <span className="text-cyan-300/40 text-sm font-bold select-none">•</span>
+            </div>
           ))}
         </div>
       </div>

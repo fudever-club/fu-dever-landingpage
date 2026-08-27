@@ -17,6 +17,7 @@ import retangle5 from "@icons/pages/home/banner/Rectangle_11.svg";
 import retangle6 from "@icons/pages/home/banner/Rectangle_12.svg";
 import retangle7 from "@icons/pages/home/banner/Rectangle_13.svg";
 import "./style.css";
+import DeverFloatingStickers from "@components/ui/DeverFloatingStickers";
 type obj = {
   x: number;
   y: number;
@@ -65,6 +66,7 @@ function Banner() {
       }}
       className="relative flex min-h-[520px] items-center justify-center overflow-hidden bg-[radial-gradient(circle_at_top,_#E6F4FF_0%,_#FFFFFF_58%)] md:min-h-[573px] lg:min-h-[708px] xl:min-h-[810px]"
     >
+      <DeverFloatingStickers />
 
       <div className="max-w-[1440px] w-[100%] px-[20px] md:px-[40px] lg:px-[40px] xl:px-[80px] h-[100%] flex justify-center items-center">
         <div className="relative z-10 mx-auto flex w-full max-w-xl flex-col items-center justify-center py-12 text-center md:max-w-2xl xl:-translate-y-10">

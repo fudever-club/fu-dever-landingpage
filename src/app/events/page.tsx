@@ -24,6 +24,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
+import DeverEventHero from "@components/ui/DeverEventHero";
 
 interface EventItem {
   _id?: string;
@@ -223,115 +224,10 @@ export default function EventsPage() {
 
   return (
     <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
-      {/* Modern Premium Banner Section */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-10">
-        <div className="relative bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] rounded-3xl p-8 lg:p-12 text-white shadow-2xl overflow-hidden border border-blue-400/30">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-cyan-400/15 rounded-full blur-3xl pointer-events-none" />
-
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-black tracking-wider uppercase text-blue-50">
-                  <Bolt className="h-3.5 w-3.5" aria-hidden="true" /> FU-DEVER EVENTS & WORKSHOPS
-                </span>
-              </div>
-
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-sm">
-                Sự Kiện & Workshop <br />
-                <span className="bg-gradient-to-r from-cyan-200 via-blue-100 to-amber-200 bg-clip-text text-transparent">
-                  Đỉnh Cao Công Nghệ
-                </span>
-              </h1>
-
-              <p className="text-blue-100 text-sm lg:text-base max-w-xl leading-relaxed font-medium">
-                Nơi truyền cảm hứng, rèn luyện tư duy lập trình thực chiến, thi đấu giải thuật ICPC và kết nối cùng mạng lưới Cựu sinh viên FPT giàu kinh nghiệm.
-              </p>
-
-              <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-extrabold text-blue-100">
-                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  <Globe2 className="h-3.5 w-3.5" aria-hidden="true" /> Web Fullstack
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  <BrainCircuit className="h-3.5 w-3.5" aria-hidden="true" /> AI & Machine Learning
-                </span>
-                <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                  <Trophy className="h-3.5 w-3.5" aria-hidden="true" /> ICPC & LeetCode
-                </span>
-              </div>
-            </div>
-
-            {/* Right Hero: Featured Event OR Dever Ecosystem Stats Card */}
-            {featuredEvent ? (
-              <div className="lg:col-span-5">
-                <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 shadow-2xl relative overflow-hidden group hover:border-amber-300/60 transition-all">
-                  <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
-                    <span className="bg-amber-400 text-gray-950 font-black text-xs px-3 py-1 rounded-full shadow-md uppercase tracking-wider">
-                      <Flame className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> SỰ KIỆN NỔI BẬT
-                    </span>
-                    {renderEventStatusBadge(featuredEvent.status)}
-                  </div>
-
-                  <h3 className="text-lg font-extrabold text-white mb-2 leading-snug">
-                    {featuredEvent.title}
-                  </h3>
-                  <p className="text-xs text-blue-100 font-medium mb-3 leading-relaxed line-clamp-2">
-                    {featuredEvent.description}
-                  </p>
-
-                  <div className="bg-black/20 rounded-xl p-3 text-xs text-blue-100 font-semibold space-y-1 border border-white/10 mb-4">
-                    <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Thời gian:</strong> {featuredEvent.date} ({featuredEvent.time})</span></p>
-                    <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden="true" /><span><strong>Địa điểm:</strong> {featuredEvent.location}</span></p>
-                  </div>
-
-                  <button
-                    onClick={() => setSelectedRegisterEvent(featuredEvent)}
-                    type="button"
-                    className="w-full py-3 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-gray-950 font-black text-xs uppercase tracking-wider shadow-lg shadow-amber-500/20 transition-all flex items-center justify-center gap-2 active:scale-95"
-                  >
-                    <Rocket className="h-4 w-4" aria-hidden="true" /> Đăng Ký Tham Gia Ngay <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <div className="lg:col-span-5">
-                <div className="bg-white/10 backdrop-blur-xl border border-white/30 rounded-2xl p-6 shadow-2xl space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-cyan-400/20 text-cyan-200 border border-cyan-300/30">
-                      <Sparkles className="h-3.5 w-3.5 text-cyan-300" /> HỆ SINH THÁI DEVER 2026
-                    </span>
-                    <span className="text-xs text-blue-200 font-semibold">FPT University</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2.5 pt-1">
-                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
-                      <div className="text-2xl font-black text-amber-300">50+</div>
-                      <div className="text-[11px] text-blue-100 font-semibold">Workshop Chuyên Sâu</div>
-                    </div>
-                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
-                      <div className="text-2xl font-black text-cyan-300">1000+</div>
-                      <div className="text-[11px] text-blue-100 font-semibold">Lượt Tham Gia</div>
-                    </div>
-                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
-                      <div className="text-2xl font-black text-emerald-300">100%</div>
-                      <div className="text-[11px] text-blue-100 font-semibold">Dự Án Thực Chiến</div>
-                    </div>
-                    <div className="bg-black/20 rounded-xl p-3 border border-white/10 text-center space-y-0.5">
-                      <div className="text-2xl font-black text-purple-300">Gen 9</div>
-                      <div className="text-[11px] text-blue-100 font-semibold">Thế Hệ Kế Thừa</div>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-blue-100/90 leading-relaxed font-medium">
-                    Chọn một sự kiện bên dưới để đăng ký giữ chỗ và trải nghiệm không gian học thuật đỉnh cao cùng FU-DEVER.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
+      {/* Modern Premium 3D Holographic VIP Ticket & Background Beams Hero */}
+      <DeverEventHero
+        onRegisterClick={() => setSelectedRegisterEvent(featuredEvent || events[0])}
+      />
 
       {/* Events List & Filter Section */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20">

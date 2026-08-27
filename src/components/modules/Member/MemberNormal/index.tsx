@@ -1,6 +1,5 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -9,6 +8,8 @@ import { useInView } from "framer-motion";
 import { userEndpoint } from "@/src/services/endpoint";
 import axios from "axios";
 import Loading from "@components/modules/Member/Loading";
+import { TiltedCard } from "@components/ui/TiltedCard";
+
 const parent: any = {
   show: {
     transition: {
@@ -19,6 +20,7 @@ const parent: any = {
     },
   },
 };
+
 const child: any = {
   hidden: {
     x: 20,
@@ -42,94 +44,104 @@ const ListMember = ({ member = initialData }: { member: any }) => {
   const [data, setData] = useState(member);
   const [page, setPage] = useState<number>(2);
   const [end, setEnd] = useState(false);
-  const getMoreUser = async (page: number) => {
+
+  const getMoreUser = async (pageNum: number) => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${userEndpoint.GET_ALL_USERS}?page=${page}&limit=8&filter={"isLeader":false}`,
+      url: `${userEndpoint.GET_ALL_USERS}?page=${pageNum}&limit=8&filter={"isLeader":false}`,
     };
 
     try {
       const response: any = await axios.request(config);
-      if (response?.data?.currentPage === response?.data?.totalPages)
+      if (response?.data?.currentPage === response?.data?.totalPages) {
         setEnd(true);
-      setData([...data, ...response?.data?.data?.users]);
+      }
+      if (response?.data?.data?.users) {
+        setData((prev: any[]) => [...prev, ...response.data.data.users]);
+      }
     } catch (error) {
       return error;
     }
   };
 
   useEffect(() => {
-    if (inView) {
+    if (inView && !end) {
       getMoreUser(page);
-      setPage(page + 1);
+      setPage((prev) => prev + 1);
     }
-  }, [inView]);
+  }, [inView, end]);
+
   return (
-    <article className=" md:pb-[60px] sm:pb-[40px]">
+    <article className="md:pb-[60px] sm:pb-[40px]">
       <div className="xl:max-w-[1280px] mx-[auto] px-[auto]">
-        <div className="justify-between relative items-end md:flex-row flex sm:flex-col md:items-end  sm:items-start xl:gap-0 sm:gap-[25px] w-[100%] h-[auto] ">
+        <div className="justify-between relative items-end md:flex-row flex sm:flex-col md:items-end sm:items-start xl:gap-0 sm:gap-[25px] w-[100%] h-[auto]">
           <SectionTittle
             title="CÁC THÀNH VIÊN CỦA CÂU LẠC BỘ"
             subtitle="Những thành viên đầy nhiệt huyết"
             textPosition="left"
-          ></SectionTittle>
+          />
         </div>
         <motion.ul
           initial="hidden"
           animate="show"
           variants={parent}
-          className=" xl:mt-[28px] w-[100%] md:mt-[40px] sm:mt-[20px] xl:gap-[40px] md:gap-[35px] sm:gap-[20px] flex-wrap flex justify-start"
+          className="xl:mt-[28px] w-[100%] md:mt-[40px] sm:mt-[20px] xl:gap-[40px] md:gap-[35px] sm:gap-[20px] flex-wrap flex justify-start"
         >
-          {data?.map((user: any) => (
-            <motion.li
-              variants={child}
-              key={user?.profileKey || `${user?.firstname}-${user?.lastname}`}
-              className="xl:w-[calc((100%-40px*3)/4)] shadow-2xl lg:rounded-[20px_0] md:rounded-[15px_0] sm:rounded-[8px_0] overflow-hidden md:w-[calc((100%-35px*3)/4)]  xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204]  sm:aspect-[93/123] sm:w-[calc((100%-20px*1)/2)]  cursor-pointer  relative"
-            >
-              <Link href={user?.profileKey ? `/member/${encodeURIComponent(user.profileKey)}` : "/member"}>
-                <Image
-                  loading="lazy"
-                  unoptimized
-                  width={290}
-                  height={400}
-                  className="xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204]  sm:aspect-[93/123] pointer-events-none object-cover lg:rounded-tl-[20px] lg:rounded-br-[20px] md:rounded-tl-[15px] md:rounded-br-[15px] sm:rounded-tl-[8px] sm:rounded-br-[8px] w-[100%] h-[100%] "
-                  alt={`${user?.firstname} ${user?.lastname} là một thanh viên của dever`}
-                  src={user?.avatar}
-                ></Image>
-                <div className="h-[auto] absolute bottom-0 w-[100%]">
-                  <div className=" flex justify-center lg:pt-[3.75px] xl:py-[6px] lg:pb-[2.5px] sm:py-[4px] xl:w-[93px] lg:w-[68px] h-[auto] md:w-[47px] sm:w-[40px] lg:rounded-tl-[12px] md:rounded-tl-[6px] sm:rounded-tl-[4px] bg-[#C69C6D] absolute right-0 translate-y-[-100%] top-[0.2px]">
-                    <p className="uppercase xl:h-[19px] lg:h-[17px] md:h-[12px] sm:h-[7px] xl:text-[16px] lg:text-[14px] md:text-[10px] sm:text-[8px] font-[700] text-[#fff]">
-                      {user?.MSSV && `K${user?.MSSV?.slice(2, 4)}`}
-                    </p>
-                  </div>
-                  <div className=" w-[100%] xl:p-[20px] lg:p-[15px] md:pt-[5px] md:px-[10px] md:py-0 sm:p-[5px] xl:h-[118px] lg:h-[88px] md:h-[59px] sm:h-[80px] bg-primary lg:rounded-br-[20px]  md:rounded-br-[15px] sm:rounded-br-[4px]">
-                    <div className="flex flex-col h-[100%] xl:gap-[12px] md:gap-[6px] sm:gap-[4px] ">
-                      <h4 className="truncate  font-[700]  xl:leading-[24.2px] lg:leading-[16.94px] md:leading-[12px]  xl:text-[20px] lg:text-[14px] md:text-[10px] sm:text-[14px] text-[12px] text-[#fff] ">
-                        {user?.firstname || user?.lastname
-                          ? `${user?.firstname ?? ""} ${user?.lastname ?? ""}`
-                          : "Chưa có tên"}
-                      </h4>
-                      <div className=" h-[auto] xl:text-[14px]  lg:text-[12px] md:text-[8px] sm:text-[10px] xl:leading-[17px] lg:leading-[14.52px] md:leading-[9.6px] flex justify-between items-end ">
-                        <div className="flex flex-col xl:gap-[8px] md:gap-[6px] sm:gap-[3px]">
-                          <p className="uppercase font-[500] text-[#fff]">
-                            {user?.MSSV && `-${user?.MSSV}`}
-                          </p>
-                          <p className="font-[500] text-[#fff]">
-                            {user?.positionId?.name &&
-                              `-${user?.positionId?.name}`}
-                          </p>
+          {data?.map((user: any, index: number) => {
+            if (!user) return null;
+
+            const fullName = user?.firstname || user?.lastname
+              ? `${user?.firstname ?? ""} ${user?.lastname ?? ""}`.trim()
+              : "Thành viên DEVER";
+            const kCohort = user?.MSSV ? `K${user?.MSSV?.slice(2, 4)}` : (user?.gen ? `GEN ${user.gen}` : "");
+            const position = user?.positionId?.name || "Thành viên";
+            const memberLink = user?.profileKey
+              ? `/member/${encodeURIComponent(user.profileKey)}`
+              : `/member/${user?.nickname ?? user?._id}`;
+
+            return (
+              <motion.li
+                variants={child}
+                key={user?.profileKey || user?._id || `member-${index}`}
+                className="xl:w-[calc((100%-40px*3)/4)] md:w-[calc((100%-35px*3)/4)] xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204] sm:aspect-[93/123] sm:w-[calc((100%-20px*1)/2)] cursor-pointer relative"
+              >
+                <Link href={memberLink} className="block w-full h-full">
+                  <TiltedCard
+                    imageSrc={user?.avatar || "/images/pages/leaderBoard/avatar_default.png"}
+                    altText={`${fullName} - Thành viên DEVER`}
+                    captionText={`🚀 ${fullName} • ${position} ${kCohort ? `(${kCohort})` : ""}`}
+                    rotateAmplitude={12}
+                    scaleOnHover={1.06}
+                    showMobileWarning={false}
+                    showTooltip={true}
+                    displayOverlayContent={true}
+                    imageClassName="rounded-tl-[20px] rounded-br-[20px] object-cover border border-slate-200/80 shadow-lg"
+                    overlayContent={
+                      <div className="h-[auto] w-[100%] rounded-br-[20px] overflow-hidden">
+                        {/* K Cohort Tag */}
+                        {kCohort && (
+                          <div className="flex justify-center py-1 px-3 w-fit ml-auto rounded-tl-lg bg-[#C69C6D] text-white text-[11px] font-bold shadow-sm">
+                            {kCohort}
+                          </div>
+                        )}
+                        {/* Info Bottom Bar */}
+                        <div className="w-[100%] p-3 sm:p-4 bg-gradient-to-t from-[#002D66]/95 via-[#004C99]/90 to-transparent text-white rounded-br-[20px]">
+                          <h4 className="font-bold text-sm sm:text-base truncate leading-snug">
+                            {fullName}
+                          </h4>
+                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center mt-1">
+                            <span className="truncate opacity-90">{user?.MSSV ? `MSSV: ${user.MSSV}` : position}</span>
+                            {user?.gen && <span className="font-bold shrink-0 ml-1">GEN {user.gen}</span>}
+                          </div>
                         </div>
-                        <h3 className="absolute xl:bottom-[20px] lg:bottom-[14px] md:bottom-[10px] xl:right-[20px] lg:right-[14px] md:right-[10px] sm:right-[15px] sm:bottom-[15px] inline text-[#fff] font-[600] xl:text-[20px] lg:text-[16px] md:text-[10px] sm:text-[12px]">
-                          {user?.gen && `GEN ${user?.gen}`}
-                        </h3>
                       </div>
-                    </div>
-                  </div>
-                </div>
-              </Link>
-            </motion.li>
-          ))}
+                    }
+                  />
+                </Link>
+              </motion.li>
+            );
+          })}
         </motion.ul>
         {!end && <Loading myRef={ref} />}
       </div>
