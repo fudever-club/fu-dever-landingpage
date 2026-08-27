@@ -78,7 +78,7 @@ function Header() {
         />
       </Suspense>
 
-      <div className="max-w-[1440px] mx-auto h-[64px] flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-10 xl:px-16">
+      <div className="w-full max-w-[1440px] mx-auto h-[60px] sm:h-[64px] flex items-center justify-between gap-3 px-3 sm:px-6 lg:px-10 xl:px-16">
         {/* Logo */}
         <div className="flex shrink-0 items-center">
           <Link href="/" className="flex items-center gap-2" aria-label="FU-DEVER - Trang chủ">
@@ -86,7 +86,7 @@ function Header() {
               loading="lazy"
               src={Logo}
               alt="FU-DEVER Logo"
-              className="h-8 w-auto sm:h-9"
+              className="h-7 sm:h-8 md:h-9 w-auto"
             />
           </Link>
         </div>
@@ -304,7 +304,7 @@ function Header() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-            className="flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
             title="Tìm kiếm nhanh (Ctrl + K)"
             aria-label="Mở tìm kiếm"
           >
@@ -338,7 +338,7 @@ function Header() {
             aria-label={isOpenMenu ? "Đóng điều hướng" : "Mở điều hướng"}
             aria-expanded={isOpenMenu}
             onClick={() => setOpenMenu(!isOpenMenu)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 lg:hidden active:scale-95 transition-transform"
+            className="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-blue-50/80 hover:bg-blue-100 text-[#0066CC] border border-blue-100/60 lg:hidden shrink-0 active:scale-95 transition-all shadow-2xs"
           >
             {isOpenMenu ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
