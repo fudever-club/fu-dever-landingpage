@@ -115,7 +115,7 @@ function Header() {
         </div>
 
         {/* Centered Desktop Navigation Grouping */}
-        <div className="hidden xl:flex min-w-0 items-center justify-center gap-6 2xl:gap-8 text-sm font-semibold mx-auto">
+        <div className="hidden lg:flex min-w-0 items-center justify-center gap-4 xl:gap-6 2xl:gap-8 text-xs xl:text-sm font-semibold mx-auto">
           {/* Trang chủ */}
           <button
             onClick={() => handleDirect("/")}
@@ -228,7 +228,7 @@ function Header() {
                     <Trophy className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Bảng Xếp Hạng</div>
-                      <div className="text-xs text-gray-400">Đua TOP LeetCode giải thuật</div>
+                      <div className="text-xs text-gray-400">Đấu trường thuật toán LeetCode</div>
                     </div>
                   </button>
 
@@ -239,7 +239,7 @@ function Header() {
                     <UsersRound className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
                       <div className="font-semibold">Thành Viên CLB</div>
-                      <div className="text-xs text-gray-400">Danh sách member active</div>
+                      <div className="text-xs text-gray-400">Danh sách ban chủ nhiệm & thành viên</div>
                     </div>
                   </button>
 
@@ -328,7 +328,7 @@ function Header() {
             href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden xl:inline-flex items-center gap-1.5 bg-blue-50 text-[#0066CC] hover:bg-blue-100 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-blue-200"
+            className="hidden lg:inline-flex items-center gap-1.5 bg-blue-50 text-[#0066CC] hover:bg-blue-100 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-blue-200"
           >
             <UserRound className="h-3.5 w-3.5" aria-hidden="true" /> Member Portal
           </a>
@@ -337,7 +337,7 @@ function Header() {
             href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden 2xl:inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-gray-200"
+            className="hidden xl:inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-gray-200"
           >
             <ShieldCheck className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" /> Admin Portal
           </a>
@@ -347,7 +347,7 @@ function Header() {
             aria-label={isOpenMenu ? "Đóng điều hướng" : "Mở điều hướng"}
             aria-expanded={isOpenMenu}
             onClick={() => setOpenMenu(!isOpenMenu)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 xl:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-xl text-[#0066CC] hover:bg-blue-50 lg:hidden"
           >
             {isOpenMenu ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>
@@ -361,7 +361,7 @@ function Header() {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="xl:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
+            className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
           >
             <div className="p-4 flex flex-col gap-2 max-h-[80vh] overflow-y-auto text-sm">
               <button
