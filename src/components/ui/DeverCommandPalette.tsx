@@ -52,6 +52,13 @@ export default function DeverCommandPalette() {
     process.env.NEXT_PUBLIC_API_SERVER ||
     "https://dever-backend-production.up.railway.app";
 
+  // Custom event listener: 'open-command-palette'
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener("open-command-palette", handleOpen);
+    return () => window.removeEventListener("open-command-palette", handleOpen);
+  }, []);
+
   // Hotkey listener: Ctrl + K / Cmd + K / Esc
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -108,45 +115,45 @@ export default function DeverCommandPalette() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (query.trim()) {
-        searchApi(query);
-      } else {
-        setResults([]);
-      }
-    }, 220);
+      searchApi(query);
+    }, 250);
 
     return () => clearTimeout(timer);
   }, [query, searchApi]);
 
   // Filtered by Category Tab
-  const filtered = results.filter(
-    (item) => activeTab === "All" || item.category === activeTab
-  );
+  const filtered =
+    activeTab === "All"
+      ? results
+      : results.filter((item) => item.category === activeTab);
 
   // Keyboard navigation inside list
   const handleKeyDownList = (e: React.KeyboardEvent) => {
+    if (filtered.length === 0) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev < filtered.length - 1 ? prev + 1 : 0));
+      setSelectedIndex((prev) => (prev + 1) % filtered.length);
     } else if (e.key === "ArrowUp") {
       e.preventDefault();
-      setSelectedIndex((prev) => (prev > 0 ? prev - 1 : filtered.length - 1));
-    } else if (e.key === "Enter" && filtered[selectedIndex]) {
+      setSelectedIndex((prev) => (prev - 1 + filtered.length) % filtered.length);
+    } else if (e.key === "Enter") {
       e.preventDefault();
       const target = filtered[selectedIndex];
-      setIsOpen(false);
-      router.push(target.url);
+      if (target) {
+        setIsOpen(false);
+        router.push(target.url);
+      }
     }
   };
 
   const getCategoryIcon = (category: string) => {
     switch (category) {
-      case "Event":
-        return <Calendar className="w-4 h-4 text-emerald-500" />;
       case "Blog":
-        return <BookOpen className="w-4 h-4 text-[#0066CC]" />;
+        return <BookOpen className="w-4 h-4 text-blue-500" />;
+      case "Event":
+        return <Calendar className="w-4 h-4 text-purple-500" />;
       case "Resource":
-        return <FileCode className="w-4 h-4 text-purple-500" />;
+        return <FileCode className="w-4 h-4 text-emerald-500" />;
       case "Member":
         return <Users className="w-4 h-4 text-amber-500" />;
       case "Project":
@@ -158,26 +165,11 @@ export default function DeverCommandPalette() {
 
   return (
     <>
-      {/* Floating Quick Search Trigger Widget */}
-      <button
-        onClick={() => setIsOpen(true)}
-        aria-label="Mở tìm kiếm nhanh"
-        className="fixed bottom-5 left-5 z-40 hidden 2xl:flex items-center gap-3 bg-white/95 dark:bg-slate-900/95 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-800 px-4 py-2.5 rounded-full shadow-xl hover:shadow-2xl hover:border-[#0066CC] transition-all duration-200 backdrop-blur-md group active:scale-[0.98]"
-      >
-        <Search className="w-4 h-4 text-[#0066CC]" />
-        <span className="text-xs font-semibold text-slate-600 dark:text-slate-300">
-          Tìm nhanh Blog, Sự kiện, Kho tài liệu...
-        </span>
-        <kbd className="hidden lg:inline-flex items-center gap-0.5 px-2 py-0.5 text-[10px] font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 rounded border border-slate-200 dark:border-slate-700">
-          <Command className="w-3 h-3" /> K
-        </kbd>
-      </button>
-
       {/* Modal Backdrop & Command Palette */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md flex items-start justify-center pt-16 md:pt-24 px-4 animate-in fade-in duration-200"
+          className="fixed inset-0 z-[250] bg-slate-950/75 backdrop-blur-md flex items-start justify-center pt-16 md:pt-24 px-4 animate-in fade-in duration-200"
         >
           <div
             onClick={(e) => e.stopPropagation()}

@@ -1,6 +1,8 @@
 "use client";
+import React from "react";
 import Header from "./Header";
 import Footer from "./Footer";
+import DeverCommandPalette from "@components/ui/DeverCommandPalette";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -12,6 +14,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
         Chuyển đến nội dung chính
       </a>
       <Header />
+      <DeverCommandPalette />
       <main id="main-content" tabIndex={-1} className="pt-16 outline-none">
         {children}
       </main>

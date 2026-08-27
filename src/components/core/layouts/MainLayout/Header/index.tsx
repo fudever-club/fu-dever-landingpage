@@ -18,13 +18,13 @@ import {
   Menu,
   Newspaper,
   Rocket,
+  Search,
   ShieldCheck,
   Trophy,
   UserRound,
   UsersRound,
   X,
 } from "lucide-react";
-import DeverCommandPalette from "@components/ui/DeverCommandPalette";
 
 const animationHeader: any = {
   down: {
@@ -99,7 +99,6 @@ function Header() {
           shallowRouting
         />
       </Suspense>
-      <DeverCommandPalette />
 
       <div className="max-w-[1440px] mx-auto h-[64px] flex items-center justify-between gap-4 px-4 sm:px-6 lg:px-10 xl:px-16">
         {/* Logo */}
@@ -322,8 +321,22 @@ function Header() {
           </div>
         </div>
 
-        {/* Right Ecosystem Portals */}
+        {/* Right Ecosystem Portals & Quick Search */}
         <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+            className="flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
+            title="Tìm kiếm nhanh (Ctrl + K)"
+            aria-label="Mở tìm kiếm"
+          >
+            <Search className="h-3.5 w-3.5 text-[#0066CC]" />
+            <span className="hidden sm:inline text-slate-500 font-normal">Tìm kiếm</span>
+            <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-400">
+              ⌘K
+            </kbd>
+          </button>
+
           <a
             href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
             target="_blank"
@@ -364,6 +377,21 @@ function Header() {
             className="lg:hidden bg-white border-t border-gray-100 overflow-hidden shadow-2xl"
           >
             <div className="p-4 flex flex-col gap-2 max-h-[80vh] overflow-y-auto text-sm">
+              {/* Quick Search in Drawer */}
+              <button
+                onClick={() => {
+                  setOpenMenu(false);
+                  window.dispatchEvent(new Event("open-command-palette"));
+                }}
+                className="flex w-full items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-medium text-xs mb-1"
+              >
+                <div className="flex items-center gap-2">
+                  <Search className="h-4 w-4 text-[#0066CC]" />
+                  <span>Tìm kiếm nhanh bài viết, sự kiện...</span>
+                </div>
+                <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">⌘K</kbd>
+              </button>
+
               <button
                 onClick={() => handleDirect("/")}
                 className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
