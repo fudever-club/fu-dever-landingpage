@@ -91,8 +91,8 @@ const FALLBACK_EVENTS: EventItem[] = [
     status: "Đang mở đăng ký",
     description:
       "Chào đón các tân sinh viên K21 gia nhập đại gia đình FU-DEVER. Trải nghiệm môi trường học thuật chuyên nghiệp, tham gia dự án thực tế và thi đấu giải thuật.",
-    registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_gen9_form/viewform",
-    checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_gen9_checkin/viewform",
+    registerUrl: "https://forms.gle/hJxSewnuiVFwR1rH8",
+    checkinUrl: "https://forms.gle/hJxSewnuiVFwR1rH8",
     speakers: "Ban Chủ Nhiệm FU-DEVER",
     coverImage: "",
     isFeatured: false,

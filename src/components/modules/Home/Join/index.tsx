@@ -2,7 +2,7 @@ import { Code2, GraduationCap, UsersRound } from "lucide-react";
 import DeverParticleNetwork from "@components/ui/DeverParticleNetwork";
 
 const JOIN_FORM_URL =
-  "https://docs.google.com/forms/d/1zr-qtjxbWkFvV10AWEyRnlsdq2IzqqOrewaHWXKIuDQ/prefill";
+  "https://forms.gle/hJxSewnuiVFwR1rH8";
 
 const benefits = [
   {

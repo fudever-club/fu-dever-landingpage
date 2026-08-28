@@ -92,7 +92,7 @@ function Banner() {
           </p>
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <a
-              href="https://docs.google.com/forms/d/1zr-qtjxbWkFvV10AWEyRnlsdq2IzqqOrewaHWXKIuDQ/prefill"
+              href="https://forms.gle/hJxSewnuiVFwR1rH8"
               target="_blank"
               rel="noreferrer"
               className="rounded-xl bg-[#0066CC] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#004C99] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
