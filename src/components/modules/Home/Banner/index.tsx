@@ -80,7 +80,7 @@ function Banner() {
             <motion.span
               animate="show"
               variants={animationTitle}
-              className="w-[120px] animate-line h-[5px] bg-[red] absolute top-[50px] xl:top-[54px]"
+              className="w-[120px] animate-line h-[4px] bg-gradient-to-r from-[#0066CC] to-[#0080FF] rounded-full absolute top-[50px] xl:top-[54px]"
             ></motion.span>
           </h1>
           <h2 className="mt-4 text-xl font-semibold leading-tight text-slate-900 md:text-2xl xl:text-3xl">
@@ -153,7 +153,7 @@ function Banner() {
             y: client.y,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="w-[240px] h-[258px] lg:w-[200px] lg:h-[240px] xl:w-[226px] xl:h-[272px] absolute bottom-[40px]"
@@ -166,7 +166,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="w-[200px] h-[190px] lg:w-[210] lg:h-[260px] xl:w-[236px] xl:h-[333px] absolute right-[20px] md:right-[40px] lg:right-[40px] xl:right-[80px] bottom-[61px] lg:bottom-[44px] xl:bottom-[80px]"
@@ -179,7 +179,7 @@ function Banner() {
             y: client.y,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="w-[120px] h-[144px] xl:w-[133px] xl:h-[141px] absolute right-[120px] lg:right-[180px] xl:right-[328px] top-[116px] lg:top-[147px] xl:top-[132px]"
@@ -192,7 +192,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="w-[134px] h-[138px] xl:w-[156px] xl:h-[148px] absolute xl:left-[256px] top-[96px] lg:top-[142px] xl:top-[120px] lg:left-[180px] left-[120px]"
@@ -208,7 +208,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute lg:top-[204px] xl:top-[335px] lg:left-[-90px] xl:left-[-70px] xl:w-auto xl:h-auto lg:w-auto lg:h-auto md:w-[68px] md:h-[111px] md:top-[216px] md:left-[-40px] hidden md:block lg:block xl:block"
@@ -221,7 +221,7 @@ function Banner() {
             y: client.y,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute lg:top-[312px] xl:top-[373px] lg:left-[110px] xl:left-[250px] xl:w-auto xl:h-auto lg:w-[23px] lg:h-[21px] hidden md:hidden xl:block lg:block"
@@ -234,7 +234,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute xl:top-[277px] xl:right-[160px] xl:w-auto xl:h-auto lg:w-[45px] lg:h-[45px] lg:top-[297px] lg:right-[80px]  hidden md:hidden xl:block lg:block"
@@ -247,7 +247,7 @@ function Banner() {
             y: client.y,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute xl:top-[179px] xl:right-[-30px] xl:w-auto xl:h-auto lg:w-[61px] lg:h-[73px] lg:right-[-40px] lg:top-[114px] md:w-[61px] md:h-[73px] md:top-[246px] right-[-40px] hidden md:block lg:block xl:block"
@@ -260,7 +260,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute xl:bottom-[91px] xl:right-[427px] lg:right-[340px] lg:bottom-[137px] hidden md:hidden xl:block lg:block"
@@ -273,7 +273,7 @@ function Banner() {
             y: client.y,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute xl:bottom-[147px] xl:left-[553px] xl:w-auto xl:h-auto lg:w-[31px] lg:h-[30px] lg:bottom-[159px] lg:left-[356px] md:bottom-[30px] md:left-[264px] bottom-[63px] right-[46px]"
@@ -286,7 +286,7 @@ function Banner() {
             y: client.y * -1,
           }}
           transition={{
-            type: "lieaner",
+            ease: "linear",
             restDelta: 0.01,
           }}
           className="absolute xl:top-[108px] xl:right-[571px] xl:w-auto xl:h-auto lg:w-[33px] lg:h-[33px] lg:top-[142px] lg:right-[311px] md:top-[108px] md:right-[240px] top-[96px] left-[40px]"
