@@ -128,7 +128,8 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
   const [activeHeadingId, setActiveHeadingId] = useState<string>("");
   const [scrollProgress, setScrollProgress] = useState(0);
 
-  const API_SERVER = "https://dever-backend-production.up.railway.app";
+  const API_SERVER =
+    process.env.NEXT_PUBLIC_API_SERVER || "https://dever-backend-production.up.railway.app";
 
   // Check Bookmark state from localStorage
   useEffect(() => {

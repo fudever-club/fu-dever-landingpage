@@ -46,7 +46,9 @@ type ProjectLabItem = {
 
 const getProjectLabs = async (): Promise<ProjectLabItem[]> => {
   try {
-    const response = await fetch("https://dever-backend-production.up.railway.app/api/v1/project-lab", { cache: "no-store" });
+    const apiServer =
+      process.env.NEXT_PUBLIC_API_SERVER || "https://dever-backend-production.up.railway.app";
+    const response = await fetch(`${apiServer}/api/v1/project-lab`, { cache: "no-store" });
     if (!response.ok) return [];
     const payload = await response.json();
     return Array.isArray(payload?.data) ? payload.data : [];
