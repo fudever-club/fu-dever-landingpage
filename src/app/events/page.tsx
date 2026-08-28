@@ -386,7 +386,7 @@ export default function EventsPage() {
               </p>
             </div>
 
-            <div className="bg-blue-50 rounded-2xl p-4 text-xs space-y-2 border border-blue-200 text-gray-900 font-semibold">
+            <div className="bg-slate-50 rounded-2xl p-4 text-xs space-y-2 border border-slate-200 text-slate-900 font-semibold">
               <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Thời gian:</strong> {selectedRegisterEvent.date} ({selectedRegisterEvent.time})</span></p>
               <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Địa điểm:</strong> {selectedRegisterEvent.location}</span></p>
             </div>

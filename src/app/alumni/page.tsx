@@ -198,7 +198,7 @@ export default function AlumniPage() {
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-sm">
               Mạng Lưới Cựu Thành Viên <br />
-              <span className="bg-gradient-to-r from-amber-200 via-cyan-200 to-white bg-clip-text text-transparent">
+              <span className="text-cyan-200">
                 Gen 1 Đến Gen 6 (Hơn 9+ Năm)
               </span>
             </h1>

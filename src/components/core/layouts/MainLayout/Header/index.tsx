@@ -137,34 +137,34 @@ function Header() {
                 >
                   <button
                     onClick={() => handleDirect("/blog")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Newspaper className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Blog Kỹ Thuật</div>
-                      <div className="text-xs text-gray-400">Chia sẻ kiến thức lập trình</div>
+                      <div className="font-semibold text-slate-800">Blog Kỹ Thuật</div>
+                      <div className="text-xs text-slate-400">Chia sẻ kiến thức lập trình</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/events")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <CalendarDays className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Sự Kiện &amp; Workshop</div>
-                      <div className="text-xs text-gray-400">Lịch trình hội thảo CLB</div>
+                      <div className="font-semibold text-slate-800">Sự Kiện &amp; Workshop</div>
+                      <div className="text-xs text-slate-400">Lịch trình hội thảo CLB</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/resources")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Kho Tài Liệu</div>
-                      <div className="text-xs text-gray-400">Slide workshop &amp; Mã nguồn mẫu</div>
+                      <div className="font-semibold text-slate-800">Kho Tài Liệu</div>
+                      <div className="text-xs text-slate-400">Slide workshop &amp; Mã nguồn mẫu</div>
                     </div>
                   </button>
                 </motion.div>
@@ -200,34 +200,34 @@ function Header() {
                 >
                   <button
                     onClick={() => handleDirect("/leaderboard")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Trophy className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Bảng Xếp Hạng</div>
-                      <div className="text-xs text-gray-400">Đấu trường thuật toán LeetCode</div>
+                      <div className="font-semibold text-slate-800">Bảng Xếp Hạng</div>
+                      <div className="text-xs text-slate-400">Đấu trường thuật toán LeetCode</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/member")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <UsersRound className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Thành Viên CLB</div>
-                      <div className="text-xs text-gray-400">Danh sách ban chủ nhiệm &amp; thành viên</div>
+                      <div className="font-semibold text-slate-800">Thành Viên CLB</div>
+                      <div className="text-xs text-slate-400">Danh sách ban chủ nhiệm &amp; thành viên</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/alumni")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <GraduationCap className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Cựu Thành Viên</div>
-                      <div className="text-xs text-gray-400">Hall of Fame sinh viên xuất sắc</div>
+                      <div className="font-semibold text-slate-800">Cựu Thành Viên</div>
+                      <div className="text-xs text-slate-400">Hall of Fame sinh viên xuất sắc</div>
                     </div>
                   </button>
                 </motion.div>
@@ -263,34 +263,34 @@ function Header() {
                 >
                   <button
                     onClick={() => handleDirect("/project")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Rocket className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Tất Cả Dự Án</div>
-                      <div className="text-xs text-gray-400">Showcase sản phẩm CLB</div>
+                      <div className="font-semibold text-slate-800">Tất Cả Dự Án</div>
+                      <div className="text-xs text-slate-400">Showcase sản phẩm CLB</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/project-lab")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Lightbulb className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Project Lab</div>
-                      <div className="text-xs text-gray-400">Gợi ý ý tưởng &amp; Ghép đội</div>
+                      <div className="font-semibold text-slate-800">Project Lab</div>
+                      <div className="text-xs text-slate-400">Gợi ý ý tưởng &amp; Ghép đội</div>
                     </div>
                   </button>
 
                   <button
                     onClick={() => handleDirect("/activity")}
-                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-blue-50/80 text-left transition-colors text-gray-700 hover:text-[#0098FF]"
+                    className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Images className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
                     <div>
-                      <div className="font-semibold">Hoạt Động CLB</div>
-                      <div className="text-xs text-gray-400">Hình ảnh &amp; Kỷ niệm DEVER</div>
+                      <div className="font-semibold text-slate-800">Hoạt Động CLB</div>
+                      <div className="text-xs text-slate-400">Hình ảnh &amp; Kỷ niệm DEVER</div>
                     </div>
                   </button>
                 </motion.div>
@@ -304,13 +304,13 @@ function Header() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-            className="hidden sm:inline-flex items-center gap-1.5 bg-slate-50 hover:bg-blue-50 text-slate-600 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
+            className="hidden sm:inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
             title="Tìm kiếm nhanh (Ctrl + K)"
             aria-label="Mở tìm kiếm"
           >
             <Search className="h-3.5 w-3.5 text-[#0066CC]" />
-            <span className="hidden sm:inline text-slate-500 font-normal">Tìm kiếm</span>
-            <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-400">
+            <span className="hidden sm:inline text-slate-600 font-normal">Tìm kiếm</span>
+            <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">
               ⌘K
             </kbd>
           </button>
@@ -371,7 +371,7 @@ function Header() {
                     setOpenMenu(false);
                     window.dispatchEvent(new Event("open-command-palette"));
                   }}
-                  className="flex w-full items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600 font-medium text-xs mb-2"
+                  className="flex w-full items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-700 font-medium text-xs mb-2"
                 >
                   <div className="flex items-center gap-2">
                     <Search className="h-4 w-4 text-[#0066CC]" />
@@ -382,7 +382,7 @@ function Header() {
 
                 <button
                   onClick={() => handleDirect("/")}
-                  className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-blue-50 font-semibold text-gray-800"
+                  className="flex w-full items-center gap-2 text-left p-3 rounded-xl hover:bg-slate-100 font-semibold text-slate-800"
                 >
                   <Home className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Trang chủ
                 </button>
@@ -390,39 +390,39 @@ function Header() {
                 <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                   Góc Học Tập
                 </div>
-                <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Newspaper className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Blog Kỹ Thuật
                 </button>
-                <button onClick={() => handleDirect("/events")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/events")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <CalendarDays className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Sự Kiện &amp; Workshop
                 </button>
-                <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/resources")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu
                 </button>
 
                 <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                   Cộng Đồng
                 </div>
-                <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Trophy className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Bảng Xếp Hạng LeetCode
                 </button>
-                <button onClick={() => handleDirect("/member")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/member")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <UsersRound className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Thành Viên CLB
                 </button>
-                <button onClick={() => handleDirect("/alumni")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/alumni")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <GraduationCap className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cựu Thành Viên
                 </button>
 
                 <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
                   Sản Phẩm &amp; Lab
                 </div>
-                <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Rocket className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Tất Cả Dự Án
                 </button>
-                <button onClick={() => handleDirect("/project-lab")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/project-lab")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Lightbulb className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Project Lab &amp; Tìm Đồng Đội
                 </button>
-                <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-blue-50 text-gray-700">
+                <button onClick={() => handleDirect("/activity")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
                   <Images className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Hoạt Động CLB
                 </button>
 

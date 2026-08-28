@@ -292,7 +292,7 @@ export default function BlogPage() {
                       className={`text-xs font-extrabold p-2 rounded-full transition-all ${
                         likedPosts[post._id || post.id || ""]
                           ? "bg-rose-100 text-rose-800"
-                          : "text-gray-600 hover:text-rose-800 hover:bg-rose-100"
+                          : "text-slate-600 hover:text-rose-700 hover:bg-slate-100"
                       }`}
                     >
                       <Heart className={`h-3.5 w-3.5 ${likedPosts[post._id || post.id || ""] ? "fill-current" : ""}`} /> {post.likes}

@@ -7,11 +7,11 @@ function Sharing() {
   return (
     <div>
       <div className=" space-y-[20px] flex sm:flex-row lg:flex-col">
-        <div className=" lg:w-[100%] sm:border-l-8 lg:border-l-0 lg:border-b-8 border-highlight flex justify-center flex-col  sm:px-[10px] lg:pb-[6px]">
-          <div className="lg:text-[24px] xl:text-[26px] font-[400] h-[31px] text-center">
+        <div className=" lg:w-[100%] sm:border-l-2 lg:border-l-0 lg:border-b border-slate-200 flex justify-center flex-col sm:px-[10px] lg:pb-[6px]">
+          <div className="lg:text-[24px] xl:text-[26px] font-[500] text-slate-800 h-[31px] text-center">
             528
           </div>
-          <div className="text-[16px] font-[400] leading-[20px]  h-[17px]  text-center text-[#A7A7A7] ">
+          <div className="text-[14px] font-[400] leading-[20px] h-[17px] text-center text-slate-500">
             Shares
           </div>
         </div>

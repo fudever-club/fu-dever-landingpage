@@ -122,7 +122,7 @@ export default function LeaderboardModule({
 
             <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight uppercase">
               BẢNG XẾP HẠNG{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#0066CC] via-[#0080FF] to-cyan-500">
+              <span className="text-[#0066CC] dark:text-[#0080FF]">
                 LEETCODE
               </span>
             </h1>

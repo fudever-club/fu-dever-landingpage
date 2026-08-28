@@ -194,7 +194,7 @@ export default function DeverBlogPreview() {
                         className={`h-9 px-3 rounded-xl border flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${
                           isLiked
                             ? "bg-rose-50 border-rose-300 text-rose-600 shadow-xs"
-                            : "bg-slate-50 border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-rose-50"
+                            : "bg-slate-50 border-slate-200 text-slate-600 hover:text-rose-600 hover:bg-slate-100"
                         }`}
                       >
                         <Heart className={`w-3.5 h-3.5 ${isLiked ? "fill-rose-600" : ""}`} />

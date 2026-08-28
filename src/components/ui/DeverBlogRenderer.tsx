@@ -401,7 +401,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
         output.push(
           <blockquote
             key={index}
-            className="border-l-4 border-[#0066CC] pl-4 py-2.5 my-4 text-slate-700 italic bg-blue-50/40 rounded-r-2xl text-[15px] sm:text-base font-medium font-sans leading-relaxed"
+            className="border border-slate-200 bg-slate-50/80 px-4 py-3 my-4 text-slate-800 italic rounded-2xl text-[15px] sm:text-base font-medium font-sans leading-relaxed shadow-2xs"
           >
             {line.slice(2)}
           </blockquote>
@@ -587,7 +587,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             </div>
 
             {/* Excerpt Lead */}
-            <p className="text-[15px] sm:text-base font-semibold leading-relaxed text-slate-700 bg-blue-50/60 p-4 lg:p-5 rounded-2xl border-l-4 border-[#0066CC] mb-8 font-sans">
+            <p className="text-[15px] sm:text-base font-semibold leading-relaxed text-slate-800 bg-slate-50 border border-slate-200/80 p-4 lg:p-5 rounded-2xl mb-8 font-sans shadow-2xs">
               {post.excerpt}
             </p>
 

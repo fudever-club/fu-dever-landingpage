@@ -205,7 +205,7 @@ export default async function HallOfFamePage() {
                       <Zap className="h-3.5 w-3.5" /> {podium.second.exp} EXP
                     </div>
                   </div>
-                  <div className="h-40 w-full rounded-t-3xl border-t-4 border-slate-300 bg-gradient-to-b from-slate-100 to-slate-200/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
+                  <div className="h-40 w-full rounded-t-3xl border border-slate-300/80 bg-gradient-to-b from-slate-100 to-slate-200/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
                     <Medal className="h-8 w-8 text-slate-400 mb-1" />
                     <span className="text-sm font-extrabold text-slate-700">Á QUÂN</span>
                     <span className="text-xs text-slate-500">Level {podium.second.level}</span>
@@ -216,7 +216,7 @@ export default async function HallOfFamePage() {
               {/* Rank 1 (Gold - Elevated) */}
               <div className="order-1 md:order-2 flex flex-col items-center">
                 <div className="relative mb-4 flex flex-col items-center">
-                  <Crown className="h-10 w-10 text-amber-500 mb-1 animate-bounce" />
+                  <Crown className="h-10 w-10 text-amber-500 mb-1 animate-pulse drop-shadow-sm" />
                   <div className="relative">
                     <img
                       src={podium.first.avatar || "/icons/layout/logo.png"}
@@ -235,7 +235,7 @@ export default async function HallOfFamePage() {
                     <Zap className="h-4 w-4 fill-amber-500 text-amber-500" /> {podium.first.exp} EXP
                   </div>
                 </div>
-                <div className="h-52 w-full rounded-t-3xl border-t-4 border-amber-400 bg-gradient-to-b from-amber-100 via-amber-50 to-white p-4 text-center shadow-xl flex flex-col justify-center items-center">
+                <div className="h-52 w-full rounded-t-3xl border border-amber-400/80 bg-gradient-to-b from-amber-100 via-amber-50 to-white p-4 text-center shadow-xl flex flex-col justify-center items-center">
                   <Trophy className="h-10 w-10 text-amber-500 mb-1" />
                   <span className="text-base font-black text-amber-700">QUÁN QUÂN</span>
                   <span className="text-xs font-semibold text-amber-600">Level {podium.first.level}</span>
@@ -265,7 +265,7 @@ export default async function HallOfFamePage() {
                       <Zap className="h-3.5 w-3.5" /> {podium.third.exp} EXP
                     </div>
                   </div>
-                  <div className="h-32 w-full rounded-t-3xl border-t-4 border-amber-700/50 bg-gradient-to-b from-amber-50 to-orange-100/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
+                  <div className="h-32 w-full rounded-t-3xl border border-amber-700/40 bg-gradient-to-b from-amber-50 to-orange-100/50 p-4 text-center shadow-md flex flex-col justify-center items-center">
                     <Shield className="h-7 w-7 text-amber-800 mb-1" />
                     <span className="text-sm font-extrabold text-amber-900">QUÝ QUÂN</span>
                     <span className="text-xs text-slate-500">Level {podium.third.level}</span>

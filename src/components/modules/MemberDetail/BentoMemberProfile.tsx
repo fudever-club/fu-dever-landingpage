@@ -431,12 +431,12 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
               </div>
 
-              {/* Bouncing Cyan/Blue Soundwave */}
+              {/* Cyan/Blue Soundwave */}
               <div className="flex items-end gap-1 h-3.5">
                 <span className={`w-0.5 bg-cyan-400 rounded-full transition-all ${isPlaying ? "h-3.5 animate-pulse" : "h-1"}`} />
-                <span className={`w-0.5 bg-[#0080FF] rounded-full transition-all ${isPlaying ? "h-2.5 animate-bounce" : "h-1"}`} />
+                <span className={`w-0.5 bg-[#0080FF] rounded-full transition-all ${isPlaying ? "h-2.5 animate-pulse" : "h-1"}`} />
                 <span className={`w-0.5 bg-cyan-300 rounded-full transition-all ${isPlaying ? "h-3 animate-pulse" : "h-1"}`} />
-                <span className={`w-0.5 bg-[#0066CC] rounded-full transition-all ${isPlaying ? "h-1.5 animate-bounce" : "h-1"}`} />
+                <span className={`w-0.5 bg-[#0066CC] rounded-full transition-all ${isPlaying ? "h-1.5 animate-pulse" : "h-1"}`} />
               </div>
             </div>
 
@@ -590,7 +590,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
           <div className="tile md:col-span-1 bg-gradient-to-br from-rose-50 via-orange-50/70 to-amber-50 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] border border-rose-200/80 hover:border-rose-400 transition-all duration-200">
             <div className="flex items-center justify-between">
               <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold font-mono text-rose-900 flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-bounce" /> 28D STREAK
+                <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" /> 28D STREAK
               </span>
               <div className="inline-flex items-center gap-1 bg-rose-200/60 text-rose-950 rounded-full px-2 py-0.5 text-[10.5px] font-bold border border-rose-300/60">
                 <TrendingUp className="w-3 h-3 text-rose-700" />

@@ -637,7 +637,7 @@ export default function ResourcesPage() {
                 </div>
               </div>
 
-              <div className="bg-blue-50/70 p-3.5 rounded-xl text-xs text-slate-800 font-semibold border border-blue-200 flex items-start gap-2">
+              <div className="bg-slate-50 p-3.5 rounded-xl text-xs text-slate-800 font-semibold border border-slate-200 flex items-start gap-2">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
                 <span>{actionInfo.storageNote}</span>
               </div>
