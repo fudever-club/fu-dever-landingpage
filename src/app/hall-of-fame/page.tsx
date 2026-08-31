@@ -287,7 +287,7 @@ export default async function HallOfFamePage() {
               </p>
             </div>
             <Link
-              href="https://dever-client-taupe.vercel.app/vi/dashboard"
+              href={`${process.env.NEXT_PUBLIC_CLIENT_URL || "https://dever-client-sigma.vercel.app"}/vi/dashboard`}
               target="_blank"
               className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-4 py-2 text-sm font-semibold text-white shadow hover:bg-[#004C99] transition-all active:scale-[0.98]"
             >

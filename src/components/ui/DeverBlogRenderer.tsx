@@ -696,7 +696,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
                 Đăng nhập Cổng Thành Viên (Client Portal) để sử dụng trình soạn thảo DEVER Studio Writer và chia sẻ kiến thức cùng CLB.
               </p>
               <a
-                href="http://localhost:3002/vi/create-blog"
+                href={`${process.env.NEXT_PUBLIC_CLIENT_URL || "https://dever-client-sigma.vercel.app"}/vi/create-blog`}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center gap-1.5 text-xs font-bold bg-white text-[#0066CC] px-4 py-2.5 rounded-xl hover:bg-blue-50 transition-all shadow-md mt-2 font-sans"
