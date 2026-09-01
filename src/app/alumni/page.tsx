@@ -44,6 +44,8 @@ const GEN_OPTIONS = [
   "Gen 4",
   "Gen 5",
   "Gen 6",
+  "Gen 7",
+  "Gen 8",
 ];
 
 const COMPANY_OPTIONS = [
