@@ -17,6 +17,7 @@ import {
   AlertTriangle,
   ArrowRight,
   ShieldCheck,
+  Crown,
 } from "lucide-react";
 
 interface Alumnus {
@@ -30,6 +31,8 @@ interface Alumnus {
   avatar?: string;
   profileUrl?: string;
   isMentor?: boolean;
+  isAdvisoryBoard?: boolean;
+  mentoringTopics?: string[];
   isPublished?: boolean;
 }
 
@@ -352,13 +355,30 @@ export default function AlumniPage() {
                     </div>
                   )}
 
-                  {/* Mentoring Status Badge */}
-                  <div className="flex items-center justify-between text-xs pt-1">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  {/* Mentoring Status & Advisory Badges */}
+                  <div className="flex flex-wrap items-center gap-2 text-xs pt-1">
+                    {item.isAdvisoryBoard && (
+                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
+                        <Crown className="w-3 h-3 text-amber-600" />
+                        Ban Cố Vấn CLB
+                      </span>
+                    )}
+                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                       Sẵn sàng Mentoring OJT
                     </span>
                   </div>
+
+                  {/* Mentoring Topics */}
+                  {item.mentoringTopics && item.mentoringTopics.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {item.mentoringTopics.map((topic, tidx) => (
+                        <span key={tidx} className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
+                          #{topic}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Connect Action Button */}
