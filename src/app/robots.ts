@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: "",
     },
-    sitemap: "https://www.fu-dever.com/sitemap.xml",
+    sitemap: "https://fudever.com/sitemap.xml",
   };
 }

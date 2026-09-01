@@ -34,29 +34,31 @@ function Activities({ data, albums }: any) {
     <>
       <section className="w-full h-full flex flex-col justify-center items-center bg-[#F8FCFF]">
         <div className="max-w-[1440px] w-full h-full  flex flex-col justify-center items-center">
-          <div className=" flex flex-col w-full xl:px-[80px] md:px-[40px] sm:px-[20px] md:py-[60px] sm:py-[40px]">
+          <div className="flex flex-col w-full px-5 md:px-10 xl:px-20 py-10 md:py-16">
             <SectionTitle
               title="HỌC THUẬT"
-              subtitle="Chia sẽ kiến thức, cạnh tranh lành mạnh"
+              subtitle="Chia sẻ kiến thức, cạnh tranh lành mạnh"
               textPosition="left"
             ></SectionTitle>
-            <div className="flex flex-col mt-[20px] md:flex-row md:gap-0 sm:gap-[30px] justify-between w-full ">
+            <div className="flex flex-col mt-6 md:flex-row gap-6 md:gap-8 justify-between w-full">
               {academicActivities.map((activity, i) => (
                 <div
                   key={i}
-                  className="flex xl:w-[calc((100%-80px)/3)] md:w-[calc((100%-40px)/3)] w-full flex-col items-center gap-4"
+                  className="flex flex-1 flex-col items-center gap-4 bg-white p-6 rounded-3xl border border-blue-100 shadow-sm hover:shadow-md transition-all"
                 >
-                  <Image
-                    loading="lazy"
-                    src={activity.img}
-                    alt={activity.alt}
-                    className=" object-cover xl:w-[400px] xl:h-[320px] lg:w-[283px] lg:h-[252px] md:w-[200px]  md:h-[178px] sm:w-full sm:h-[270px]"
-                  ></Image>
-                  <div className="flex flex-col items-center max-w-[310px] w-full">
-                    <p className="lg:text-[40px] text-[#0065A9] font-bold lg:leading-[48px] md:text-[24px] md:leading-[29px] sm:leading-[48px] sm:text-[40px] mb-2">
+                  <div className="overflow-hidden rounded-2xl w-full h-48 sm:h-56 md:h-44 lg:h-56 xl:h-64">
+                    <Image
+                      loading="lazy"
+                      src={activity.img}
+                      alt={activity.alt}
+                      className="object-cover w-full h-full hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="flex flex-col items-center max-w-[310px] w-full text-center">
+                    <p className="text-2xl md:text-3xl font-extrabold text-[#0066CC] mb-2 tracking-tight">
                       {activity.title}
                     </p>
-                    <p className="leading-[19px] lg:max-w-[310px] md:max-w-[188px] sm:w-full text-[16px] font-light text-center">
+                    <p className="text-sm font-medium text-slate-600 leading-relaxed">
                       {activity.desc}
                     </p>
                   </div>

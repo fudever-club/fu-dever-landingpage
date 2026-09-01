@@ -171,6 +171,17 @@ export default function EventsPage() {
     fetchEvents();
   }, [API_SERVER]);
 
+  useEffect(() => {
+    if (!selectedRegisterEvent) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setSelectedRegisterEvent(null);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedRegisterEvent]);
+
   const filterTabs = [
     {
       key: "all",
@@ -361,7 +372,12 @@ export default function EventsPage() {
 
       {/* Modal: Register via Google Form with Sanitized Safe URL */}
       {selectedRegisterEvent && (
-        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="event-modal-title"
+          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+        >
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 lg:p-8 shadow-2xl space-y-5">
             <div className="flex justify-between items-start">
               <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
@@ -370,15 +386,15 @@ export default function EventsPage() {
               <button
                 type="button"
                 onClick={() => setSelectedRegisterEvent(null)}
-                aria-label="Đóng hộp thoại đăng ký"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800"
+                aria-label="Đóng hộp thoại đăng ký (Phím ESC)"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
 
             <div>
-              <h3 className="text-xl font-extrabold text-gray-950 mb-2">
+              <h3 id="event-modal-title" className="text-xl font-extrabold text-gray-950 mb-2">
                 {selectedRegisterEvent.title}
               </h3>
               <p className="text-xs text-gray-700 leading-relaxed font-medium">

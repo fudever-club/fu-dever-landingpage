@@ -316,7 +316,7 @@ function Header() {
           </button>
 
           <a
-            href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
+            href={process.env.NEXT_PUBLIC_CLIENT_URL || "https://client.fudever.com"}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden lg:inline-flex items-center gap-1.5 bg-blue-50 text-[#0066CC] hover:bg-blue-100 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-blue-200"
@@ -325,7 +325,7 @@ function Header() {
           </a>
 
           <a
-            href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
+            href={process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.fudever.com"}
             target="_blank"
             rel="noopener noreferrer"
             className="hidden xl:inline-flex items-center gap-1.5 bg-gray-100 text-gray-700 hover:bg-gray-200 font-semibold text-xs px-3.5 py-2 rounded-full transition-all border border-gray-200"
@@ -429,7 +429,7 @@ function Header() {
                 {/* Mobile Ecosystem Links */}
                 <div className="pt-3 mt-1 border-t border-slate-100 flex flex-col gap-2">
                   <a
-                    href={process.env.NEXT_PUBLIC_CLIENT_URL || "http://localhost:3002"}
+                    href={process.env.NEXT_PUBLIC_CLIENT_URL || "https://client.fudever.com"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-blue-50 text-[#0066CC] font-bold text-xs border border-blue-200 transition-colors"
@@ -437,7 +437,7 @@ function Header() {
                     <UserRound className="h-4 w-4" aria-hidden="true" /> Cổng Thành Viên (Member Portal)
                   </a>
                   <a
-                    href={process.env.NEXT_PUBLIC_ADMIN_URL || "http://localhost:3003"}
+                    href={process.env.NEXT_PUBLIC_ADMIN_URL || "https://admin.fudever.com"}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex w-full items-center justify-center gap-2 p-2.5 rounded-xl bg-slate-100 text-slate-700 font-bold text-xs border border-slate-200 transition-colors"

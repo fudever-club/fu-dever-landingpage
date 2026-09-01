@@ -17,9 +17,10 @@ const deverMono = JetBrains_Mono({
   display: "swap",
 });
 export const metadata: Metadata = {
-  title: "FU-DEVER",
+  metadataBase: new URL("https://fudever.com"),
+  title: "FU-DEVER | Câu lạc bộ lập trình FPT University Đà Nẵng",
   description:
-    "Welcome to FU-DEVER, the programming club of FPT University! . At FU-DEVER, we strive to foster a vibrant community of aspiring programmers and provide a platform for skill development and collaboration.",
+    "Chào mừng bạn đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT Đà Nẵng! Môi trường học thuật thực chiến, thi đấu giải thuật và phát triển dự án công nghệ.",
   icons: {
     icon: "/icons/layout/logo.png",
   },
@@ -27,7 +28,7 @@ export const metadata: Metadata = {
     images: ["/images/meta.jpg"],
     title: "FU-DEVER | Câu lạc bộ lập trình FU-DEVER",
     description:
-      "Welcome to FU-DEVER, the programming club of FPT University! . At FU-DEVER, we strive to foster a vibrant community of aspiring programmers and provide a platform for skill development and collaboration.",
+      "Chào mừng bạn đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT Đà Nẵng! Môi trường học thuật thực chiến, thi đấu giải thuật và phát triển dự án công nghệ.",
   },
 };
 
