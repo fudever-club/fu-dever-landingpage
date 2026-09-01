@@ -111,49 +111,9 @@ async function fetchHallOfFame(): Promise<{
     } catch {}
   }
 
-  // Fallback data
-  const fallbackLeaders: LeaderMember[] = [
-    {
-      _id: "1",
-      name: "Lê Đức Anh Phương",
-      avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
-      exp: 1450,
-      level: 4,
-      title: "Code Pathfinder",
-      streakDays: 28,
-      badgeCount: 5,
-      position: "Chủ Nhiệm",
-      department: "Ban Chuyên Môn",
-    },
-    {
-      _id: "2",
-      name: "Trần Văn Bảo Thắng",
-      avatar: "https://lh3.googleusercontent.com/d/1",
-      exp: 1120,
-      level: 3,
-      title: "Code Pathfinder",
-      streakDays: 19,
-      badgeCount: 4,
-      position: "Phó Chủ Nhiệm",
-      department: "Ban Kỹ Thuật",
-    },
-    {
-      _id: "3",
-      name: "Nguyễn Nhật Quang",
-      avatar: "https://lh3.googleusercontent.com/d/2",
-      exp: 980,
-      level: 3,
-      title: "Code Pathfinder",
-      streakDays: 14,
-      badgeCount: 3,
-      position: "Trưởng Ban Kỹ Thuật",
-      department: "Ban Kỹ Thuật",
-    },
-  ];
-
   return {
-    podium: { first: fallbackLeaders[0], second: fallbackLeaders[1], third: fallbackLeaders[2] },
-    data: fallbackLeaders,
+    podium: { first: null, second: null, third: null },
+    data: [],
   };
 }
 
@@ -308,7 +268,14 @@ export default async function HallOfFamePage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-sm whitespace-nowrap">
-                {leaders.map((member, idx) => (
+                {leaders.length === 0 ? (
+                  <tr>
+                    <td colSpan={6} className="py-12 text-center text-slate-500 text-sm">
+                      Dữ liệu Bảng Vàng đang được đồng bộ hóa từ Cổng Thành Viên. Hãy đăng nhập để tích lũy EXP và vinh danh tại đây!
+                    </td>
+                  </tr>
+                ) : (
+                  leaders.map((member, idx) => (
                   <tr
                     key={member._id || idx}
                     className="hover:bg-blue-50/40 transition-colors group"
@@ -369,7 +336,8 @@ export default async function HallOfFamePage() {
                       </span>
                     </td>
                   </tr>
-                ))}
+                  ))
+                )}
               </tbody>
             </table>
           </div>

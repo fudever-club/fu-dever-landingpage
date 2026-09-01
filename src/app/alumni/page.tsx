@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import {
   Award,
   Building2,
@@ -8,14 +9,14 @@ import {
   ExternalLink,
   GraduationCap,
   Globe,
-  UserCheck,
   MessageSquareQuote,
   Search,
   Sparkles,
-  Users,
   FolderOpen,
   RefreshCw,
   AlertTriangle,
+  ArrowRight,
+  ShieldCheck,
 } from "lucide-react";
 
 interface Alumnus {
@@ -51,83 +52,8 @@ const COMPANY_OPTIONS = [
   "SmartDev",
 ];
 
-const CURATED_ALUMNI: Alumnus[] = [
-  {
-    _id: "alumni-gen1-1",
-    name: "Trần Minh Quang",
-    graduationGen: "Gen 1",
-    headline: "Tech Lead & Software Architect",
-    workplace: "Axon Active",
-    quote: "DEVER là nơi mình học cách tư duy kiến trúc hệ thống và giải quyết bài toán phức tạp trước khi bước ra môi trường quốc tế.",
-    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-  {
-    _id: "alumni-gen2-1",
-    name: "Nguyễn Hải Đăng",
-    graduationGen: "Gen 2",
-    headline: "Senior Backend Engineer",
-    workplace: "FPT Software",
-    quote: "Luyện tập giải thuật và làm dự án thực chiến tại DEVER là bệ phóng giúp mình vượt qua mọi vòng phỏng vấn OJT.",
-    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-  {
-    _id: "alumni-gen3-1",
-    name: "Lê Thị Thu Thảo",
-    graduationGen: "Gen 3",
-    headline: "Product Designer & Frontend Specialist",
-    workplace: "VNG Corp",
-    quote: "Portfolio làm cùng đội ngũ DEVER từ năm 2 đã giúp mình nhận offer chính thức ngay trong kỳ thực tập.",
-    avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-  {
-    _id: "alumni-gen4-1",
-    name: "Phạm Đức Huy",
-    graduationGen: "Gen 4",
-    headline: "Fullstack Cloud Engineer",
-    workplace: "KMS Technology",
-    quote: "Môi trường chia sẻ tri thức tại DEVER tạo nên tinh thần kỷ luật và sự kiên trì theo đuổi nghề lập trình.",
-    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-  {
-    _id: "alumni-gen5-1",
-    name: "Võ Hoàng Nam",
-    graduationGen: "Gen 5",
-    headline: "AI & Data Intelligence Engineer",
-    workplace: "SmartDev",
-    quote: "Chủ động xây dựng sản phẩm từ sớm tại Project Lab của CLB là lợi thế cạnh tranh lớn nhất khi xin việc.",
-    avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-  {
-    _id: "alumni-gen6-1",
-    name: "Đặng Quốc Bảo",
-    graduationGen: "Gen 6",
-    headline: "Software Engineer",
-    workplace: "FPT Software",
-    quote: "Học hỏi từ các anh chị Mentor đi trước đã giúp mình định hình lộ trình sự nghiệp vững chắc.",
-    avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=400&q=80",
-    profileUrl: "https://linkedin.com",
-    isMentor: true,
-    isPublished: true,
-  },
-];
-
 export default function AlumniPage() {
-  const [alumniList, setAlumniList] = useState<Alumnus[]>(CURATED_ALUMNI);
+  const [alumniList, setAlumniList] = useState<Alumnus[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [selectedGen, setSelectedGen] = useState<string>("Tất Cả Thế Hệ");
@@ -139,21 +65,20 @@ export default function AlumniPage() {
     setIsError(false);
     try {
       const apiUrl = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-      const res = await fetch(`${apiUrl}/api/v1/alumni`);
+      const res = await fetch(`${apiUrl}/api/v1/alumni`, {
+        cache: "no-store",
+      });
       if (res.ok) {
         const json = await res.json();
         const serverData = Array.isArray(json) ? json : json?.data || [];
-        if (serverData.length > 0) {
-          setAlumniList(serverData);
-        } else {
-          setAlumniList(CURATED_ALUMNI);
-        }
+        setAlumniList(serverData);
       } else {
-        setAlumniList(CURATED_ALUMNI);
+        setAlumniList([]);
       }
     } catch (err) {
-      console.warn("Backend API unavailable, using curated fallback alumni:", err);
-      setAlumniList(CURATED_ALUMNI);
+      console.warn("Backend API unavailable:", err);
+      setIsError(true);
+      setAlumniList([]);
     } finally {
       setIsLoading(false);
     }
@@ -192,7 +117,7 @@ export default function AlumniPage() {
             <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
               <Award className="h-4 w-4 text-amber-300" aria-hidden="true" />
               <span className="text-xs font-black tracking-wider uppercase text-blue-50">
-                FU-DEVER HALL OF FAME &amp; ALUMNI NETWORK
+                FU-DEVER ALUMNI NETWORK
               </span>
             </div>
 
@@ -215,7 +140,7 @@ export default function AlumniPage() {
                 <CheckCircle2 className="h-3.5 w-3.5 text-cyan-300" /> Thế Hệ Gen 1 - Gen 6
               </span>
               <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> 100% Sẵn Sàng Mentoring
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Sẵn Sàng Mentoring
               </span>
             </div>
           </div>
@@ -320,14 +245,53 @@ export default function AlumniPage() {
           </div>
         )}
 
-        {/* EMPTY STATE */}
-        {!isLoading && !isError && filteredAlumni.length === 0 && (
+        {/* HONEST EMPTY STATE: NO DATA IN DB */}
+        {!isLoading && !isError && alumniList.length === 0 && (
+          <div className="relative rounded-3xl bg-gradient-to-b from-white to-blue-50/50 border border-blue-100 p-12 text-center max-w-2xl mx-auto shadow-sm space-y-6">
+            <div className="w-20 h-20 rounded-3xl bg-blue-50 text-[#0066CC] border border-blue-200/80 flex items-center justify-center mx-auto shadow-inner">
+              <GraduationCap className="w-10 h-10" />
+            </div>
+
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/70 text-[#0066CC] text-xs font-bold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Dữ Liệu Đang Được Cập Nhật</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+                Danh Sách Cựu Thành Viên Đang Cập Nhật
+              </h3>
+              <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto font-medium">
+                Ban Chủ Nhiệm đang trong quá trình tổng hợp và xác thực hồ sơ chính thức của các thế hệ Cựu thành viên FU-DEVER (Gen 1 – Gen 6).
+              </p>
+            </div>
+
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+              <Link
+                href="/activity"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold shadow-md transition-all active:scale-[0.98]"
+              >
+                <span>Khám Phá Hoạt Động CLB</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href="/hall-of-fame"
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 shadow-sm transition-all active:scale-[0.98]"
+              >
+                <Award className="w-3.5 h-3.5 text-[#0066CC]" />
+                <span>Bảng Vàng Hall of Fame</span>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* FILTER EMPTY STATE */}
+        {!isLoading && !isError && alumniList.length > 0 && filteredAlumni.length === 0 && (
           <div className="p-12 rounded-3xl bg-white border border-dashed border-slate-300 text-center space-y-3 my-8 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
               <FolderOpen className="w-6 h-6" />
             </div>
             <h3 className="text-base font-bold text-slate-800">
-              Không tìm thấy cựu thành viên phù hợp
+              Không tìm thấy cựu thành viên phù hợp với bộ lọc
             </h3>
             <p className="text-xs text-slate-500 max-w-md mx-auto font-medium">
               Hãy thử chọn lại bộ lọc Thế hệ hoặc Doanh nghiệp để xem danh sách cựu thành viên.
