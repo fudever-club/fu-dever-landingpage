@@ -67,7 +67,7 @@ const API_SERVER =
   "http://localhost:5000";
 
 export default function MemberShowcase() {
-  const [projects, setProjects] = useState<OpenSourceProject[]>(FALLBACK_PROJECTS);
+  const [projects, setProjects] = useState<OpenSourceProject[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
@@ -76,12 +76,13 @@ export default function MemberShowcase() {
         const res = await fetch(`${API_SERVER}/api/v1/opensource-projects`);
         if (res.ok) {
           const json = await res.json();
-          if (Array.isArray(json.data) && json.data.length > 0) {
-            setProjects(json.data);
-          }
+          const serverData = Array.isArray(json) ? json : json?.data || [];
+          setProjects(serverData);
+        } else {
+          setProjects([]);
         }
       } catch (err) {
-        // Fallback to static data
+        setProjects([]);
       } finally {
         setLoading(false);
       }

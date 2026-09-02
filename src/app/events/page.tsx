@@ -148,7 +148,8 @@ function renderEventStatusBadge(status: string) {
 }
 
 export default function EventsPage() {
-  const [events, setEvents] = useState<EventItem[]>(FALLBACK_EVENTS);
+  const [events, setEvents] = useState<EventItem[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
@@ -159,13 +160,20 @@ export default function EventsPage() {
   useEffect(() => {
     async function fetchEvents() {
       try {
+        setIsLoading(true);
         const res = await fetch(`${API_SERVER}/api/v1/events`);
-        const json = await res.json();
-        if (json.data && Array.isArray(json.data) && json.data.length > 0) {
-          setEvents(json.data);
+        if (res.ok) {
+          const json = await res.json();
+          const serverData = Array.isArray(json) ? json : json?.data || [];
+          setEvents(serverData);
+        } else {
+          setEvents([]);
         }
       } catch (err) {
-        console.warn("Backend API unavailable, using fallback events:", err);
+        console.warn("Backend API unavailable:", err);
+        setEvents([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchEvents();
@@ -295,9 +303,33 @@ export default function EventsPage() {
           </div>
 
           {/* Events Grid / List */}
-          {filteredEvents.length === 0 ? (
+          {isLoading ? (
+            <div className="space-y-6">
+              {[1, 2].map((i) => (
+                <div key={i} className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-pulse">
+                  <div className="lg:col-span-4 h-48 rounded-xl bg-slate-200" />
+                  <div className="lg:col-span-8 space-y-3">
+                    <div className="h-6 bg-slate-200 rounded w-3/4" />
+                    <div className="h-4 bg-slate-200 rounded w-full" />
+                    <div className="h-4 bg-slate-200 rounded w-5/6" />
+                    <div className="h-10 bg-slate-100 rounded-xl w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : events.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 shadow-xs">
+              <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0066CC] flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-xs">
+                <CalendarDays className="w-8 h-8" />
+              </div>
+              <h3 className="text-lg font-black text-slate-900 mb-1.5">Chưa Có Sự Kiện Hoặc Workshop Nào</h3>
+              <p className="text-xs text-slate-500 max-w-md mx-auto font-medium leading-relaxed">
+                Các sự kiện học thuật, workshop chuyên đề và giải đấu mới sẽ sớm được Ban Chủ Nhiệm cập nhật tại đây. Hãy theo dõi thường xuyên nhé!
+              </p>
+            </div>
+          ) : filteredEvents.length === 0 ? (
             <div className="text-center py-12 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-              <CalendarDays className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+              <Search className="w-10 h-10 text-slate-400 mx-auto mb-3" />
               <p className="text-sm font-bold text-slate-700">Không tìm thấy sự kiện nào phù hợp</p>
               <p className="text-xs text-slate-500 mt-1">Vui lòng chọn bộ lọc khác hoặc nhập từ khóa tìm kiếm</p>
             </div>

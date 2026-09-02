@@ -138,17 +138,13 @@ export default function ResourcesPage() {
       if (res.ok) {
         const json = await res.json();
         const serverData = Array.isArray(json) ? json : json?.data || [];
-        if (serverData.length > 0) {
-          setResources(serverData);
-        } else {
-          setResources(CURATED_RESOURCES);
-        }
+        setResources(serverData);
       } else {
-        setResources(CURATED_RESOURCES);
+        setResources([]);
       }
     } catch (err) {
-      console.warn("Backend API unavailable, using curated fallback resources:", err);
-      setResources(CURATED_RESOURCES);
+      console.warn("Backend API unavailable:", err);
+      setResources([]);
     } finally {
       setIsLoading(false);
     }

@@ -119,7 +119,8 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
 }
 
 export default function BlogPage() {
-  const [blogs, setBlogs] = useState<BlogPost[]>(FALLBACK_BLOGS);
+  const [blogs, setBlogs] = useState<BlogPost[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadError, setLoadError] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [searchQuery, setSearchQuery] = useState("");
@@ -128,13 +129,20 @@ export default function BlogPage() {
   useEffect(() => {
     async function fetchBlogs() {
       try {
+        setIsLoading(true);
         const res = await fetch(`${API_SERVER}/api/v1/blogs`);
-        const json = await res.json();
-        if (Array.isArray(json.data) && json.data.length > 0) {
-          setBlogs(json.data);
+        if (res.ok) {
+          const json = await res.json();
+          const serverData = Array.isArray(json) ? json : json?.data || [];
+          setBlogs(serverData);
+        } else {
+          setBlogs([]);
         }
       } catch (err) {
-        // use fallback blogs cleanly
+        console.warn("Backend API unavailable:", err);
+        setBlogs([]);
+      } finally {
+        setIsLoading(false);
       }
     }
     fetchBlogs();
@@ -210,7 +218,7 @@ export default function BlogPage() {
         </section>
 
         {/* 1. Interactive GlowingEdgeCard Blog Spotlight Section */}
-        {selectedCategory === "Tất cả" && !searchQuery && (
+        {blogs.length > 0 && selectedCategory === "Tất cả" && !searchQuery && (
           <DeverBlogPreview />
         )}
 
@@ -237,78 +245,99 @@ export default function BlogPage() {
 
       {/* Articles Grid */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredPosts.map((post, idx) => {
-            const pId = post._id || post.id || idx;
-            const slugTarget = post.slug || post._id || String(post.id);
-            return (
-              <article
-                key={pId}
-                className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
-              >
-                <div>
-                  <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={post.coverImage || DEFAULT_BLOG_COVER}
-                      alt={post.title}
-                      onError={(e) => {
-                        e.currentTarget.src = DEFAULT_BLOG_COVER;
-                      }}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
-                    <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-[11px] px-3 py-1 rounded-full shadow-md border border-blue-100">
-                      {post.category}
-                    </span>
-                  </Link>
-
-                  {/* Content */}
-                  <div className="p-6">
-                    <Link
-                      href={`/blog/${encodeURIComponent(slugTarget)}`}
-                      className="block text-lg font-extrabold text-gray-950 mb-3 leading-snug group-hover:text-[#0066CC] transition-colors line-clamp-2"
-                    >
-                      {post.title}
-                    </Link>
-                    <p className="text-gray-700 text-xs leading-relaxed mb-4 line-clamp-3 font-medium">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Author & Footer */}
-                <div className="flex flex-col items-start gap-3 border-t border-gray-200 px-6 pb-6 pt-3 sm:flex-row sm:items-center sm:justify-between">
-                  <div className="flex items-center gap-2.5">
-                    <AuthorBadge author={post.author} />
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <span className="flex items-center gap-1 text-[11px] text-gray-600 font-semibold"><Clock3 className="h-3.5 w-3.5" />{post.readTime || "5 phút"}</span>
-                    <button
-                      type="button"
-                      onClick={(e) => handleLike(post, e)}
-                      aria-pressed={Boolean(likedPosts[post._id || post.id || ""])}
-                      aria-label={`Yêu thích ${post.title}`}
-                      className={`text-xs font-extrabold p-2 rounded-full transition-all ${
-                        likedPosts[post._id || post.id || ""]
-                          ? "bg-rose-100 text-rose-800"
-                          : "text-slate-600 hover:text-rose-700 hover:bg-slate-100"
-                      }`}
-                    >
-                      <Heart className={`h-3.5 w-3.5 ${likedPosts[post._id || post.id || ""] ? "fill-current" : ""}`} /> {post.likes}
-                    </button>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
-
-        {filteredPosts.length === 0 && (
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-sm p-6 space-y-4 animate-pulse">
+                <div className="h-48 bg-slate-200 rounded-xl" />
+                <div className="h-6 bg-slate-200 rounded w-3/4" />
+                <div className="h-4 bg-slate-200 rounded w-full" />
+                <div className="h-4 bg-slate-200 rounded w-2/3" />
+              </div>
+            ))}
+          </div>
+        ) : blogs.length === 0 ? (
+          <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">
+            <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0066CC] flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-xs">
+              <BookOpen className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-black text-gray-900 mb-1.5">Chưa Có Bài Viết Công Nghệ Nào</h3>
+            <p className="text-gray-600 text-xs mt-1 font-medium max-w-md mx-auto leading-relaxed">
+              Các bài viết chuyên sâu về thuật toán, kiến trúc hệ thống và cẩm nang công nghệ từ Ban Chuyên Môn sẽ được xuất bản tại đây.
+            </p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">
             <SearchX className="mx-auto mb-4 h-10 w-10 text-[#0066CC]" strokeWidth={1.6} aria-hidden="true" />
             <h3 className="text-xl font-extrabold text-gray-900">Không tìm thấy bài viết phù hợp</h3>
             <p className="text-gray-600 text-sm mt-1 font-medium">Hãy thử tìm kiếm với từ khóa khác hoặc chuyển danh mục.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredPosts.map((post, idx) => {
+              const pId = post._id || post.id || idx;
+              const slugTarget = post.slug || post._id || String(post.id);
+              return (
+                <article
+                  key={pId}
+                  className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 flex flex-col justify-between group hover:-translate-y-1.5"
+                >
+                  <div>
+                    <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={post.coverImage || DEFAULT_BLOG_COVER}
+                        alt={post.title}
+                        onError={(e) => {
+                          e.currentTarget.src = DEFAULT_BLOG_COVER;
+                        }}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                      />
+                      <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-[11px] px-3 py-1 rounded-full shadow-md border border-blue-100">
+                        {post.category}
+                      </span>
+                    </Link>
+
+                    {/* Content */}
+                    <div className="p-6">
+                      <Link
+                        href={`/blog/${encodeURIComponent(slugTarget)}`}
+                        className="block text-lg font-extrabold text-gray-950 mb-3 leading-snug group-hover:text-[#0066CC] transition-colors line-clamp-2"
+                      >
+                        {post.title}
+                      </Link>
+                      <p className="text-gray-700 text-xs leading-relaxed mb-4 line-clamp-3 font-medium">
+                        {post.excerpt}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Author & Footer */}
+                  <div className="flex flex-col items-start gap-3 border-t border-gray-200 px-6 pb-6 pt-3 sm:flex-row sm:items-center sm:justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <AuthorBadge author={post.author} />
+                    </div>
+
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1 text-[11px] text-gray-600 font-semibold"><Clock3 className="h-3.5 w-3.5" />{post.readTime || "5 phút"}</span>
+                      <button
+                        type="button"
+                        onClick={(e) => handleLike(post, e)}
+                        aria-pressed={Boolean(likedPosts[post._id || post.id || ""])}
+                        aria-label={`Yêu thích ${post.title}`}
+                        className={`text-xs font-extrabold p-2 rounded-full transition-all ${
+                          likedPosts[post._id || post.id || ""]
+                            ? "bg-rose-100 text-rose-800"
+                            : "text-slate-600 hover:text-rose-700 hover:bg-slate-100"
+                        }`}
+                      >
+                        <Heart className={`h-3.5 w-3.5 ${likedPosts[post._id || post.id || ""] ? "fill-current" : ""}`} /> {post.likes}
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         )}
       </section>
