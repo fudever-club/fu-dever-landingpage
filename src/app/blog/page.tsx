@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
+import { BookOpen, Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverBlogPreview from "@components/ui/DeverBlogPreview";
 import DeverCircuitBackground from "@components/ui/DeverCircuitBackground";

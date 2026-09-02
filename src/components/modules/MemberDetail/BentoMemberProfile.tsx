@@ -57,35 +57,35 @@ interface TechArticle {
   link: string;
 }
 
-const BADGES = [
-  {
+const BADGE_CATALOG: Record<string, any> = {
+  algorithmic_prodigy: {
     id: "algorithmic_prodigy",
     name: "Algorithmic Prodigy",
     iconName: "Terminal",
     iconColor: "text-amber-600",
     bgColor: "bg-amber-100/80 border-amber-300 text-amber-900",
     badgeLabel: "GIẢI THUẬT ICPC",
-    desc: "Đạt Top 5 Đấu Trường Thuật Toán LeetCode mùa giải Summer 2026.",
+    desc: "Đạt Top Đấu Trường Thuật Toán LeetCode & giải thuật chuyên sâu.",
   },
-  {
+  pro_tech_author: {
     id: "pro_tech_author",
     name: "Pro Tech Author",
     iconName: "BookOpen",
     iconColor: "text-[#0066CC]",
     bgColor: "bg-blue-100/80 border-blue-300 text-[#004C99]",
     badgeLabel: "TÁC GIẢ KỸ THUẬT",
-    desc: "Đã xuất bản hơn 5 bài viết kỹ thuật chuyên sâu trên DEVER Engineering Blog.",
+    desc: "Đã xuất bản bài viết kỹ thuật chuyên sâu trên DEVER Engineering Blog.",
   },
-  {
+  speed_coder: {
     id: "speed_coder",
     name: "Speed Coder",
     iconName: "Zap",
     iconColor: "text-emerald-600",
     bgColor: "bg-emerald-100/80 border-emerald-300 text-emerald-900",
     badgeLabel: "HACKATHON SPEED",
-    desc: "Hoàn thành thử thách lập trình trực tiếp trong thời gian kỷ lục < 3 giờ.",
+    desc: "Hoàn thành thử thách lập trình trực tiếp trong thời gian kỷ lục.",
   },
-  {
+  core_contributor: {
     id: "core_contributor",
     name: "Core Contributor",
     iconName: "Shield",
@@ -94,55 +94,10 @@ const BADGES = [
     badgeLabel: "NÒNG CỐT DỰ ÁN",
     desc: "Thành viên nòng cốt đóng góp các module tính năng cho hệ sinh thái Web DEVER.",
   },
-];
+};
 
-const CONTRIBUTED_PROJECTS: ContributionProject[] = [
-  {
-    title: "FU-DEVER Ecosystem Platform",
-    role: "Lead Fullstack & Architecture",
-    tech: ["Next.js 14", "TypeScript", "Tailwind CSS", "MongoDB"],
-    link: "https://github.com/fu-dever",
-    description: "Nền tảng cổng thông tin số hóa toàn diện kết nối thành viên, quản lý tài nguyên và giải đấu thuật toán.",
-  },
-  {
-    title: "VNPay Gateway Node.js Template",
-    role: "Core Author",
-    tech: ["Express", "TypeScript", "Docker", "Swagger"],
-    link: "https://github.com/fu-dever/vnpay-nodejs-template",
-    description: "Boilerplate tích hợp cổng thanh toán trực tuyến chuẩn hóa phục vụ các đồ án khởi nghiệp sinh viên FPTU.",
-  },
-  {
-    title: "LeetCode Realtime Scraper Engine",
-    role: "Backend Engineer",
-    tech: ["Node.js", "Redis", "Cron", "GraphQL"],
-    link: "https://github.com/fu-dever",
-    description: "Hệ thống đồng bộ dữ liệu thi đấu giải thuật tự động mỗi 30 giây phục vụ bảng xếp hạng CLB.",
-  },
-];
-
-const AUTHORED_ARTICLES: TechArticle[] = [
-  {
-    title: "Tối Ưu Hóa Caching 4 Tầng Trong Next.js 14 App Router",
-    date: "15/08/2026",
-    readTime: "6 phút đọc",
-    category: "Web & Performance",
-    link: "/blog",
-  },
-  {
-    title: "Phân Tích Chi Tiết Thuật Toán Dijkstra và Quy Hoạch Động Trong CSD201",
-    date: "02/08/2026",
-    readTime: "9 phút đọc",
-    category: "Algorithms & ICPC",
-    link: "/blog",
-  },
-  {
-    title: "Xây Dựng Kiến Trúc Microservices Chuẩn Doanh Nghiệp Với Docker & Express",
-    date: "20/07/2026",
-    readTime: "8 phút đọc",
-    category: "Backend & DevOps",
-    link: "/blog",
-  },
-];
+const CONTRIBUTED_PROJECTS: ContributionProject[] = [];
+const AUTHORED_ARTICLES: TechArticle[] = [];
 
 // Royalty-free open-source lofi stream for developer coding
 const DEFAULT_AUDIO_URL = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3";
@@ -151,7 +106,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState("14:22");
   const [selectedDrawer, setSelectedDrawer] = useState<"projects" | "articles" | null>(null);
-  const [selectedBadge, setSelectedBadge] = useState<typeof BADGES[0] | null>(null);
+  const [selectedBadge, setSelectedBadge] = useState<any>(null);
 
   // Audio Player State
   const [isPlaying, setIsPlaying] = useState(false);
@@ -236,15 +191,33 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const genCohort = user?.gen ? `Gen ${user.gen}` : (user?.MSSV ? `K${user.MSSV.slice(2, 4)}` : "DEVER Member");
   const avatarUrl = user?.avatar || "/images/pages/leaderBoard/avatar_default.png";
   const bio = user?.description || `Xin chào! Tôi là ${fullName}, thành viên tích cực tại CLB Lập Trình FU-DEVER. Đam mê xây dựng các sản phẩm web hiệu năng cao, thuật toán tối ưu và chia sẻ kiến thức công nghệ cùng cộng đồng FPTU.`;
-  const skillsList = Array.isArray(user?.skills) && user.skills.length > 0
-    ? user.skills
-    : ["Next.js 14", "TypeScript", "Tailwind CSS", "Node.js", "MongoDB", "Docker", "Algorithms"];
+  
+  // Real dynamic user data
+  const skillsList = Array.isArray(user?.skills) ? user.skills : [];
+  const projectsList = Array.isArray(user?.projects) ? user.projects : [];
+  const articlesList = Array.isArray(user?.articles) ? user.articles : [];
 
-  const leetcodeSolved = user?.totalSolved || (Array.isArray(user?.acSubmissionList) ? user.acSubmissionList.length : 185);
+  const rawBadges = Array.isArray(user?.unlockedBadges) ? user.unlockedBadges : [];
+  const userBadges = rawBadges.map((b: any) => {
+    const bId = typeof b === "string" ? b : (b?.badgeId || b?.id);
+    return BADGE_CATALOG[bId] || {
+      id: bId,
+      name: bId || "Huy hiệu DEVER",
+      iconName: "Award",
+      iconColor: "text-blue-600",
+      bgColor: "bg-blue-50 border-blue-200 text-blue-900",
+      badgeLabel: "DANH HIỆU",
+      desc: "Huy hiệu thành viên đạt được qua các hoạt động CLB.",
+    };
+  });
+
+  const streakDays = typeof user?.streakDays === "number" ? user.streakDays : (user?.streak ?? 0);
+  const leetcodeSolved = user?.totalSolved ?? (Array.isArray(user?.acSubmissionList) ? user.acSubmissionList.length : 0);
+  const leetcodeUsername = user?.leetcodeUsername || null;
   const email = user?.email || "contact@dever.club";
 
   // Helper to extract social URL from either array or direct string properties
-  const getSocialUrl = (platform: "facebook" | "github" | "linkedin" | "tiktok") => {
+  const getSocialUrl = (platform: "facebook" | "github" | "linkedin" | "leetcode" | "tiktok") => {
     if (user?.[platform]) return user[platform];
     if (Array.isArray(user?.socials)) {
       const found = user.socials.find((s: any) => {
@@ -261,19 +234,19 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const githubUrl = getSocialUrl("github");
   const linkedinUrl = getSocialUrl("linkedin");
   const userLocation = user?.hometown || user?.workplace || user?.school || "Đà Nẵng, VN";
-  const streakDays = typeof user?.streakDays === "number" ? user.streakDays : 28;
 
   // Song info customizable per member
-  const songTitle = user?.favoriteTrack?.title || "DEVER Midnight Code Session";
-  const songArtist = user?.favoriteTrack?.artist || "FPTU Lofi Chillout • Beats to Code to";
+  const hasCustomTrack = Boolean(user?.favoriteTrack?.title || user?.favoriteTrack?.url);
+  const songTitle = user?.favoriteTrack?.title || "DEVER Chill Beats (Mặc định)";
+  const songArtist = user?.favoriteTrack?.artist || (hasCustomTrack ? "Bản nhạc tùy chỉnh" : "Bản nhạc mặc định");
   const audioSource = user?.favoriteTrack?.url || DEFAULT_AUDIO_URL;
 
-  // Sunset & Coral Heatmap Dots
+  // Heatmap Dots representation based on real streak
   const heatmapDots = [
-    3, 2, 4, 1, 0, 3, 2,
+    streakDays >= 7 ? 4 : (streakDays >= 5 ? 3 : 1), 2, 4, 1, 0, 3, 2,
     4, 4, 2, 3, 1, 0, 4,
     2, 3, 4, 4, 1, 2, 3,
-    4, 3, 4, 2, 4, 3, 4,
+    4, 3, 4, 2, 4, 3, streakDays > 0 ? 4 : 0,
   ];
 
   const renderBadgeIcon = (iconName: string, className = "w-5 h-5") => {
@@ -595,26 +568,34 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <Award className="w-3.5 h-3.5 text-purple-600" />
                 <span>BADGE RACK</span>
               </div>
-              <span className="text-[10px] font-mono font-bold text-purple-700">4 MỤC</span>
+              <span className="text-[10px] font-mono font-bold text-purple-700">
+                {userBadges.length} DANH HIỆU
+              </span>
             </div>
 
-            {/* 4 Multi-colored Jewel Badges */}
-            <div className="grid grid-cols-4 gap-2 my-auto">
-              {BADGES.map((b) => (
-                <button
-                  key={b.id}
-                  type="button"
-                  onClick={() => setSelectedBadge(b)}
-                  className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xs ${b.bgColor}`}
-                  title={b.name}
-                >
-                  {renderBadgeIcon(b.iconName, `w-4 h-4 ${b.iconColor}`)}
-                </button>
-              ))}
-            </div>
+            {/* Jewel Badges */}
+            {userBadges.length > 0 ? (
+              <div className="flex flex-wrap items-center gap-2 my-auto">
+                {userBadges.map((b: any, bIdx: number) => (
+                  <button
+                    key={b.id || bIdx}
+                    type="button"
+                    onClick={() => setSelectedBadge(b)}
+                    className={`w-10 h-10 rounded-xl border flex items-center justify-center transition-all hover:scale-110 active:scale-95 shadow-xs ${b.bgColor}`}
+                    title={b.name}
+                  >
+                    {renderBadgeIcon(b.iconName, `w-4 h-4 ${b.iconColor}`)}
+                  </button>
+                ))}
+              </div>
+            ) : (
+              <div className="my-auto py-2 text-center text-xs text-purple-700/60 font-medium">
+                Chưa mở khóa danh hiệu
+              </div>
+            )}
 
             <p className="text-[10px] text-purple-800/80 text-center font-medium">
-              Bấm để xem chi tiết danh hiệu
+              {userBadges.length > 0 ? "Bấm để xem chi tiết danh hiệu" : "Tham gia hoạt động để mở khóa"}
             </p>
           </div>
 
@@ -655,15 +636,15 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               <span className="text-2xl font-black text-rose-950 tracking-tight leading-none block font-mono">
                 {leetcodeSolved} <span className="text-rose-600 text-lg font-bold">AC</span>
               </span>
-              <p className="text-[11px] text-rose-800/80 font-medium">
-                LeetCode Problems Solved
+              <p className="text-[11px] text-rose-800/80 font-medium truncate">
+                {leetcodeUsername ? `@${leetcodeUsername} • LeetCode` : "LeetCode Problems Solved"}
               </p>
             </div>
           </div>
 
           {/* TILE 5: Featured Projects Card (2-wide - Pristine White with Sapphire Accents) */}
           <div
-            onClick={() => setSelectedDrawer("projects")}
+            onClick={() => projectsList.length > 0 ? setSelectedDrawer("projects") : undefined}
             className="tile md:col-span-2 bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex items-center justify-between gap-4 min-h-[176px] transition-all duration-200 hover:border-[#0066CC]/50 hover:shadow-md group cursor-pointer"
           >
             <div className="flex items-center gap-4 min-w-0">
@@ -672,21 +653,26 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold text-slate-500 block font-mono">
-                  DỰ ÁN TIÊU BIỂU • 3 DỰ ÁN
+                  DỰ ÁN TIÊU BIỂU • {projectsList.length} DỰ ÁN
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate group-hover:text-[#0066CC] transition-colors">
-                  FU-DEVER Ecosystem Platform
+                  {projectsList[0]?.title || "Khám Phá Các Dự Án Mở CLB"}
                 </h3>
                 <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
-                    Next.js 14
-                  </span>
-                  <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
-                    TypeScript
-                  </span>
-                  <span className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200">
+                  {projectsList.length > 0 ? (
+                    projectsList[0]?.tech?.slice(0, 3).map((t: string, idx: number) => (
+                      <span key={idx} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                        {t}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                      Open Source Ecosystem
+                    </span>
+                  )}
+                  <Link href="/projects" className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200">
                     Khám phá →
-                  </span>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -732,7 +718,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
           {/* TILE 7: Tech Hub / Blog Tile (1x1 - Honey Amber Glass) */}
           <div
-            onClick={() => setSelectedDrawer("articles")}
+            onClick={() => articlesList.length > 0 ? setSelectedDrawer("articles") : (window.location.href = "/blog")}
             className="tile md:col-span-1 bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 text-slate-900 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] transition-all duration-200 border border-amber-200/80 hover:border-amber-400 cursor-pointer group"
           >
             <div className="flex items-center justify-between text-amber-800">
@@ -747,7 +733,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 Bài viết &amp; nghiên cứu công nghệ
               </h3>
               <p className="text-xs text-amber-800 font-semibold mt-1 flex items-center gap-1">
-                <span>3 Bài Viết</span> • <span className="text-amber-900 font-bold">Xem ngay →</span>
+                <span>{articlesList.length} Bài Viết</span> • <span className="text-amber-900 font-bold">Xem ngay →</span>
               </p>
             </div>
           </div>
@@ -762,28 +748,34 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 {skillsList.length} KỸ NĂNG
               </span>
             </div>
-            <div className="flex flex-wrap gap-2">
-              {skillsList.map((skill: string, sIdx: number) => {
-                const colorVariants = [
-                  { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-800", icon: "text-[#0066CC]" },
-                  { bg: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-800", icon: "text-indigo-600" },
-                  { bg: "bg-cyan-50", border: "border-cyan-200", text: "text-cyan-800", icon: "text-cyan-600" },
-                  { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-800", icon: "text-emerald-600" },
-                  { bg: "bg-sky-50", border: "border-sky-200", text: "text-sky-800", icon: "text-sky-600" },
-                  { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-800", icon: "text-purple-600" },
-                  { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-800", icon: "text-amber-600" },
-                ];
-                const c = colorVariants[sIdx % colorVariants.length];
-                return (
-                  <span
-                    key={sIdx}
-                    className={`px-3 py-1.5 rounded-xl ${c.bg} border ${c.border} text-xs font-semibold ${c.text} flex items-center gap-1.5 shadow-xs`}
-                  >
-                    <Cpu className={`w-3 h-3 ${c.icon}`} /> {skill}
-                  </span>
-                );
-              })}
-            </div>
+            {skillsList.length > 0 ? (
+              <div className="flex flex-wrap gap-2">
+                {skillsList.map((skill: string, sIdx: number) => {
+                  const colorVariants = [
+                    { bg: "bg-blue-50", border: "border-blue-200", text: "text-blue-800", icon: "text-[#0066CC]" },
+                    { bg: "bg-indigo-50", border: "border-indigo-200", text: "text-indigo-800", icon: "text-indigo-600" },
+                    { bg: "bg-cyan-50", border: "border-cyan-200", text: "text-cyan-800", icon: "text-cyan-600" },
+                    { bg: "bg-emerald-50", border: "border-emerald-200", text: "text-emerald-800", icon: "text-emerald-600" },
+                    { bg: "bg-sky-50", border: "border-sky-200", text: "text-sky-800", icon: "text-sky-600" },
+                    { bg: "bg-purple-50", border: "border-purple-200", text: "text-purple-800", icon: "text-purple-600" },
+                    { bg: "bg-amber-50", border: "border-amber-200", text: "text-amber-800", icon: "text-amber-600" },
+                  ];
+                  const c = colorVariants[sIdx % colorVariants.length];
+                  return (
+                    <span
+                      key={sIdx}
+                      className={`px-3 py-1.5 rounded-xl ${c.bg} border ${c.border} text-xs font-semibold ${c.text} flex items-center gap-1.5 shadow-xs`}
+                    >
+                      <Cpu className={`w-3 h-3 ${c.icon}`} /> {skill}
+                    </span>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="py-4 text-center text-xs text-slate-400 font-medium">
+                Thành viên chưa cập nhật danh sách kỹ năng chuyên môn.
+              </div>
+            )}
           </div>
 
           {/* TILE 9: Email-CTA Tile (2-wide - Royal DEVER Blue Gradient) */}
@@ -845,70 +837,86 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             </div>
 
             {selectedDrawer === "projects" ? (
-              <div className="space-y-4">
-                {CONTRIBUTED_PROJECTS.map((proj, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-[#0066CC]/50 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <h3 className="text-sm sm:text-base font-bold text-slate-900">
-                        {proj.title}
-                      </h3>
-                      <a
-                        href={proj.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center gap-1 text-xs font-bold text-[#0066CC] hover:underline"
-                      >
-                        <span>GitHub</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </a>
+              projectsList.length > 0 ? (
+                <div className="space-y-4">
+                  {projectsList.map((proj: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-[#0066CC]/50 transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm sm:text-base font-bold text-slate-900">
+                          {proj.title}
+                        </h3>
+                        {proj.link && (
+                          <a
+                            href={proj.link}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-1 text-xs font-bold text-[#0066CC] hover:underline"
+                          >
+                            <span>GitHub</span>
+                            <ExternalLink className="w-3 h-3" />
+                          </a>
+                        )}
+                      </div>
+                      {proj.role && <p className="text-xs text-[#004C99] font-semibold">{proj.role}</p>}
+                      {proj.description && <p className="text-xs text-slate-600 leading-relaxed">{proj.description}</p>}
+                      {Array.isArray(proj.tech) && proj.tech.length > 0 && (
+                        <div className="flex flex-wrap gap-1.5 pt-1">
+                          {proj.tech.map((t: string, tIdx: number) => (
+                            <span
+                              key={tIdx}
+                              className="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-[11px] font-mono font-semibold text-slate-700"
+                            >
+                              {t}
+                            </span>
+                          ))}
+                        </div>
+                      )}
                     </div>
-                    <p className="text-xs text-[#004C99] font-semibold">{proj.role}</p>
-                    <p className="text-xs text-slate-600 leading-relaxed">{proj.description}</p>
-                    <div className="flex flex-wrap gap-1.5 pt-1">
-                      {proj.tech.map((t, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-[11px] font-mono font-semibold text-slate-700"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-center text-xs text-slate-500 font-medium">
+                  Thành viên chưa thêm dự án công khai nào.
+                </div>
+              )
             ) : (
-              <div className="space-y-4">
-                {AUTHORED_ARTICLES.map((art, idx) => (
-                  <div
-                    key={idx}
-                    className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-amber-400 transition-colors"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10.5px] font-bold">
-                        {art.category}
-                      </span>
-                      <span className="text-[11px] font-mono text-slate-500">{art.date}</span>
+              articlesList.length > 0 ? (
+                <div className="space-y-4">
+                  {articlesList.map((art: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-amber-400 transition-colors"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10.5px] font-bold">
+                          {art.category || "Kỹ thuật"}
+                        </span>
+                        <span className="text-[11px] font-mono text-slate-500">{art.date}</span>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
+                        {art.title}
+                      </h3>
+                      <div className="flex items-center justify-between pt-1">
+                        <span className="text-xs text-slate-500 font-medium">{art.readTime || "5 phút đọc"}</span>
+                        <Link
+                          href={art.link || "/blog"}
+                          className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 hover:underline"
+                        >
+                          <span>Đọc trên DEVER Blog</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </Link>
+                      </div>
                     </div>
-                    <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                      {art.title}
-                    </h3>
-                    <div className="flex items-center justify-between pt-1">
-                      <span className="text-xs text-slate-500 font-medium">{art.readTime}</span>
-                      <Link
-                        href={art.link}
-                        className="inline-flex items-center gap-1 text-xs font-bold text-amber-700 hover:underline"
-                      >
-                        <span>Đọc trên DEVER Blog</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="py-8 text-center text-xs text-slate-500 font-medium">
+                  Thành viên chưa xuất bản bài viết nào trên DEVER Blog.
+                </div>
+              )
             )}
           </div>
         </div>

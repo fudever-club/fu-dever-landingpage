@@ -1,5 +1,5 @@
 const prefix = "/api/v1";
-const API_SERVER = process.env.NEXT_PUBLIC_API_SERVER;
+const API_SERVER = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
 const userEndpoint = {
   GET_ALL_USERS: `${API_SERVER}${prefix}/users`,
   GET_USER_DETAIL_BY_ID: `${API_SERVER}${prefix}/users/{id}`,
