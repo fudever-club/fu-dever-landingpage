@@ -239,13 +239,18 @@ export default function EventsPage() {
     return matchStatus && matchSearch;
   });
 
-  const featuredEvent = events.find((e) => e.isFeatured);
+  const featuredEvent =
+    events.find((e) => e.isFeatured) ||
+    events[0] ||
+    (isLoading ? null : FALLBACK_EVENTS[0]);
 
   return (
     <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
       {/* Modern Premium 3D Holographic VIP Ticket & Background Beams Hero */}
       <DeverEventHero
-        onRegisterClick={() => setSelectedRegisterEvent(featuredEvent || events[0])}
+        event={featuredEvent}
+        isLoading={isLoading}
+        onRegisterClick={() => setSelectedRegisterEvent(featuredEvent || events[0] || FALLBACK_EVENTS[0])}
       />
 
       {/* Events List & Filter Section */}

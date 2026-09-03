@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Image from "next/image";
 import {
   Calendar,
   MapPin,
@@ -13,36 +12,117 @@ import {
 } from "lucide-react";
 import DeverMeteorsBackground from "./DeverMeteorsBackground";
 
+export interface EventHeroData {
+  _id?: string;
+  id?: string | number;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  status?: string;
+  description?: string;
+  speakers?: string;
+  coverImage?: string;
+  registerUrl?: string;
+  checkinUrl?: string;
+  isFeatured?: boolean;
+}
+
 interface DeverEventHeroProps {
+  event?: EventHeroData | null;
+  isLoading?: boolean;
   onRegisterClick?: () => void;
 }
 
-export default function DeverEventHero({ onRegisterClick }: DeverEventHeroProps) {
+function parseEventTargetDate(dateStr?: string, timeStr?: string): Date | null {
+  if (!dateStr || typeof dateStr !== "string") return null;
+  const cleanDate = dateStr.trim();
+  if (!cleanDate) return null;
+
+  let year = new Date().getFullYear();
+  let month = 0;
+  let day = 1;
+  let hours = 9;
+  let minutes = 0;
+
+  // Pattern DD/MM/YYYY or DD-MM-YYYY
+  const dmyMatch = cleanDate.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmyMatch) {
+    day = parseInt(dmyMatch[1], 10);
+    month = parseInt(dmyMatch[2], 10) - 1;
+    year = parseInt(dmyMatch[3], 10);
+  } else {
+    // Pattern YYYY-MM-DD or YYYY/MM/DD
+    const ymdMatch = cleanDate.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (ymdMatch) {
+      year = parseInt(ymdMatch[1], 10);
+      month = parseInt(ymdMatch[2], 10) - 1;
+      day = parseInt(ymdMatch[3], 10);
+    } else {
+      const parsed = Date.parse(cleanDate);
+      if (!isNaN(parsed)) return new Date(parsed);
+      return null;
+    }
+  }
+
+  // Extract starting hour from time string like "14:00 - 17:00"
+  if (timeStr && typeof timeStr === "string") {
+    const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (timeMatch) {
+      hours = parseInt(timeMatch[1], 10);
+      minutes = parseInt(timeMatch[2], 10);
+    }
+  }
+
+  return new Date(year, month, day, hours, minutes, 0);
+}
+
+export default function DeverEventHero({
+  event,
+  isLoading = false,
+  onRegisterClick,
+}: DeverEventHeroProps) {
   // Ticket 3D Tilt
   const ticketRef = useRef<HTMLDivElement>(null);
   const [rotateX, setRotateX] = useState(0);
   const [rotateY, setRotateY] = useState(0);
 
-  // Live countdown state
+  // Dynamic Live countdown state
   const [timeLeft, setTimeLeft] = useState({
-    days: 3,
-    hours: 14,
-    minutes: 22,
-    seconds: 45,
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isExpired: false,
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev.seconds > 0) return { ...prev, seconds: prev.seconds - 1 };
-        if (prev.minutes > 0) return { ...prev, minutes: 59, seconds: 59 };
-        if (prev.hours > 0) return { ...prev, hours: prev.hours - 1, minutes: 59, seconds: 59 };
-        if (prev.days > 0) return { ...prev, days: prev.days - 1, hours: 23, minutes: 59, seconds: 59 };
-        return prev;
-      });
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+    const target = parseEventTargetDate(event?.date, event?.time);
+
+    const updateTimer = () => {
+      if (!target) {
+        // Fallback default demo countdown if no target
+        setTimeLeft({ days: 3, hours: 14, minutes: 22, seconds: 45, isExpired: false });
+        return;
+      }
+      const now = Date.now();
+      const diff = target.getTime() - now;
+
+      if (diff <= 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: true });
+      } else {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeLeft({ days, hours, minutes, seconds, isExpired: false });
+      }
+    };
+
+    updateTimer();
+    const interval = setInterval(updateTimer, 1000);
+    return () => clearInterval(interval);
+  }, [event?.date, event?.time]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ticketRef.current) return;
@@ -63,6 +143,13 @@ export default function DeverEventHero({ onRegisterClick }: DeverEventHeroProps)
     setRotateX(0);
     setRotateY(0);
   };
+
+  const displayTitle =
+    event?.title || "Tối Ưu Hóa Lập Trình & Tích Hợp AI Web 2026";
+  const displayDate = event?.date
+    ? `${event.date} ${event.time ? `(${event.time})` : ""}`
+    : "15/08/2026 (14:00 - 17:00)";
+  const displayLocation = event?.location || "Hội trường Beta, FPTU Đà Nẵng";
 
   return (
     <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 mb-10">
@@ -113,11 +200,22 @@ export default function DeverEventHero({ onRegisterClick }: DeverEventHeroProps)
               >
                 {/* Event Name */}
                 <div className="space-y-1 mb-3">
-                  <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider">
-                    SỰ KIỆN TIẾP THEO
+                  <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                    {event?.isFeatured ? (
+                      <>
+                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                        SỰ KIỆN NỔI BẬT
+                      </>
+                    ) : (
+                      "SỰ KIỆN TIẾP THEO"
+                    )}
                   </span>
-                  <h3 className="text-base sm:text-lg font-bold text-white leading-snug">
-                    Tối Ưu Hóa Lập Trình &amp; Tích Hợp AI Web 2026
+                  <h3 className="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2">
+                    {isLoading ? (
+                      <span className="inline-block h-6 w-3/4 bg-slate-800 rounded animate-pulse" />
+                    ) : (
+                      displayTitle
+                    )}
                   </h3>
                 </div>
 
@@ -125,11 +223,23 @@ export default function DeverEventHero({ onRegisterClick }: DeverEventHeroProps)
                 <div className="space-y-1.5 text-xs text-slate-300 mb-4">
                   <p className="flex items-center gap-2">
                     <Calendar className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                    <span>15/08/2026 (14:00 - 17:00)</span>
+                    <span>
+                      {isLoading ? (
+                        <span className="inline-block h-3.5 w-40 bg-slate-800 rounded animate-pulse" />
+                      ) : (
+                        displayDate
+                      )}
+                    </span>
                   </p>
                   <p className="flex items-center gap-2">
                     <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
-                    <span>Hội trường Beta, FPTU Đà Nẵng</span>
+                    <span className="truncate">
+                      {isLoading ? (
+                        <span className="inline-block h-3.5 w-48 bg-slate-800 rounded animate-pulse" />
+                      ) : (
+                        displayLocation
+                      )}
+                    </span>
                   </p>
                 </div>
 
@@ -167,7 +277,9 @@ export default function DeverEventHero({ onRegisterClick }: DeverEventHeroProps)
                     <QrCode className="w-7 h-7 text-white" />
                     <span className="text-[11px] font-mono text-slate-400 leading-tight">
                       Check-in <br />
-                      <strong className="text-slate-200">Online/Direct</strong>
+                      <strong className="text-slate-200">
+                        {event?.checkinUrl && event.checkinUrl !== "#" ? "QR Bàn Desk" : "Online/Direct"}
+                      </strong>
                     </span>
                   </div>
 
