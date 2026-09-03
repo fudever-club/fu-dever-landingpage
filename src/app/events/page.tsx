@@ -413,7 +413,10 @@ export default function EventsPage() {
           <div className="bg-white rounded-3xl max-w-lg w-full p-6 lg:p-8 shadow-2xl space-y-5">
             <div className="flex justify-between items-start">
               <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
-                <ClipboardList className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" /> ĐĂNG KÝ QUA GOOGLE FORM
+                <ClipboardList className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />{" "}
+                {selectedRegisterEvent.registerUrl && selectedRegisterEvent.registerUrl !== "#"
+                  ? "ĐĂNG KÝ QUA GOOGLE FORM"
+                  : "VÉ ĐIỆN TỬ & ĐIỂM DANH QR"}
               </span>
               <button
                 type="button"
@@ -447,14 +450,25 @@ export default function EventsPage() {
               >
                 Đóng
               </button>
-              <a
-                href={sanitizeUrl(selectedRegisterEvent.registerUrl)}
-                target="_blank"
-                rel="noreferrer noopener"
-                className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
-              >
-                Mở Google Form Đăng Ký <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-              </a>
+              {selectedRegisterEvent.registerUrl && selectedRegisterEvent.registerUrl !== "#" ? (
+                <a
+                  href={sanitizeUrl(selectedRegisterEvent.registerUrl)}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
+                >
+                  Mở Google Form Đăng Ký <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              ) : (
+                <a
+                  href={process.env.NEXT_PUBLIC_CLIENT_URL || process.env.NEXT_PUBLIC_CLIENT_APP_URL || "https://client.fudever.com"}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
+                >
+                  Đăng Ký Tại Cổng Sinh Viên <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                </a>
+              )}
             </div>
           </div>
         </div>

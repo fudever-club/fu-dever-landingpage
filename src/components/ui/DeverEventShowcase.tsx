@@ -108,7 +108,8 @@ export default function DeverEventShowcase() {
     setIsLoading(true);
     setIsError(false);
     try {
-      const res = await fetch("http://localhost:5000/api/v1/events");
+      const apiServer = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
+      const res = await fetch(`${apiServer}/api/v1/events`);
       if (!res.ok) throw new Error("Không thể kết nối API Backend");
       const json = await res.json();
       const data = Array.isArray(json) ? json : json?.data || [];
