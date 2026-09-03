@@ -9,6 +9,7 @@ import {
   Globe2,
   BrainCircuit,
   Trophy,
+  CalendarDays,
 } from "lucide-react";
 import DeverMeteorsBackground from "./DeverMeteorsBackground";
 
@@ -42,7 +43,7 @@ function parseEventTargetDate(dateStr?: string, timeStr?: string): Date | null {
   let year = new Date().getFullYear();
   let month = 0;
   let day = 1;
-  let hours = 9;
+  let hours = 8;
   let minutes = 0;
 
   // Pattern DD/MM/YYYY or DD-MM-YYYY
@@ -65,7 +66,7 @@ function parseEventTargetDate(dateStr?: string, timeStr?: string): Date | null {
     }
   }
 
-  // Extract starting hour from time string like "14:00 - 17:00"
+  // Extract starting hour from time string like "8:00 - 12:00" or "14:00 - 17:00"
   if (timeStr && typeof timeStr === "string") {
     const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
     if (timeMatch) {
@@ -97,12 +98,16 @@ export default function DeverEventHero({
   });
 
   useEffect(() => {
-    const target = parseEventTargetDate(event?.date, event?.time);
+    if (!event) {
+      setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false });
+      return;
+    }
+
+    const target = parseEventTargetDate(event.date, event.time);
 
     const updateTimer = () => {
       if (!target) {
-        // Fallback default demo countdown if no target
-        setTimeLeft({ days: 3, hours: 14, minutes: 22, seconds: 45, isExpired: false });
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0, isExpired: false });
         return;
       }
       const now = Date.now();
@@ -122,7 +127,7 @@ export default function DeverEventHero({
     updateTimer();
     const interval = setInterval(updateTimer, 1000);
     return () => clearInterval(interval);
-  }, [event?.date, event?.time]);
+  }, [event?.date, event?.time, event]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ticketRef.current) return;
@@ -144,12 +149,7 @@ export default function DeverEventHero({
     setRotateY(0);
   };
 
-  const displayTitle =
-    event?.title || "Tối Ưu Hóa Lập Trình & Tích Hợp AI Web 2026";
-  const displayDate = event?.date
-    ? `${event.date} ${event.time ? `(${event.time})` : ""}`
-    : "15/08/2026 (14:00 - 17:00)";
-  const displayLocation = event?.location || "Hội trường Beta, FPTU Đà Nẵng";
+  const hasRealEvent = Boolean(event && event.title);
 
   return (
     <section className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-20 mb-10">
@@ -201,20 +201,28 @@ export default function DeverEventHero({
                 {/* Event Name */}
                 <div className="space-y-1 mb-3">
                   <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
-                    {event?.isFeatured ? (
-                      <>
-                        <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
-                        SỰ KIỆN NỔI BẬT
-                      </>
+                    {isLoading ? (
+                      <span className="inline-block h-3.5 w-24 bg-slate-800 rounded animate-pulse" />
+                    ) : hasRealEvent ? (
+                      event?.isFeatured ? (
+                        <>
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                          SỰ KIỆN NỔI BẬT
+                        </>
+                      ) : (
+                        "SỰ KIỆN TIẾP THEO"
+                      )
                     ) : (
-                      "SỰ KIỆN TIẾP THEO"
+                      "THÔNG BÁO SỰ KIỆN"
                     )}
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2">
                     {isLoading ? (
                       <span className="inline-block h-6 w-3/4 bg-slate-800 rounded animate-pulse" />
+                    ) : hasRealEvent ? (
+                      event?.title
                     ) : (
-                      displayTitle
+                      "Chưa Có Sự Kiện Sắp Diễn Ra"
                     )}
                   </h3>
                 </div>
@@ -226,8 +234,10 @@ export default function DeverEventHero({
                     <span>
                       {isLoading ? (
                         <span className="inline-block h-3.5 w-40 bg-slate-800 rounded animate-pulse" />
+                      ) : hasRealEvent ? (
+                        `${event?.date || "Đang cập nhật"} ${event?.time ? `(${event.time})` : ""}`
                       ) : (
-                        displayDate
+                        "Sẽ sớm được cập nhật"
                       )}
                     </span>
                   </p>
@@ -236,8 +246,10 @@ export default function DeverEventHero({
                     <span className="truncate">
                       {isLoading ? (
                         <span className="inline-block h-3.5 w-48 bg-slate-800 rounded animate-pulse" />
+                      ) : hasRealEvent ? (
+                        event?.location || "FPT University Đà Nẵng"
                       ) : (
-                        displayLocation
+                        "FPT University Đà Nẵng"
                       )}
                     </span>
                   </p>
@@ -278,19 +290,27 @@ export default function DeverEventHero({
                     <span className="text-[11px] font-mono text-slate-400 leading-tight">
                       Check-in <br />
                       <strong className="text-slate-200">
-                        {event?.checkinUrl && event.checkinUrl !== "#" ? "QR Bàn Desk" : "Online/Direct"}
+                        {hasRealEvent && event?.checkinUrl && event.checkinUrl !== "#"
+                          ? "QR Bàn Desk"
+                          : "Online/Direct"}
                       </strong>
                     </span>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={onRegisterClick}
-                    className="h-9 px-4 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition-all active:scale-95 shrink-0"
-                  >
-                    <span>Đăng ký tham gia</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+                  {hasRealEvent ? (
+                    <button
+                      type="button"
+                      onClick={onRegisterClick}
+                      className="h-9 px-4 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold flex items-center gap-1.5 shadow-md transition-all active:scale-95 shrink-0"
+                    >
+                      <span>Đăng ký tham gia</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  ) : (
+                    <span className="text-[11px] text-slate-400 italic">
+                      Theo dõi để cập nhật
+                    </span>
+                  )}
                 </div>
               </div>
             </div>

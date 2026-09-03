@@ -64,41 +64,6 @@ function resolveEventImageUrl(url?: string): string {
   return url;
 }
 
-const FALLBACK_EVENTS: EventItem[] = [
-  {
-    _id: "evt_1",
-    id: 1,
-    title: "Workshop: Tối Ưu Hóa Lập Trình & Tích Hợp AI Trong Web 2026",
-    date: "15/08/2026",
-    time: "14:00 - 17:00",
-    location: "Hội trường Beta, FPT University Da Nang",
-    status: "Đang mở đăng ký",
-    description:
-      "Buổi chia sẻ chuyên sâu về cách ứng dụng AI hỗ trợ lập trình, xây dựng kiến trúc web hiệu năng cao và giải đáp thắc mắc cùng các Senior Dev cựu sinh viên FPT.",
-    registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_register_form/viewform",
-    checkinUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc_sample_checkin_form/viewform",
-    speakers: "Lê Đức Anh Phương & Trần Văn Bảo Thắng",
-    coverImage: "",
-    isFeatured: true,
-  },
-  {
-    _id: "evt_2",
-    id: 2,
-    title: "Đợt Tuyển Thành Viên Gen 9 (Khóa K21 - Năm 2026)",
-    date: "25/08/2026",
-    time: "08:00 - 22:00",
-    location: "Online & Bàn Desk Sảnh Alpha FPTU",
-    status: "Đang mở đăng ký",
-    description:
-      "Chào đón các tân sinh viên K21 gia nhập đại gia đình FU-DEVER. Trải nghiệm môi trường học thuật chuyên nghiệp, tham gia dự án thực tế và thi đấu giải thuật.",
-    registerUrl: "https://forms.gle/hJxSewnuiVFwR1rH8",
-    checkinUrl: "https://forms.gle/hJxSewnuiVFwR1rH8",
-    speakers: "Ban Chủ Nhiệm FU-DEVER",
-    coverImage: "",
-    isFeatured: false,
-  },
-];
-
 function renderEventStatusBadge(status: string) {
   switch (status) {
     case "Đang mở đăng ký":
@@ -242,7 +207,7 @@ export default function EventsPage() {
   const featuredEvent =
     events.find((e) => e.isFeatured) ||
     events[0] ||
-    (isLoading ? null : FALLBACK_EVENTS[0]);
+    null;
 
   return (
     <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
@@ -250,7 +215,9 @@ export default function EventsPage() {
       <DeverEventHero
         event={featuredEvent}
         isLoading={isLoading}
-        onRegisterClick={() => setSelectedRegisterEvent(featuredEvent || events[0] || FALLBACK_EVENTS[0])}
+        onRegisterClick={() => {
+          if (featuredEvent) setSelectedRegisterEvent(featuredEvent);
+        }}
       />
 
       {/* Events List & Filter Section */}
