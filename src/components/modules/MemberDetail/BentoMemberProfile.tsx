@@ -1,8 +1,9 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { Map, Marker } from "pigeon-maps";
 import {
   Copy,
   Check,
@@ -99,6 +100,49 @@ const BADGE_CATALOG: Record<string, any> = {
 const CONTRIBUTED_PROJECTS: ContributionProject[] = [];
 const AUTHORED_ARTICLES: TechArticle[] = [];
 
+// Curated coordinates for Vietnamese locations with FPT University Da Nang default
+const LOCATION_COORDINATES: Record<string, [number, number]> = {
+  "đà nẵng": [16.0544, 108.2022],
+  "da nang": [16.0544, 108.2022],
+  "fpt": [15.9689, 108.2608],
+  "quảng nam": [15.5684, 108.4735],
+  "quang nam": [15.5684, 108.4735],
+  "quảng ngãi": [15.1205, 108.7923],
+  "quang ngai": [15.1205, 108.7923],
+  "huế": [16.4637, 107.5909],
+  "hue": [16.4637, 107.5909],
+  "thừa thiên huế": [16.4637, 107.5909],
+  "hà nội": [21.0285, 105.8542],
+  "ha noi": [21.0285, 105.8542],
+  "hồ chí minh": [10.8231, 106.6297],
+  "ho chi minh": [10.8231, 106.6297],
+  "sài gòn": [10.8231, 106.6297],
+  "bình định": [13.7820, 109.2194],
+  "quy nhơn": [13.7820, 109.2194],
+  "quảng bình": [17.4687, 106.6225],
+  "quảng trị": [16.7500, 107.1855],
+  "nghệ an": [18.6796, 105.6813],
+  "thanh hóa": [19.8067, 105.7852],
+  "khánh hòa": [12.2388, 109.1967],
+  "nha trang": [12.2388, 109.1967],
+  "đắk lắk": [12.6667, 108.0500],
+  "dak lak": [12.6667, 108.0500],
+  "gia lai": [13.9833, 108.0000],
+  "lâm đồng": [11.9404, 108.4583],
+  "đà lạt": [11.9404, 108.4583],
+};
+
+const resolveCoordinates = (loc: string): [number, number] => {
+  if (!loc) return [15.9689, 108.2608];
+  const normalized = loc.toLowerCase().trim();
+  for (const [key, coords] of Object.entries(LOCATION_COORDINATES)) {
+    if (normalized.includes(key)) {
+      return coords;
+    }
+  }
+  return [15.9689, 108.2608]; // Default: FPT University Da Nang Campus
+};
+
 // Royalty-free open-source lofi stream for developer coding
 const DEFAULT_AUDIO_URL = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3";
 
@@ -107,19 +151,21 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const [currentTime, setCurrentTime] = useState("14:22");
   const [selectedDrawer, setSelectedDrawer] = useState<"projects" | "articles" | null>(null);
   const [selectedBadge, setSelectedBadge] = useState<any>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
-  // Audio Player State
+  // Audio Player State (Real-time HTML5 audio tracking)
   const [isPlaying, setIsPlaying] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isShuffle, setIsShuffle] = useState(false);
   const [isRepeat, setIsRepeat] = useState(false);
-  const [progressSec, setProgressSec] = useState(84); // 1:24
-  const durationSec = 225; // 3:45
+  const [progressSec, setProgressSec] = useState(0);
+  const [durationSec, setDurationSec] = useState(0);
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    setIsMounted(true);
     const updateTime = () => {
       const now = new Date();
       const hours = String(now.getHours()).padStart(2, "0");
@@ -131,17 +177,6 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
     return () => clearInterval(interval);
   }, []);
 
-  // Track progress timer
-  useEffect(() => {
-    let timer: any = null;
-    if (isPlaying) {
-      timer = setInterval(() => {
-        setProgressSec((prev) => (prev >= durationSec ? 0 : prev + 1));
-      }, 1000);
-    }
-    return () => clearInterval(timer);
-  }, [isPlaying]);
-
   const togglePlayAudio = () => {
     if (!audioRef.current) return;
     if (isPlaying) {
@@ -152,14 +187,15 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
         .play()
         .then(() => setIsPlaying(true))
         .catch(() => {
-          setIsPlaying(true);
+          setIsPlaying(false);
         });
     }
   };
 
   const formatSec = (total: number) => {
+    if (!total || isNaN(total) || total < 0) return "0:00";
     const m = Math.floor(total / 60);
-    const s = total % 60;
+    const s = Math.floor(total % 60);
     return `${m}:${String(s).padStart(2, "0")}`;
   };
 
@@ -234,6 +270,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const githubUrl = getSocialUrl("github");
   const linkedinUrl = getSocialUrl("linkedin");
   const userLocation = user?.hometown || user?.workplace || user?.school || "Đà Nẵng, VN";
+  const mapCoordinates = useMemo(() => resolveCoordinates(userLocation), [userLocation]);
 
   // Song info customizable per member
   const hasCustomTrack = Boolean(user?.favoriteTrack?.title || user?.favoriteTrack?.url);
@@ -241,13 +278,53 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   const songArtist = user?.favoriteTrack?.artist || (hasCustomTrack ? "Bản nhạc tùy chỉnh" : "Bản nhạc mặc định");
   const audioSource = user?.favoriteTrack?.url || DEFAULT_AUDIO_URL;
 
-  // Heatmap Dots representation based on real streak
-  const heatmapDots = [
-    streakDays >= 7 ? 4 : (streakDays >= 5 ? 3 : 1), 2, 4, 1, 0, 3, 2,
-    4, 4, 2, 3, 1, 0, 4,
-    2, 3, 4, 4, 1, 2, 3,
-    4, 3, 4, 2, 4, 3, streakDays > 0 ? 4 : 0,
-  ];
+  // Real 28-day LeetCode / Coding Activity Heatmap calculation (No hardcoded mock numbers)
+  const heatmapData = useMemo(() => {
+    const rawCounts = new Array(28).fill(0);
+    const dayLabels = new Array(28).fill("");
+    const submissions = Array.isArray(user?.acSubmissionList) ? user.acSubmissionList : [];
+    const now = new Date();
+
+    // Generate date labels for the past 28 days
+    for (let i = 0; i < 28; i++) {
+      const d = new Date(now);
+      d.setDate(d.getDate() - (27 - i));
+      const dd = String(d.getDate()).padStart(2, "0");
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      dayLabels[i] = `${dd}/${mm}`;
+    }
+
+    // Bucket real submissions by day
+    submissions.forEach((sub: any) => {
+      const rawTime = sub?.timestamp || sub?.createdAt;
+      if (!rawTime) return;
+      const subTime = typeof rawTime === "number"
+        ? (rawTime > 1e11 ? rawTime : rawTime * 1000)
+        : new Date(rawTime).getTime();
+
+      if (isNaN(subTime)) return;
+      const diffDays = Math.floor((now.getTime() - subTime) / (24 * 60 * 60 * 1000));
+      if (diffDays >= 0 && diffDays < 28) {
+        const dotIndex = 27 - diffDays;
+        rawCounts[dotIndex] = (rawCounts[dotIndex] || 0) + 1;
+      }
+    });
+
+    // Map counts to intensity levels 0..4
+    const dots = rawCounts.map((count, idx) => {
+      // If member has verified streakDays, reflect activity on those days
+      if (streakDays > 0 && idx >= 28 - Math.min(streakDays, 28) && count === 0) {
+        return 1;
+      }
+      if (count === 0) return 0;
+      if (count === 1) return 1;
+      if (count <= 2) return 2;
+      if (count <= 4) return 3;
+      return 4;
+    });
+
+    return { dots, counts: rawCounts, labels: dayLabels };
+  }, [user?.acSubmissionList, streakDays]);
 
   const renderBadgeIcon = (iconName: string, className = "w-5 h-5") => {
     switch (iconName) {
@@ -266,14 +343,23 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
   return (
     <div className="min-h-screen bg-[#F4F6F9] text-slate-900 pt-24 pb-20 px-4 sm:px-6 relative selection:bg-[#0066CC] selection:text-white font-sans">
-      {/* Hidden HTML5 Audio Element */}
+      {/* HTML5 Audio Element with Real Metadata Listeners */}
       <audio
         ref={audioRef}
         src={audioSource}
-        preload="none"
-        loop
+        preload="metadata"
+        loop={isRepeat}
         muted={isMuted}
-        onEnded={() => setIsPlaying(false)}
+        onLoadedMetadata={(e) => {
+          const d = Math.floor(e.currentTarget.duration || 0);
+          if (!isNaN(d) && d > 0) setDurationSec(d);
+        }}
+        onTimeUpdate={(e) => {
+          setProgressSec(Math.floor(e.currentTarget.currentTime || 0));
+        }}
+        onEnded={() => {
+          if (!isRepeat) setIsPlaying(false);
+        }}
       />
 
       {/* Subtle modern dot grid */}
@@ -545,16 +631,19 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               <span>{formatSec(progressSec)}</span>
               <div
                 onClick={(e) => {
+                  if (!audioRef.current || durationSec <= 0) return;
                   const rect = e.currentTarget.getBoundingClientRect();
                   const clickX = e.clientX - rect.left;
-                  const newPercent = clickX / rect.width;
-                  setProgressSec(Math.floor(newPercent * durationSec));
+                  const newPercent = Math.max(0, Math.min(1, clickX / rect.width));
+                  const targetSec = Math.floor(newPercent * durationSec);
+                  audioRef.current.currentTime = targetSec;
+                  setProgressSec(targetSec);
                 }}
                 className="relative flex-1 h-1 rounded-full bg-slate-800 hover:h-1.5 cursor-pointer group/bar transition-all"
               >
                 <div
                   className="h-full bg-slate-400 group-hover/bar:bg-gradient-to-r group-hover/bar:from-[#0066CC] group-hover/bar:to-cyan-400 rounded-full transition-all"
-                  style={{ width: `${(progressSec / durationSec) * 100}%` }}
+                  style={{ width: `${durationSec > 0 ? (progressSec / durationSec) * 100 : 0}%` }}
                 />
               </div>
               <span>{formatSec(durationSec)}</span>
@@ -611,12 +700,12 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
             </div>
 
-            {/* Mini Heatmap Matrix with Sunset / Coral Tones */}
+            {/* Mini Heatmap Matrix with Sunset / Coral Tones (Real 28-day submission activity) */}
             <div className="grid grid-cols-7 gap-1 my-1">
-              {heatmapDots.map((lvl, idx) => (
+              {heatmapData.dots.map((lvl, idx) => (
                 <span
                   key={idx}
-                  className={`w-2.5 h-2.5 rounded-xs ${
+                  className={`w-2.5 h-2.5 rounded-xs transition-colors ${
                     lvl === 4
                       ? "bg-rose-600"
                       : lvl === 3
@@ -627,7 +716,13 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                       ? "bg-rose-200"
                       : "bg-white/80"
                   }`}
-                  title={`Hoạt động ngày ${idx + 1}`}
+                  title={`${heatmapData.labels[idx]}: ${
+                    heatmapData.counts[idx] > 0
+                      ? `${heatmapData.counts[idx]} bài nộp AC`
+                      : streakDays > 0 && idx >= 28 - Math.min(streakDays, 28)
+                      ? "Hoạt động trong chuỗi Streak"
+                      : "Không có lượt nộp"
+                  }`}
                 />
               ))}
             </div>
@@ -644,7 +739,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
           {/* TILE 5: Featured Projects Card (2-wide - Pristine White with Sapphire Accents) */}
           <div
-            onClick={() => projectsList.length > 0 ? setSelectedDrawer("projects") : undefined}
+            onClick={() => (projectsList.length > 0 ? setSelectedDrawer("projects") : undefined)}
             className="tile md:col-span-2 bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex items-center justify-between gap-4 min-h-[176px] transition-all duration-200 hover:border-[#0066CC]/50 hover:shadow-md group cursor-pointer"
           >
             <div className="flex items-center gap-4 min-w-0">
@@ -653,7 +748,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold text-slate-500 block font-mono">
-                  DỰ ÁN TIÊU BIỂU • {projectsList.length} DỰ ÁN
+                  {projectsList.length > 0 ? `DỰ ÁN TIÊU BIỂU • ${projectsList.length} DỰ ÁN` : "DỰ ÁN TIÊU BIỂU • FU-DEVER LAB"}
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate group-hover:text-[#0066CC] transition-colors">
                   {projectsList[0]?.title || "Khám Phá Các Dự Án Mở CLB"}
@@ -670,7 +765,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                       Open Source Ecosystem
                     </span>
                   )}
-                  <Link href="/projects" className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200">
+                  <Link href="/project-lab" className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200">
                     Khám phá →
                   </Link>
                 </div>
@@ -682,35 +777,46 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             </div>
           </div>
 
-          {/* TILE 6: Map Tile (1x1 - Soft Mint / Teal Glass) */}
-          <div className="tile md:col-span-1 bg-gradient-to-br from-emerald-50/80 via-teal-50/50 to-cyan-50/40 rounded-3xl shadow-xs relative overflow-hidden border border-teal-200/70 min-h-[176px] p-4 flex flex-col justify-between transition-all duration-200 hover:border-teal-400">
-            {/* Stylized Mint SVG Grid */}
-            <svg
-              className="absolute inset-0 w-full h-full opacity-20 pointer-events-none"
-              viewBox="0 0 200 200"
-              preserveAspectRatio="xMidYMid slice"
-            >
-              <line x1="0" y1="40" x2="200" y2="70" stroke="#0f9d8f" strokeWidth="6" />
-              <line x1="30" y1="0" x2="160" y2="200" stroke="#0f9d8f" strokeWidth="8" />
-              <line x1="0" y1="160" x2="200" y2="130" stroke="#0f9d8f" strokeWidth="5" />
-              <line x1="120" y1="0" x2="50" y2="200" stroke="#0f9d8f" strokeWidth="4" />
-            </svg>
+          {/* TILE 6: Map Tile (1x1 - Real OpenStreetMap via Pigeon Maps) */}
+          <div className="tile md:col-span-1 bg-white rounded-3xl shadow-xs relative overflow-hidden border border-teal-200/70 min-h-[176px] flex flex-col justify-between transition-all duration-200 hover:border-teal-400 group">
+            {/* Real Open-source Map */}
+            <div className="absolute inset-0 z-0">
+              {isMounted ? (
+                <Map
+                  height={176}
+                  center={mapCoordinates}
+                  defaultZoom={13}
+                  mouseEvents={false}
+                  touchEvents={false}
+                  provider={(x, y, z) =>
+                    `https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/${z}/${x}/${y}.png`
+                  }
+                >
+                  <Marker width={26} anchor={mapCoordinates} color="#0066CC" />
+                </Map>
+              ) : (
+                <div className="w-full h-full bg-teal-50/60 animate-pulse" />
+              )}
+            </div>
 
-            {/* Location Pin */}
-            <div className="relative z-10 flex items-center justify-center my-auto">
-              <div className="relative flex items-center justify-center">
-                <span className="w-7 h-7 rounded-full bg-teal-500/25 animate-ping absolute" />
-                <span className="w-3.5 h-3.5 rounded-full bg-[#0f9d8f] ring-3 ring-white shadow-md relative z-10" />
-              </div>
+            {/* Subtle Gradient protection layer so text remains readable */}
+            <div className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-white/95 via-white/60 to-transparent pointer-events-none z-10" />
+
+            {/* Top Status Tag */}
+            <div className="relative z-20 p-3 flex items-center justify-between pointer-events-none">
+              <span className="px-2 py-0.5 rounded-full bg-white/95 border border-teal-200/80 text-[10px] font-mono font-bold text-teal-800 shadow-xs flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+                <span>OPENSTREETMAP</span>
+              </span>
             </div>
 
             {/* Bottom Strip */}
-            <div className="relative z-10 flex items-center justify-between">
+            <div className="relative z-20 p-3 pt-0 flex items-center justify-between">
               <div className="h-7 px-2.5 rounded-full bg-white/95 border border-teal-200 text-[11px] font-bold text-teal-950 flex items-center gap-1 shadow-xs truncate max-w-[140px]">
-                <MapPin className="w-3 h-3 text-[#0f9d8f] shrink-0" />
+                <MapPin className="w-3 h-3 text-[#0066CC] shrink-0" />
                 <span className="truncate">{userLocation}</span>
               </div>
-              <span className="text-xs font-mono font-bold text-teal-800 shrink-0">
+              <span className="text-xs font-mono font-bold text-teal-900 bg-white/90 px-2 py-0.5 rounded-full border border-teal-200/60 shadow-xs shrink-0">
                 {currentTime}
               </span>
             </div>
@@ -718,7 +824,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
           {/* TILE 7: Tech Hub / Blog Tile (1x1 - Honey Amber Glass) */}
           <div
-            onClick={() => articlesList.length > 0 ? setSelectedDrawer("articles") : (window.location.href = "/blog")}
+            onClick={() => (articlesList.length > 0 ? setSelectedDrawer("articles") : (window.location.href = "/blog"))}
             className="tile md:col-span-1 bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 text-slate-900 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] transition-all duration-200 border border-amber-200/80 hover:border-amber-400 cursor-pointer group"
           >
             <div className="flex items-center justify-between text-amber-800">
@@ -730,10 +836,10 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
             <div>
               <h3 className="text-sm sm:text-base font-bold text-amber-950 leading-snug">
-                Bài viết &amp; nghiên cứu công nghệ
+                {articlesList.length > 0 ? "Bài viết & nghiên cứu công nghệ" : "Khám phá DEVER Tech Blog"}
               </h3>
               <p className="text-xs text-amber-800 font-semibold mt-1 flex items-center gap-1">
-                <span>{articlesList.length} Bài Viết</span> • <span className="text-amber-900 font-bold">Xem ngay →</span>
+                <span>{articlesList.length > 0 ? `${articlesList.length} Bài Viết` : "Thư viện bài viết kỹ thuật"}</span> • <span className="text-amber-900 font-bold">Xem ngay →</span>
               </p>
             </div>
           </div>

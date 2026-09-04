@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Clock,
@@ -9,15 +9,16 @@ import {
   BookOpen,
   Heart,
   TrendingUp,
+  Star,
 } from "lucide-react";
-import { GlowingEdgeCard } from "./GlowingEdgeCard";
 
 export interface BlogPostItem {
   id: string | number;
+  _id?: string;
   slug: string;
   title: string;
   category: string;
-  categoryColor: string;
+  categoryColor?: string;
   author: {
     name: string;
     role: string;
@@ -28,57 +29,141 @@ export interface BlogPostItem {
   excerpt: string;
   tags: string[];
   likes: number;
+  isFeatured?: boolean;
 }
 
-const FEATURED_ARTICLES: BlogPostItem[] = [
+interface DeverBlogPreviewProps {
+  blogs?: any[];
+}
+
+const FALLBACK_ARTICLES: BlogPostItem[] = [
   {
     id: "nextjs-14-architecture",
     slug: "lam-chu-nextjs-14-app-router",
     title: "Làm Chủ Next.js 14 App Router & Tối Ưu Hóa Caching 4 Tầng",
     category: "Architecture & Web",
-    categoryColor: "bg-blue-50 text-[#0066CC] border-blue-200",
     author: {
       name: "Lê Đức Anh Phương",
       role: "Lead Fullstack • Ban Chuyên Môn",
       avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
     },
-    date: "15 Tháng 8, 2026",
+    date: "15/08/2026",
     readTime: "6 phút đọc",
     excerpt:
-      "Phân tích chuyên sâu kiến trúc Server Components, tối ưu hóa Data Cache & Full Route Cache, triệt tiêu triệt để tình trạng HMR Context và rò rỉ bộ nhớ trong dự án quy mô lớn.",
+      "Phân tích chuyên sâu kiến trúc Server Components, tối ưu hóa Data Cache & Full Route Cache, triệt tiêu triệt để tình trạng rò rỉ bộ nhớ trong dự án quy mô lớn.",
     tags: ["Next.js 14", "TypeScript", "Performance", "Caching"],
     likes: 142,
+    isFeatured: true,
   },
   {
     id: "icpc-dynamic-programming",
     slug: "kinh-nghiem-sanh-vai-icpc-2026",
     title: "Bí Kíp Đua Top LeetCode & Chiến Thuật Quy Hoạch Động ICPC 2026",
     category: "Algorithms & ICPC",
-    categoryColor: "bg-amber-50 text-amber-800 border-amber-200",
     author: {
       name: "Trần Văn Bảo Thắng",
       role: "Algorithm Lead • Đội Tuyển ICPC",
       avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
     },
-    date: "02 Tháng 8, 2026",
+    date: "02/08/2026",
     readTime: "8 phút đọc",
     excerpt:
       "Tổng hợp các dạng bài toán quy hoạch động trạng thái (Bitmask DP), tối ưu hóa cây phân đoạn Segment Tree và kinh nghiệm phân bổ thời gian thực chiến trong đấu trường giải thuật.",
     tags: ["Algorithms", "LeetCode", "Dynamic Programming", "C++"],
     likes: 118,
+    isFeatured: true,
   },
 ];
 
-export default function DeverBlogPreview() {
+const API_SERVER =
+  process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
+
+export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewProps) {
+  const [internalBlogs, setInternalBlogs] = useState<any[]>([]);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
 
-  const toggleLike = (id: string | number, e: React.MouseEvent) => {
+  useEffect(() => {
+    // If props not passed or empty, self-fetch from API
+    if (!propBlogs || propBlogs.length === 0) {
+      const fetchLatest = async () => {
+        try {
+          const res = await fetch(`${API_SERVER}/api/v1/blogs`);
+          if (res.ok) {
+            const json = await res.json();
+            const data = Array.isArray(json) ? json : json?.data || [];
+            setInternalBlogs(data);
+          }
+        } catch (e) {
+          // silently fallback
+        }
+      };
+      fetchLatest();
+    }
+  }, [propBlogs]);
+
+  const sourceBlogs = (propBlogs && propBlogs.length > 0) ? propBlogs : internalBlogs;
+
+  // Compute dynamic featured articles list:
+  // 1. Prioritize blogs with isFeatured === true (marked by Admin)
+  // 2. If fewer than 2, fill with highest liked / latest published blogs
+  const featuredArticles = useMemo<BlogPostItem[]>(() => {
+    if (!sourceBlogs || sourceBlogs.length === 0) {
+      return FALLBACK_ARTICLES;
+    }
+
+    const normalized: BlogPostItem[] = sourceBlogs.map((b: any) => ({
+      id: b._id || b.id || b.slug,
+      slug: b.slug,
+      title: b.title,
+      category: b.category || "Kỹ thuật",
+      author: {
+        name: b.author?.name || "Thành viên DEVER",
+        role: b.author?.role || "Ban Chuyên Môn",
+        avatar: b.author?.avatar || "",
+      },
+      date: b.createdAt
+        ? new Date(b.createdAt).toLocaleDateString("vi-VN")
+        : (b.date || "Gần đây"),
+      readTime: b.readTime || "5 phút đọc",
+      excerpt: b.excerpt || "",
+      tags: Array.isArray(b.tags) ? b.tags : [],
+      likes: typeof b.likes === "number" ? b.likes : 0,
+      isFeatured: Boolean(b.isFeatured || b.featured),
+    }));
+
+    // Filter explicitly featured articles
+    const explicitlyFeatured = normalized.filter((b) => b.isFeatured);
+
+    if (explicitlyFeatured.length >= 2) {
+      return explicitlyFeatured.slice(0, 2);
+    }
+
+    // Fill remaining spots with top liked blogs
+    const remaining = normalized
+      .filter((b) => !b.isFeatured)
+      .sort((a, b) => b.likes - a.likes);
+
+    const merged = [...explicitlyFeatured, ...remaining].slice(0, 2);
+    return merged.length > 0 ? merged : FALLBACK_ARTICLES;
+  }, [sourceBlogs]);
+
+  const toggleLike = async (id: string | number, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+
+    const postId = String(id);
+    const isLiked = likedPosts[postId];
     setLikedPosts((prev) => ({
       ...prev,
-      [id]: !prev[id],
+      [postId]: !isLiked,
     }));
+
+    // Call API optimistic
+    try {
+      await fetch(`${API_SERVER}/api/v1/blogs/${postId}/like`, { method: "PUT" });
+    } catch {
+      // ignore
+    }
   };
 
   return (
@@ -99,32 +184,42 @@ export default function DeverBlogPreview() {
             </p>
           </div>
 
-          <div className="flex items-center gap-2 text-xs font-semibold text-[#0066CC] bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200 self-start sm:self-auto">
+          <div className="flex items-center gap-2 text-xs font-semibold text-[#0066CC] bg-blue-50 px-3 py-1.5 rounded-xl border border-blue-200 self-start sm:self-auto shadow-2xs">
             <TrendingUp className="w-4 h-4" />
-            <span>2 Bài Viết Tiêu Biểu</span>
+            <span>{featuredArticles.length} Bài Viết Tiêu Biểu</span>
           </div>
         </div>
 
-        {/* Featured Glowing Edge Cards Grid */}
+        {/* Premium DEVER Editorial Cards Grid (Clean, human-crafted aesthetics - No AI-style rainbow neon) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {FEATURED_ARTICLES.map((article) => {
+          {featuredArticles.map((article) => {
             const isLiked = likedPosts[article.id];
             const currentLikes = article.likes + (isLiked ? 1 : 0);
 
             return (
-              <GlowingEdgeCard
+              <div
                 key={article.id}
-                className="min-h-[440px] shadow-sm hover:shadow-xl transition-all"
+                className="group relative bg-white rounded-3xl border border-slate-200/90 hover:border-[#0066CC]/50 shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between overflow-hidden min-h-[440px]"
               >
+                {/* Subtle Top Accent Brand Line */}
+                <div className="h-1.5 w-full bg-gradient-to-r from-[#004C99] via-[#0066CC] to-cyan-400 opacity-80 group-hover:opacity-100 transition-opacity" />
+
                 <div className="flex flex-col justify-between h-full p-6 sm:p-8">
-                  {/* Top Bar: Category & Read Time */}
+                  {/* Top Bar: Category, Featured Pill & Read Time */}
                   <div className="flex items-center justify-between gap-2">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold border ${article.categoryColor}`}
-                    >
-                      <BookOpen className="w-3.5 h-3.5" />
-                      <span>{article.category}</span>
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border bg-blue-50 text-[#0066CC] border-blue-200 shadow-2xs">
+                        <BookOpen className="w-3.5 h-3.5" />
+                        <span>{article.category}</span>
+                      </span>
+
+                      {article.isFeatured && (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10.5px] font-bold bg-amber-50 text-amber-800 border border-amber-200 shadow-2xs">
+                          <Star className="w-3 h-3 fill-amber-500 text-amber-500" />
+                          <span>GHIM NỔI BẬT</span>
+                        </span>
+                      )}
+                    </div>
 
                     <div className="flex items-center gap-1 text-xs font-mono text-slate-500 font-semibold">
                       <Clock className="w-3.5 h-3.5 text-[#0066CC]" />
@@ -147,16 +242,18 @@ export default function DeverBlogPreview() {
                     </p>
 
                     {/* Tags */}
-                    <div className="flex flex-wrap gap-1.5 pt-2">
-                      {article.tags.map((tag, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[11px] font-mono font-semibold text-slate-700 hover:border-[#0066CC] hover:text-[#0066CC] transition-colors"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
+                    {article.tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1.5 pt-2">
+                        {article.tags.map((tag, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className="px-2.5 py-0.5 rounded-lg bg-slate-100 border border-slate-200 text-[11px] font-mono font-semibold text-slate-700 hover:border-[#0066CC] hover:text-[#0066CC] transition-colors"
+                          >
+                            #{tag}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   {/* Bottom Row: Author & Action Buttons */}
@@ -211,7 +308,7 @@ export default function DeverBlogPreview() {
                     </div>
                   </div>
                 </div>
-              </GlowingEdgeCard>
+              </div>
             );
           })}
         </div>

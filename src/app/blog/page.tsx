@@ -217,9 +217,9 @@ export default function BlogPage() {
           </div>
         </section>
 
-        {/* 1. Interactive GlowingEdgeCard Blog Spotlight Section */}
+        {/* 1. High-End Editorial Featured Blog Spotlight Section */}
         {blogs.length > 0 && selectedCategory === "Tất cả" && !searchQuery && (
-          <DeverBlogPreview />
+          <DeverBlogPreview blogs={blogs} />
         )}
 
       {/* Category Filter Pills */}

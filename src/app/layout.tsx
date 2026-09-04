@@ -39,6 +39,36 @@ export default function RootLayout({
 }) {
   return (
     <html lang="vi">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function isExtErr(e, s) {
+                  var str = String((e && (e.stack || e.message)) || e || s || '');
+                  return str.indexOf('chrome-extension://') !== -1 ||
+                         str.indexOf('moz-extension://') !== -1 ||
+                         str.indexOf('M_ID') !== -1 ||
+                         str.indexOf('nimlmejbmnecnaghgmbahmbaddhjbecg') !== -1;
+                }
+                window.addEventListener('error', function(ev) {
+                  if (isExtErr(ev.error, ev.filename) || isExtErr(ev.message)) {
+                    ev.stopImmediatePropagation();
+                    ev.preventDefault();
+                    return true;
+                  }
+                }, true);
+                window.addEventListener('unhandledrejection', function(ev) {
+                  if (isExtErr(ev.reason)) {
+                    ev.stopImmediatePropagation();
+                    ev.preventDefault();
+                  }
+                }, true);
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${deverSans.variable} ${deverMono.variable} font-sans`}>
         <MainLayout>{children}</MainLayout>
       </body>
