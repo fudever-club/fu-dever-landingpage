@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
   Award,
@@ -48,15 +48,6 @@ const GEN_OPTIONS = [
   "Gen 8",
 ];
 
-const COMPANY_OPTIONS = [
-  "Tất Cả Doanh Nghiệp",
-  "Axon Active",
-  "FPT Software",
-  "VNG Corp",
-  "KMS Technology",
-  "SmartDev",
-];
-
 export default function AlumniPage() {
   const [alumniList, setAlumniList] = useState<Alumnus[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -64,6 +55,23 @@ export default function AlumniPage() {
   const [selectedGen, setSelectedGen] = useState<string>("Tất Cả Thế Hệ");
   const [selectedCompany, setSelectedCompany] = useState<string>("Tất Cả Doanh Nghiệp");
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Dynamic company list derived directly from Alumni profiles
+  const companyOptions = useMemo(() => {
+    const rawCompanies = alumniList
+      .map((item) => item.workplace?.trim())
+      .filter((wp): wp is string => Boolean(wp && wp.length > 0));
+
+    const uniqueMap = new Map<string, string>();
+    for (const comp of rawCompanies) {
+      const lower = comp.toLowerCase();
+      if (!uniqueMap.has(lower)) {
+        uniqueMap.set(lower, comp);
+      }
+    }
+    const dynamicCompanies = Array.from(uniqueMap.values()).sort((a, b) => a.localeCompare(b));
+    return ["Tất Cả Doanh Nghiệp", ...dynamicCompanies];
+  }, [alumniList]);
 
   const fetchAlumni = async () => {
     setIsLoading(true);
@@ -105,13 +113,13 @@ export default function AlumniPage() {
 
     const matchCompany =
       selectedCompany === "Tất Cả Doanh Nghiệp" ||
-      (item.workplace && item.workplace.toLowerCase().includes(selectedCompany.toLowerCase().split(" ")[0]));
+      (item.workplace && item.workplace.trim().toLowerCase() === selectedCompany.trim().toLowerCase());
 
     return matchSearch && matchGen && matchCompany;
   });
 
   return (
-    <main className="min-h-screen pt-24 pb-20 bg-[#F8FCFF]">
+    <div className="min-h-screen pt-4 pb-20 bg-[#F8FCFF]">
       {/* Hero Banner */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
         <div className="relative bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] rounded-3xl p-8 lg:p-12 text-white shadow-2xl overflow-hidden border border-blue-400/30">
@@ -189,25 +197,27 @@ export default function AlumniPage() {
           </div>
 
           {/* Company Radar Quick Filter */}
-          <div className="pt-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
-            <span className="text-slate-400 font-bold flex items-center gap-1 shrink-0">
-              <Building2 className="w-3.5 h-3.5 text-[#0066CC]" /> Doanh nghiệp:
-            </span>
-            {COMPANY_OPTIONS.map((comp) => (
-              <button
-                key={comp}
-                type="button"
-                onClick={() => setSelectedCompany(comp)}
-                className={`px-3 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all ${
-                  selectedCompany === comp
-                    ? "bg-blue-100 text-[#004C99] border border-blue-300"
-                    : "text-slate-600 hover:bg-slate-100"
-                }`}
-              >
-                {comp}
-              </button>
-            ))}
-          </div>
+          {companyOptions.length > 1 && (
+            <div className="pt-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
+              <span className="text-slate-400 font-bold flex items-center gap-1 shrink-0">
+                <Building2 className="w-3.5 h-3.5 text-[#0066CC]" /> Doanh nghiệp:
+              </span>
+              {companyOptions.map((comp) => (
+                <button
+                  key={comp}
+                  type="button"
+                  onClick={() => setSelectedCompany(comp)}
+                  className={`px-3 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all cursor-pointer ${
+                    selectedCompany === comp
+                      ? "bg-blue-100 text-[#004C99] border border-blue-300 shadow-xs"
+                      : "text-slate-600 hover:bg-slate-100"
+                  }`}
+                >
+                  {comp}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* LOADING SKELETON */}
@@ -401,6 +411,6 @@ export default function AlumniPage() {
           </div>
         )}
       </section>
-    </main>
+    </div>
   );
 }

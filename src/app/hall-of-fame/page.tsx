@@ -121,7 +121,7 @@ export default async function HallOfFamePage() {
   const { podium, data: leaders } = await fetchHallOfFame();
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#F4F9FF] via-white to-[#F0F7FF] py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-b from-[#F4F9FF] via-white to-[#F0F7FF] py-8 px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         {/* Hero Section */}
         <div className="text-center max-w-3xl mx-auto space-y-4 mb-16">
@@ -393,6 +393,6 @@ export default async function HallOfFamePage() {
           </div>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

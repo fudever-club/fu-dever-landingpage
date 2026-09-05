@@ -29,7 +29,7 @@ interface OpenSourceProject {
   tags?: string[];
 }
 
-const FALLBACK_PROJECTS: OpenSourceProject[] = [
+const INITIAL_PROJECTS: OpenSourceProject[] = [
   {
     id: 1,
     title: "dever-cli",
@@ -67,27 +67,36 @@ const API_SERVER =
   "http://localhost:5000";
 
 export default function MemberShowcase() {
-  const [projects, setProjects] = useState<OpenSourceProject[]>([]);
+  const [projects, setProjects] = useState<OpenSourceProject[]>(INITIAL_PROJECTS);
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     async function fetchProjects() {
-      try {
-        const res = await fetch(`${API_SERVER}/api/v1/opensource-projects`);
-        if (res.ok) {
-          const json = await res.json();
-          const serverData = Array.isArray(json) ? json : json?.data || [];
-          setProjects(serverData);
-        } else {
-          setProjects([]);
+      const endpoints = [
+        `${API_SERVER}/api/v1/opensource-projects`,
+        "https://dever-backend-production.up.railway.app/api/v1/opensource-projects",
+      ];
+
+      for (const url of endpoints) {
+        try {
+          const res = await fetch(url);
+          if (res.ok) {
+            const json = await res.json();
+            const serverData = Array.isArray(json) ? json : json?.data || [];
+            if (Array.isArray(serverData) && serverData.length > 0) {
+              setProjects(serverData);
+              return;
+            }
+          }
+        } catch {
+          // Continue to fallback
         }
-      } catch (err) {
-        setProjects([]);
-      } finally {
-        setLoading(false);
       }
+      // Fallback to static initial projects if server unavailable
+      setProjects(INITIAL_PROJECTS);
+      setLoading(false);
     }
-    fetchProjects();
+    fetchProjects().finally(() => setLoading(false));
   }, []);
 
   return (
@@ -105,14 +114,38 @@ export default function MemberShowcase() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, idx) => {
-            const pKey = project._id || project.id || idx;
-            return (
-              <div
-                key={pKey}
-                className="group relative bg-white dark:bg-gray-800/90 rounded-3xl p-7 border border-slate-200/80 dark:border-gray-700/80 shadow-sm hover:shadow-2xl hover:border-blue-300 dark:hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5"
-              >
+        {loading && projects.length === 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-3xl p-7 border border-slate-200 dark:border-gray-700 animate-pulse space-y-4">
+                <div className="flex justify-between items-center">
+                  <div className="h-5 w-24 bg-slate-200 dark:bg-gray-700 rounded-full" />
+                  <div className="h-5 w-12 bg-slate-200 dark:bg-gray-700 rounded-full" />
+                </div>
+                <div className="h-7 bg-slate-200 dark:bg-gray-700 rounded-xl w-3/4" />
+                <div className="space-y-2">
+                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-full" />
+                  <div className="h-4 bg-slate-200 dark:bg-gray-700 rounded w-5/6" />
+                </div>
+                <div className="h-10 bg-slate-100 dark:bg-gray-700 rounded-xl w-full pt-4" />
+              </div>
+            ))}
+          </div>
+        ) : projects.length === 0 ? (
+          <div className="text-center py-16 bg-white dark:bg-gray-800 rounded-3xl border border-dashed border-slate-200 dark:border-gray-700 p-8">
+            <Code2 className="w-10 h-10 text-[#0066CC] mx-auto mb-3" />
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Chưa có dự án mã nguồn mở nào</h3>
+            <p className="text-xs text-slate-500 max-w-md mx-auto">Các dự án cá nhân và open source của thành viên CLB sẽ sớm được cập nhật tại đây.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projects.map((project, idx) => {
+              const pKey = project._id || project.id || idx;
+              return (
+                <div
+                  key={pKey}
+                  className="group relative bg-white dark:bg-gray-800/90 rounded-3xl p-7 border border-slate-200/80 dark:border-gray-700/80 shadow-sm hover:shadow-2xl hover:border-blue-300 dark:hover:border-blue-500/50 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1.5"
+                >
                 <div>
                   <div className="flex items-center justify-between gap-3 mb-4">
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-blue-50 dark:bg-blue-900/30 text-[#004C99] dark:text-blue-300 border border-blue-100 dark:border-blue-800">
@@ -178,6 +211,7 @@ export default function MemberShowcase() {
             );
           })}
         </div>
+        )}
       </div>
     </section>
   );

@@ -210,7 +210,7 @@ export default function EventsPage() {
     null;
 
   return (
-    <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
+    <div className="w-full min-h-screen bg-[#F8FCFF] pb-20 pt-4">
       {/* Modern Premium 3D Holographic VIP Ticket & Background Beams Hero */}
       <DeverEventHero
         event={featuredEvent}
@@ -445,6 +445,6 @@ export default function EventsPage() {
           </div>
         </div>
       )}
-    </main>
+    </div>
   );
 }

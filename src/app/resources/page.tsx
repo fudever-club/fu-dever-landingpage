@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   BookOpen,
   CalendarDays,
@@ -37,6 +37,8 @@ interface ResourceItem {
   description?: string;
   category?: string;
   isSpotlight?: boolean;
+  isFeatured?: boolean;
+  createdAt?: string;
 }
 
 interface ResourceActionInfo {
@@ -122,12 +124,32 @@ const CURATED_RESOURCES: ResourceItem[] = [
 ];
 
 export default function ResourcesPage() {
-  const [resources, setResources] = useState<ResourceItem[]>(CURATED_RESOURCES);
+  const [resources, setResources] = useState<ResourceItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isError, setIsError] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Tất Cả");
   const [selectedResource, setSelectedResource] = useState<ResourceItem | null>(null);
+
+  // Dynamic Spotlight Resources configured by Admin or backfilled from real database resources
+  const spotlightResources = useMemo(() => {
+    if (resources.length === 0) return [];
+    // 1. Prioritize resources explicitly marked as featured by Admin (isFeatured: true or isSpotlight: true)
+    const featured = resources.filter((item) => item.isFeatured || item.isSpotlight);
+    if (featured.length >= 3) {
+      return featured.slice(0, 3);
+    }
+    // 2. If less than 3 featured, backfill with remaining real resources from database
+    if (featured.length > 0) {
+      const remaining = resources.filter((item) => !featured.includes(item));
+      return [...featured, ...remaining].slice(0, 3);
+    }
+    // 3. If no resources marked as featured, use top 3 from real resources
+    if (resources.length >= 3) {
+      return resources.slice(0, 3);
+    }
+    return resources;
+  }, [resources]);
 
   const fetchResources = async () => {
     setIsLoading(true);
@@ -140,10 +162,12 @@ export default function ResourcesPage() {
         const serverData = Array.isArray(json) ? json : json?.data || [];
         setResources(serverData);
       } else {
+        setIsError(true);
         setResources([]);
       }
     } catch (err) {
       console.warn("Backend API unavailable:", err);
+      setIsError(true);
       setResources([]);
     } finally {
       setIsLoading(false);
@@ -272,7 +296,7 @@ export default function ResourcesPage() {
   };
 
   return (
-    <main className="min-h-screen pt-20 pb-20 bg-[#F8FAFC]">
+    <div className="w-full min-h-screen pb-20 bg-[#F8FAFC]">
       {/* Memphis Confetti Animated Background Wrapper for Hero & Spotlight */}
       <MemphisConfettiBackground className="pt-4 pb-4">
         {/* 1. Header */}
@@ -322,7 +346,7 @@ export default function ResourcesPage() {
         </section>
 
         {/* 2. Top 3 Spotlight Modules */}
-        {selectedCategory === "Tất Cả" && !searchQuery && (
+        {selectedCategory === "Tất Cả" && !searchQuery && spotlightResources.length >= 3 && (
           <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -333,101 +357,120 @@ export default function ResourcesPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
               {/* Spotlight 1: Large Feature (6 cols) */}
-              <div className="lg:col-span-6 bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-full text-xs font-mono font-black bg-blue-50 text-[#004C99] border border-blue-200">
-                      SLIDE WORKSHOP
-                    </span>
-                    <span className="text-xs font-mono text-slate-400 font-bold">14.5 MB (PDF)</span>
+              {(() => {
+                const item = spotlightResources[0];
+                const action = getResourceActionInfo(item);
+                const dateStr = item.date || (item.createdAt ? new Date(item.createdAt).toLocaleDateString("vi-VN") : "Cập nhật mới");
+                return (
+                  <div className="lg:col-span-6 bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <span className="px-3 py-1 rounded-full text-xs font-mono font-black bg-blue-50 text-[#004C99] border border-blue-200">
+                          {item.type ? item.type.toUpperCase() : "SLIDE WORKSHOP"}
+                        </span>
+                        <span className="text-xs font-mono text-slate-400 font-bold">{item.size || "Tài liệu"}</span>
+                      </div>
+
+                      <h3 className="text-xl lg:text-2xl font-black text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
+                        {item.title}
+                      </h3>
+
+                      <p className="text-xs lg:text-sm text-slate-600 leading-relaxed font-medium">
+                        {item.description || "Tài liệu kỹ thuật chuyên môn do cộng đồng FU-DEVER biên soạn và chọn lọc."}
+                      </p>
+
+                      <div className="pt-2 flex items-center gap-2 text-xs font-semibold text-slate-500">
+                        <PenLine className="w-3.5 h-3.5 text-[#0066CC]" /> {item.author || "Ban Chuyên Môn FU-DEVER"}
+                      </div>
+                    </div>
+
+                    <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-xs font-mono text-slate-500">{dateStr}</span>
+                      <a
+                        href={action.url}
+                        target={action.isDirectFile ? undefined : "_blank"}
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold shadow-md shadow-blue-600/20 transition-all active:scale-[0.98]"
+                      >
+                        <span>{action.label}</span>
+                        {renderActionIcon(action.iconType)}
+                      </a>
+                    </div>
                   </div>
-
-                  <h3 className="text-xl lg:text-2xl font-black text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
-                    Tối Ưu Hóa Next.js 14 App Router &amp; Server Components
-                  </h3>
-
-                  <p className="text-xs lg:text-sm text-slate-600 leading-relaxed font-medium">
-                    Bộ slide đào tạo chi tiết về kiến trúc Server Components, cơ chế caching 4 tầng và kỹ thuật tối ưu Core Web Vitals từ chuyên đề đào tạo Gen 6-8.
-                  </p>
-
-                  <div className="pt-2 flex items-center gap-2 text-xs font-semibold text-slate-500">
-                    <PenLine className="w-3.5 h-3.5 text-[#0066CC]" /> Ban Chuyên Môn FU-DEVER
-                  </div>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-xs font-mono text-slate-500">15/08/2026</span>
-                  <a
-                    href="https://drive.google.com/file/d/sample_nextjs14_slide/view"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold shadow-md shadow-blue-600/20 transition-all active:scale-[0.98]"
-                  >
-                    <span>Mở Google Drive</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </a>
-                </div>
-              </div>
+                );
+              })()}
 
               {/* Spotlight 2: Clean Architecture Boilerplate (3 cols) */}
-              <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
-                <div className="space-y-3">
-                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-purple-50 text-purple-700 border border-purple-200 inline-block">
-                    MÃ NGUỒN MẪU
-                  </span>
+              {(() => {
+                const item = spotlightResources[1];
+                const action = getResourceActionInfo(item);
+                return (
+                  <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
+                    <div className="space-y-3">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-purple-50 text-purple-700 border border-purple-200 inline-block">
+                        {item.type ? item.type.toUpperCase() : "MÃ NGUỒN MẪU"}
+                      </span>
 
-                  <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
-                    Fullstack Express + TS + Clean Architecture
-                  </h3>
+                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
+                        {item.title}
+                      </h3>
 
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
-                    Boilerplate chuẩn doanh nghiệp tích hợp sẵn JWT Auth, Mongoose, Docker và Swagger.
-                  </p>
-                </div>
+                      <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
+                        {item.description || "Tài liệu kỹ thuật chuyên môn do cộng đồng FU-DEVER biên soạn."}
+                      </p>
+                    </div>
 
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-slate-500 font-bold">2.8 MB</span>
-                  <a
-                    href="https://github.com/fu-dever/vnpay-nodejs-template"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all"
-                  >
-                    <FileCode className="w-3 h-3 text-[#0066CC]" />
-                    <span>GitHub</span>
-                  </a>
-                </div>
-              </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-slate-500 font-bold">{item.size || "Source Code"}</span>
+                      <a
+                        href={action.url}
+                        target={action.isDirectFile ? undefined : "_blank"}
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all"
+                      >
+                        {renderActionIcon(action.iconType)}
+                        <span>{action.label}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              })()}
 
-              {/* Spotlight 3: CSD201 Algorithms Ebook (3 cols) */}
-              <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
-                <div className="space-y-3">
-                  <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-amber-50 text-amber-800 border border-amber-200 inline-block">
-                    EBOOK THUẬT TOÁN
-                  </span>
+              {/* Spotlight 3: Dynamic Tertiary Spotlight (3 cols) */}
+              {(() => {
+                const item = spotlightResources[2];
+                const action = getResourceActionInfo(item);
+                return (
+                  <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all flex flex-col justify-between group">
+                    <div className="space-y-3">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block">
+                        {item.type ? item.type.toUpperCase() : "EBOOK CHUYÊN NGÀNH"}
+                      </span>
 
-                  <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
-                    100 Thuật Toán Kinh Điển &amp; Đề Thi FPTU
-                  </h3>
+                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
+                        {item.title}
+                      </h3>
 
-                  <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
-                    Tổng hợp các dạng bài quy hoạch động, cây nhị phân, đồ thị Dijkstra và bẫy đề thi.
-                  </p>
-                </div>
+                      <p className="text-xs text-slate-600 leading-relaxed font-medium line-clamp-3">
+                        {item.description || "Tài liệu kỹ thuật chuyên môn do cộng đồng FU-DEVER biên soạn."}
+                      </p>
+                    </div>
 
-                <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[11px] font-mono text-slate-500 font-bold">8.2 MB (PDF)</span>
-                  <a
-                    href="https://drive.google.com/file/d/sample_csd201_algorithms/view"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 text-[#0066CC] text-xs font-bold transition-all"
-                  >
-                    <Download className="w-3 h-3 text-[#0066CC]" />
-                    <span>Xem PDF</span>
-                  </a>
-                </div>
-              </div>
+                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-[11px] font-mono text-slate-500 font-bold">{item.size || "Tài liệu số"}</span>
+                      <a
+                        href={action.url}
+                        target={action.isDirectFile ? undefined : "_blank"}
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold transition-all"
+                      >
+                        {renderActionIcon(action.iconType)}
+                        <span>{action.label}</span>
+                      </a>
+                    </div>
+                  </div>
+                );
+              })()}
             </div>
           </section>
         )}
@@ -511,10 +554,14 @@ export default function ResourcesPage() {
               <FolderOpen className="h-6 w-6" />
             </div>
             <h3 className="text-base font-bold text-slate-900">
-              Không tìm thấy tài liệu phù hợp
+              {resources.length === 0
+                ? "Chưa có tài liệu nào"
+                : "Không tìm thấy tài liệu phù hợp"}
             </h3>
             <p className="text-xs text-slate-500 max-w-md mx-auto font-medium">
-              Hãy thử thay đổi từ khóa tìm kiếm hoặc chọn danh mục &quot;Tất Cả&quot; để khám phá kho tài nguyên của CLB.
+              {resources.length === 0
+                ? "Hiện tại kho tài nguyên của CLB chưa có tài liệu nào được xuất bản. Vui lòng quay lại sau hoặc liên hệ Admin để đóng góp tài liệu."
+                : "Hãy thử thay đổi từ khóa tìm kiếm hoặc chọn danh mục \"Tất Cả\" để khám phá kho tài nguyên của CLB."}
             </p>
           </div>
         )}
@@ -661,6 +708,6 @@ export default function ResourcesPage() {
           </div>
         );
       })()}
-    </main>
+    </div>
   );
 }

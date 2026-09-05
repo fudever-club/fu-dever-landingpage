@@ -42,8 +42,9 @@ const ListMember = ({ member = initialData }: { member: any }) => {
   const ref = useRef(null);
   const inView = useInView(ref);
   const [data, setData] = useState(member);
-  const [page, setPage] = useState<number>(2);
   const [end, setEnd] = useState(false);
+  const pageRef = useRef(2);
+  const loadingRef = useRef(false);
 
   const getMoreUser = async (pageNum: number) => {
     let config = {
@@ -62,13 +63,17 @@ const ListMember = ({ member = initialData }: { member: any }) => {
       }
     } catch (error) {
       return error;
+    } finally {
+      loadingRef.current = false;
     }
   };
 
   useEffect(() => {
-    if (inView && !end) {
-      getMoreUser(page);
-      setPage((prev) => prev + 1);
+    if (inView && !end && !loadingRef.current) {
+      loadingRef.current = true;
+      const currentPage = pageRef.current;
+      pageRef.current += 1;
+      getMoreUser(currentPage);
     }
   }, [inView, end]);
 

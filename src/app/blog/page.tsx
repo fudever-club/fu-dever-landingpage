@@ -134,13 +134,13 @@ export default function BlogPage() {
         if (res.ok) {
           const json = await res.json();
           const serverData = Array.isArray(json) ? json : json?.data || [];
-          setBlogs(serverData);
+          setBlogs(serverData.length > 0 ? serverData : FALLBACK_BLOGS);
         } else {
-          setBlogs([]);
+          setBlogs(FALLBACK_BLOGS);
         }
       } catch (err) {
         console.warn("Backend API unavailable:", err);
-        setBlogs([]);
+        setBlogs(FALLBACK_BLOGS);
       } finally {
         setIsLoading(false);
       }
@@ -184,7 +184,7 @@ export default function BlogPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FCFF] pb-20 pt-20">
+    <div className="w-full min-h-screen bg-[#F8FCFF] pb-20 pt-4">
       {/* Full-Page Cyber Circuit Background */}
       <DeverCircuitBackground className="pb-10">
         {/* Header Title & Intro */}
@@ -342,6 +342,6 @@ export default function BlogPage() {
         )}
       </section>
       </DeverCircuitBackground>
-    </main>
+    </div>
   );
 }

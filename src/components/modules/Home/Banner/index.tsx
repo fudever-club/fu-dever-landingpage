@@ -31,7 +31,7 @@ const animationTitle: any = {
       bounce: 0.8,
       duration: 3,
       delay: 0.5,
-      repeat: "Infinity",
+      repeat: Infinity,
       repeatType: "reverse",
     },
   },

@@ -1,12 +1,16 @@
 "use client";
-import React from "react";
+import React, { Suspense } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import DeverCommandPalette from "@components/ui/DeverCommandPalette";
+import DeverRouteLoader from "@components/ui/DeverRouteLoader";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
+      <Suspense fallback={null}>
+        <DeverRouteLoader />
+      </Suspense>
       <a
         href="#main-content"
         className="sr-only fixed left-4 top-4 z-[200] rounded-lg bg-[#0066CC] px-4 py-2 text-sm font-semibold text-white shadow-lg focus:not-sr-only focus:outline-none focus:ring-4 focus:ring-blue-200"

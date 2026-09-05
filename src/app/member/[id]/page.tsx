@@ -45,7 +45,7 @@ const Member = async ({ params: { id } }: { params: { id: string } }) => {
 
   if (!user) {
     return (
-      <main className="min-h-screen bg-[#F4F6F9] flex items-center justify-center px-4 pt-24 pb-20">
+      <div className="min-h-screen bg-[#F4F6F9] flex items-center justify-center px-4 pt-6 pb-20">
         <div className="max-w-md w-full bg-white rounded-3xl p-8 border border-slate-200 shadow-sm text-center space-y-4">
           <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 border border-rose-100 flex items-center justify-center mx-auto">
             <UserX className="w-8 h-8" />
@@ -56,14 +56,14 @@ const Member = async ({ params: { id } }: { params: { id: string } }) => {
           </p>
           <div className="pt-2">
             <Link
-              href="/members"
+              href="/member"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold transition-all shadow-sm"
             >
               <ArrowLeft className="w-4 h-4" /> Về danh bạ thành viên
             </Link>
           </div>
         </div>
-      </main>
+      </div>
     );
   }
 

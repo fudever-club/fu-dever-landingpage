@@ -8,7 +8,7 @@ export const metadata = {
     icon: "/icons/layout/logo.png",
   },
   openGraph: {
-    images: ["/images//layouts/leaderboard.png"],
+    images: ["/images/layouts/leaderboard.png"],
     title: "FU-DEVER | Câu lạc bộ lập trình FU-DEVER",
     description:
       "Chào mừng bạn đến với FU-DEVER, câu lạc bộ lập trình của Đại học FPT! . Tại FU-DEVER, chúng tôi cố gắng thúc đẩy một cộng đồng sôi động gồm các lập trình viên đầy tham vọng và cung cấp nền tảng để phát triển kỹ năng và cộng tác.",

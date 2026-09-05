@@ -109,7 +109,7 @@ export default function LeaderboardModule({
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-50 via-blue-50/20 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pt-20 pb-16">
+    <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 via-blue-50/20 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 pb-16">
       {/* Full-Page Crisp Matrix Rain & Parallax Floating Code Symbols */}
       <DeverMatrixRain opacity={0.4} fontSize={13} className="pt-4 pb-10">
         <DeverCodeParallaxBackground className="w-full">
@@ -413,6 +413,6 @@ export default function LeaderboardModule({
       </section>
         </DeverCodeParallaxBackground>
       </DeverMatrixRain>
-    </main>
+    </div>
   );
 }

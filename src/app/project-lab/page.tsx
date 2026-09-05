@@ -60,7 +60,7 @@ const getProjectLabs = async (): Promise<ProjectLabItem[]> => {
 export default async function ProjectLabPage() {
   const projects = await getProjectLabs();
   return (
-    <main className="min-h-screen pt-24 pb-16 bg-[#F8FCFF]">
+    <div className="min-h-screen pt-4 pb-16 bg-[#F8FCFF]">
       {/* Header Banner */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
         <div className="bg-gradient-to-r from-[#0098FF] to-[#00528C] rounded-3xl p-8 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between shadow-xl overflow-hidden relative">
@@ -164,6 +164,6 @@ export default async function ProjectLabPage() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
 }

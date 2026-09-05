@@ -62,26 +62,29 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const API_SERVER =
     process.env.NEXT_PUBLIC_API_SERVER ||
     "http://localhost:5000";
+  const servers = [API_SERVER, "https://dever-backend-production.up.railway.app"];
 
-  try {
-    const response = await fetch(
-      `${API_SERVER}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
-      { next: { revalidate: 60 } }
-    );
-    if (response.ok) {
-      const payload = await response.json();
-      const post = payload.data;
-      return {
-        title: `${post.title} | FU-DEVER Tech Blog`,
-        description: post.excerpt || "Chia sẻ kiến thức kỹ thuật từ CLB FU-DEVER.",
-        openGraph: {
-          title: post.title,
-          description: post.excerpt,
-          type: "article",
-        },
-      };
-    }
-  } catch (e) {}
+  for (const server of servers) {
+    try {
+      const response = await fetch(
+        `${server}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+        { next: { revalidate: 60 } }
+      );
+      if (response.ok) {
+        const payload = await response.json();
+        const post = payload.data;
+        return {
+          title: `${post.title} | FU-DEVER Tech Blog`,
+          description: post.excerpt || "Chia sẻ kiến thức kỹ thuật từ CLB FU-DEVER.",
+          openGraph: {
+            title: post.title,
+            description: post.excerpt,
+            type: "article",
+          },
+        };
+      }
+    } catch {}
+  }
 
   const fallback = FALLBACK_POSTS[params.slug];
   if (fallback) {
@@ -100,21 +103,22 @@ export default async function BlogDetailPage({ params }: Props) {
   const API_SERVER =
     process.env.NEXT_PUBLIC_API_SERVER ||
     "http://localhost:5000";
+  const servers = [API_SERVER, "https://dever-backend-production.up.railway.app"];
 
-  try {
-    const response = await fetch(
-      `${API_SERVER}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
-      { cache: "no-store" }
-    );
+  for (const server of servers) {
+    try {
+      const response = await fetch(
+        `${server}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+        { cache: "no-store" }
+      );
 
-    if (response.ok) {
-      const payload = await response.json();
-      if (payload?.data) {
-        return <DeverBlogRenderer post={payload.data} />;
+      if (response.ok) {
+        const payload = await response.json();
+        if (payload?.data) {
+          return <DeverBlogRenderer post={payload.data} />;
+        }
       }
-    }
-  } catch (error) {
-    // Network fallback
+    } catch {}
   }
 
   const fallbackPost = FALLBACK_POSTS[params.slug];

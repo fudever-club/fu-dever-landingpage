@@ -28,7 +28,7 @@ const getActivity = async () => {
     const response = await axios.request(config);
     return response;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
@@ -43,7 +43,7 @@ const getAlbum = async () => {
     const response = await axios.request(config);
     return response;
   } catch (error) {
-    return error;
+    return null;
   }
 };
 
@@ -52,7 +52,7 @@ async function Activity() {
   const albums: any = await getAlbum();
   return (
     <div>
-      <MainActivy data={data?.data?.data} albums={albums?.data?.data} />
+      <MainActivy data={data?.data?.data || null} albums={albums?.data?.data || null} />
     </div>
   );
 }
