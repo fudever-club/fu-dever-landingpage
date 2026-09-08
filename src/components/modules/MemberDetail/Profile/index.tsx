@@ -17,8 +17,8 @@ const Profile = ({ user }: { user: any }) => {
       <div className="flex lg:gap-[20px] md:gap-[10px] sm:gap-[20px]">
         <div className="rounded-[10px] aspect-[16/22] lg:w-[160px] md:w-[200px] overflow-hidden">
           <Image
-            src={user?.avatar}
-            alt={user?.description}
+            src={user?.avatar || "/images/avatar/avatar.jpg"}
+            alt={user?.description || "Avatar"}
             width={160}
             height={220}
             className="w-full h-full object-cover"
