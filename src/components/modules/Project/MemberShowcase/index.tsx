@@ -100,7 +100,7 @@ export default function MemberShowcase() {
   }, []);
 
   return (
-    <section className="py-20 bg-slate-50/70 dark:bg-gray-900/90 transition-colors border-t border-slate-200/60 dark:border-gray-800">
+    <section id="open-source" className="py-20 bg-slate-50/70 dark:bg-gray-900/90 transition-colors border-t border-slate-200/60 dark:border-gray-800 scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 xl:px-20">
         <div className="text-center max-w-3xl mx-auto mb-14">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-[#0066CC] dark:text-blue-400 text-xs font-bold uppercase tracking-wider mb-4">

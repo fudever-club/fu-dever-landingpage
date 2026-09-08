@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Map, Marker } from "pigeon-maps";
 import {
   Copy,
@@ -147,6 +148,7 @@ const resolveCoordinates = (loc: string): [number, number] => {
 const DEFAULT_AUDIO_URL = "https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=lofi-study-112191.mp3";
 
 export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
+  const router = useRouter();
   const [copied, setCopied] = useState(false);
   const [currentTime, setCurrentTime] = useState("14:22");
   const [selectedDrawer, setSelectedDrawer] = useState<"projects" | "articles" | null>(null);
@@ -739,7 +741,13 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
           {/* TILE 5: Featured Projects Card (2-wide - Pristine White with Sapphire Accents) */}
           <div
-            onClick={() => (projectsList.length > 0 ? setSelectedDrawer("projects") : undefined)}
+            onClick={() => {
+              if (projectsList.length > 0) {
+                setSelectedDrawer("projects");
+              } else {
+                router.push("/project#open-source");
+              }
+            }}
             className="tile md:col-span-2 bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex items-center justify-between gap-4 min-h-[176px] transition-all duration-200 hover:border-[#0066CC]/50 hover:shadow-md group cursor-pointer"
           >
             <div className="flex items-center gap-4 min-w-0">
@@ -748,7 +756,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
               <div className="space-y-1.5 min-w-0">
                 <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold text-slate-500 block font-mono">
-                  {projectsList.length > 0 ? `DỰ ÁN TIÊU BIỂU • ${projectsList.length} DỰ ÁN` : "DỰ ÁN TIÊU BIỂU • FU-DEVER LAB"}
+                  {projectsList.length > 0 ? `DỰ ÁN TIÊU BIỂU • ${projectsList.length} DỰ ÁN` : "DỰ ÁN TIÊU BIỂU • DEVER OPEN SOURCE"}
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate group-hover:text-[#0066CC] transition-colors">
                   {projectsList[0]?.title || "Khám Phá Các Dự Án Mở CLB"}
@@ -765,9 +773,26 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                       Open Source Ecosystem
                     </span>
                   )}
-                  <Link href="/project-lab" className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200">
-                    Khám phá →
-                  </Link>
+                  {projectsList.length > 0 ? (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedDrawer("projects");
+                      }}
+                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
+                    >
+                      Xem chi tiết →
+                    </button>
+                  ) : (
+                    <Link
+                      href="/project#open-source"
+                      onClick={(e) => e.stopPropagation()}
+                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
+                    >
+                      Khám phá →
+                    </Link>
+                  )}
                 </div>
               </div>
             </div>
