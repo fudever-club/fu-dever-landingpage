@@ -66,6 +66,13 @@ const API_SERVER =
   process.env.NEXT_PUBLIC_API_SERVER ||
   "http://localhost:5000";
 
+const formatExternalUrl = (url?: string): string => {
+  if (!url) return "";
+  const trimmed = url.trim();
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+};
+
 export default function MemberShowcase() {
   const [projects, setProjects] = useState<OpenSourceProject[]>(INITIAL_PROJECTS);
   const [loading, setLoading] = useState<boolean>(true);
@@ -187,7 +194,7 @@ export default function MemberShowcase() {
 
                   <div className="flex items-center gap-3">
                     <a
-                      href={project.githubUrl || "https://github.com/fu-dever"}
+                      href={formatExternalUrl(project.githubUrl) || "https://github.com/fu-dever"}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-slate-900 hover:bg-black dark:bg-slate-700 dark:hover:bg-slate-600 text-white rounded-xl text-xs font-extrabold shadow-sm transition-all hover:scale-[1.02] active:scale-[0.98]"
@@ -196,10 +203,10 @@ export default function MemberShowcase() {
                     </a>
                     {project.demoUrl && (
                       <a
-                        href={project.demoUrl}
+                        href={formatExternalUrl(project.demoUrl)}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center p-2.5 bg-blue-50 dark:bg-blue-900/40 text-[#0066CC] dark:text-blue-300 hover:bg-blue-100 rounded-xl border border-blue-200 dark:border-blue-800 transition-all hover:scale-105"
+                        className="inline-flex items-center justify-center p-2.5 bg-blue-50 dark:bg-blue-900/40 text-[#0066CC] dark:text-blue-300 hover:bg-blue-100 rounded-xl border border-blue-200 dark:border-blue-800 transition-all hover:scale-105 active:scale-[0.98]"
                         title="Xem bản Demo trực tiếp"
                       >
                         <ExternalLink className="h-4 w-4" />

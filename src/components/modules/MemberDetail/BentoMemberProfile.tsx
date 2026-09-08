@@ -403,16 +403,19 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
           {/* Right: Actions */}
           <div className="flex items-center gap-2">
             <button
+              type="button"
               onClick={handleCopyLink}
-              className="h-9 px-3.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 shadow-xs flex items-center gap-1.5 transition-all active:scale-95"
+              className="h-9 px-3.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 shadow-xs flex items-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5 text-slate-500" />}
               <span>{copied ? "Đã sao chép" : "Copy link"}</span>
             </button>
             <button
+              type="button"
               onClick={handleShare}
-              className="w-9 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 shadow-xs flex items-center justify-center transition-all active:scale-95"
+              className="w-9 h-9 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 shadow-xs flex items-center justify-center transition-all active:scale-[0.98] cursor-pointer"
               title="Chia sẻ profile"
+              aria-label="Chia sẻ profile"
             >
               <Share2 className="w-4 h-4 text-slate-500" />
             </button>
@@ -960,8 +963,9 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
               <button
                 type="button"
+                aria-label="Đóng"
                 onClick={() => setSelectedDrawer(null)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition-all cursor-pointer active:scale-[0.98]"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1077,7 +1081,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             <button
               type="button"
               onClick={() => setSelectedBadge(null)}
-              className="w-full py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold transition-all shadow-md active:scale-98"
+              className="w-full py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold transition-all shadow-md active:scale-[0.98] cursor-pointer"
             >
               Đóng
             </button>
