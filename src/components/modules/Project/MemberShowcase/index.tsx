@@ -106,6 +106,28 @@ export default function MemberShowcase() {
     fetchProjects().finally(() => setLoading(false));
   }, []);
 
+  // Guarantee smooth auto-scroll to this section when URL contains #open-source
+  useEffect(() => {
+    const scrollToOpenSource = () => {
+      if (typeof window !== "undefined" && window.location.hash === "#open-source") {
+        const el = document.getElementById("open-source");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    };
+
+    const t1 = setTimeout(scrollToOpenSource, 150);
+    const t2 = setTimeout(scrollToOpenSource, 600);
+    window.addEventListener("hashchange", scrollToOpenSource);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      window.removeEventListener("hashchange", scrollToOpenSource);
+    };
+  }, []);
+
   return (
     <section id="open-source" className="py-20 bg-slate-50/70 dark:bg-gray-900/90 transition-colors border-t border-slate-200/60 dark:border-gray-800 scroll-mt-20">
       <div className="max-w-[1440px] mx-auto px-5 sm:px-8 lg:px-16 xl:px-20">
