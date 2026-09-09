@@ -62,6 +62,7 @@ graph TD
 - **Hệ thống 5 trạng thái UX:** Xử lý triệt để `Empty State`, `Loading Skeleton`, `Success Toast`, `Error State with Retry`, `Disabled State`.
 - **Tiêu chuẩn No-AI Asset:** 100% sử dụng hình ảnh thực tế CLB và Code Component / SVG Vector Canvas thuần khiết.
 - **Khả năng tiếp cận (Accessibility):** Hỗ trợ phím tắt `ESC` đóng Modal, đạt chuẩn tương phản WCAG 2.1 AAA.
+- **Phục hồi sự cố (Resilience & Telemetry):** Tích hợp `ErrorBoundary` đa tầng bao bọc thành phần tương tác WebGL/3D Three.js và tự động gửi Telemetry crash report về Backend Gateway (`/api/v1/telemetry/report-error`), kích hoạt cảnh báo thông minh đến Telegram DevOps Bot.
 
 ---
 
