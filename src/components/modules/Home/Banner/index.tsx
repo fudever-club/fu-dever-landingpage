@@ -90,18 +90,18 @@ function Banner() {
             Học cùng cộng đồng yêu công nghệ, thực chiến qua workshop, dự án và
             thử thách lập trình.
           </p>
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
+          <div className="mt-7 flex flex-col w-full max-w-xs md:max-w-none md:w-auto md:flex-row items-stretch justify-center gap-3">
             <a
               href="https://forms.gle/hJxSewnuiVFwR1rH8"
               target="_blank"
               rel="noreferrer"
-              className="rounded-xl bg-[#0066CC] px-5 py-3 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#004C99] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
+              className="inline-flex items-center justify-center rounded-xl bg-[#0066CC] px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition-all duration-200 hover:bg-[#004C99] hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200 text-center whitespace-nowrap"
             >
               Đăng ký thành viên
             </a>
             <Link
               href="/events"
-              className="rounded-xl border border-[#0066CC] bg-white px-5 py-3 text-sm font-semibold text-[#0066CC] shadow-sm transition-all duration-200 hover:bg-blue-50 hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200"
+              className="inline-flex items-center justify-center rounded-xl border border-[#0066CC] bg-white px-6 py-3.5 text-sm font-semibold text-[#0066CC] shadow-sm transition-all duration-200 hover:bg-blue-50 hover:shadow-md active:scale-[0.98] focus:outline-none focus:ring-4 focus:ring-blue-200 text-center whitespace-nowrap"
             >
               Xem sự kiện sắp tới
             </Link>

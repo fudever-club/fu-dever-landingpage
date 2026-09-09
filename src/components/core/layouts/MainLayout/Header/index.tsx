@@ -304,15 +304,25 @@ function Header() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-            className="hidden sm:inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
+            className="hidden md:inline-flex items-center gap-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 hover:text-[#0066CC] text-xs font-semibold px-3 py-1.5 rounded-full border border-slate-200/80 transition-all active:scale-95 shadow-2xs"
             title="Tìm kiếm nhanh (Ctrl + K)"
             aria-label="Mở tìm kiếm"
           >
             <Search className="h-3.5 w-3.5 text-[#0066CC]" />
-            <span className="hidden sm:inline text-slate-600 font-normal">Tìm kiếm</span>
-            <kbd className="hidden sm:inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">
+            <span className="text-slate-600 font-normal">Tìm kiếm</span>
+            <kbd className="inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">
               ⌘K
             </kbd>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
+            className="inline-flex md:hidden h-9 w-9 items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0066CC] border border-slate-200/80 transition-all active:scale-95 shrink-0"
+            title="Tìm kiếm nhanh"
+            aria-label="Mở tìm kiếm nhanh"
+          >
+            <Search className="h-4 w-4 text-[#0066CC]" />
           </button>
 
           <a
