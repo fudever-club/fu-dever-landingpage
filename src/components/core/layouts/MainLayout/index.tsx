@@ -4,6 +4,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import DeverCommandPalette from "@components/ui/DeverCommandPalette";
 import DeverRouteLoader from "@components/ui/DeverRouteLoader";
+import ErrorBoundary from "@components/core/common/ErrorBoundary";
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -20,7 +21,7 @@ const MainLayout = ({ children }: { children: React.ReactNode }) => {
       <Header />
       <DeverCommandPalette />
       <main id="main-content" tabIndex={-1} className="pt-16 outline-none">
-        {children}
+        <ErrorBoundary>{children}</ErrorBoundary>
       </main>
       <Footer />
     </>
