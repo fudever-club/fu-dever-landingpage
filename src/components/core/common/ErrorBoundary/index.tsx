@@ -29,6 +29,30 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error("[FU-DEVER Landing ErrorBoundary caught error]:", error, errorInfo);
+
+    if (typeof window !== "undefined") {
+      try {
+        const apiServer = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
+        const payload = JSON.stringify({
+          message: error?.message || "Landing Page Component Crash",
+          stack: error?.stack,
+          componentStack: errorInfo?.componentStack,
+          url: window.location.href,
+        });
+
+        const targetUrl = `${apiServer}/api/v1/telemetry/report-error`;
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(targetUrl, new Blob([payload], { type: "application/json" }));
+        } else {
+          fetch(targetUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: payload,
+            keepalive: true,
+          }).catch(() => {});
+        }
+      } catch (e) {}
+    }
   }
 
   private handleReset = () => {
