@@ -7,6 +7,7 @@ const getAlbumBySlug = async (slug: string) => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: activityEndpointer.GET_ALBUM_BY_SLUG.replace("{slug}", slug),
   };
 
@@ -24,6 +25,7 @@ export async function generateMetadata({
 }) {
   const data: any = await getAlbumBySlug(id);
   const album = data?.data?.data?.album;
+  const coverImage = album?.imageList?.[0];
   return {
     title: `FU-DEVER | ${album?.name}`,
     description:
@@ -32,7 +34,7 @@ export async function generateMetadata({
       icon: "/icons/layout/logo.png",
     },
     openGraph: {
-      images: [album?.imageList[0]],
+      ...(typeof coverImage === "string" && coverImage ? { images: [coverImage] } : {}),
       title: `FU-DEVER |  ${album?.name}`,
       description: `${album?.description}`,
     },

@@ -344,7 +344,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
   };
 
   return (
-    <div className="min-h-screen bg-[#F4F6F9] text-slate-900 pt-24 pb-20 px-4 sm:px-6 relative selection:bg-[#0066CC] selection:text-white font-sans">
+    <div className="min-h-screen bg-[#F4F6F9] text-slate-900 pt-4 pb-20 px-4 sm:px-6 relative selection:bg-[#0066CC] selection:text-white font-sans">
       {/* HTML5 Audio Element with Real Metadata Listeners */}
       <audio
         ref={audioRef}

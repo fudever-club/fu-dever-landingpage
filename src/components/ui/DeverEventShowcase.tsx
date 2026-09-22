@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { apiFetch } from "@/src/lib/api";
 import {
   Calendar,
   Clock,
@@ -108,8 +109,7 @@ export default function DeverEventShowcase() {
     setIsLoading(true);
     setIsError(false);
     try {
-      const apiServer = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-      const res = await fetch(`${apiServer}/api/v1/events`);
+      const res = await apiFetch(`/api/v1/events`);
       if (!res.ok) throw new Error("Không thể kết nối API Backend");
       const json = await res.json();
       const data = Array.isArray(json) ? json : json?.data || [];

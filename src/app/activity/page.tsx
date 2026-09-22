@@ -21,6 +21,7 @@ const getActivity = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: activityEndpointer.GET_IMAGE_ACTIVITY,
   };
 
@@ -36,6 +37,7 @@ const getAlbum = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: activityEndpointer.GET_ALL_ALBUM,
   };
 

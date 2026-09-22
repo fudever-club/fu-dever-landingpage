@@ -6,6 +6,7 @@ const getAllProject = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: projectEndpoint.GET_ALL_PROJECT,
   };
 

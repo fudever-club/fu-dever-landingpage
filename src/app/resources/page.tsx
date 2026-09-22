@@ -24,6 +24,7 @@ import {
 
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 import MemphisConfettiBackground from "@components/ui/MemphisConfettiBackground";
+import { apiFetch, getApiServer } from "@/src/lib/api";
 
 interface ResourceItem {
   _id?: string;
@@ -62,67 +63,6 @@ const CATEGORIES = [
   "AI & Data Science",
 ];
 
-const CURATED_RESOURCES: ResourceItem[] = [
-  {
-    id: 1,
-    title: "Slide Workshop: Tối Ưu Hóa Next.js 14 App Router & Server Components",
-    date: "15/08/2026",
-    author: "Ban Chuyên Môn FU-DEVER",
-    type: "Slide",
-    category: "Web & Frontend",
-    fileUrl: "https://drive.google.com/file/d/sample_nextjs14_slide/view",
-    size: "14.5 MB (PDF)",
-    description: "Bộ slide đào tạo chi tiết về kiến trúc Server Components, cơ chế caching 4 tầng và kỹ thuật tối ưu Core Web Vitals.",
-    isSpotlight: true,
-  },
-  {
-    id: 2,
-    title: "Mã Nguồn Mẫu: Fullstack Express + TypeScript + Clean Architecture",
-    date: "02/08/2026",
-    author: "Dev Team DEVER",
-    type: "Source Code",
-    category: "Backend & Architecture",
-    fileUrl: "https://github.com/fu-dever/vnpay-nodejs-template",
-    size: "2.8 MB (GitHub Repo)",
-    description: "Boilerplate chuẩn doanh nghiệp tích hợp sẵn JWT Auth, Mongoose, Docker-compose, Swagger và thanh toán VNPAY.",
-    isSpotlight: true,
-  },
-  {
-    id: 3,
-    title: "Ebook / Cẩm Nang: 100 Thuật Toán Kinh Điển & Bí Kíp Giải CSD201",
-    date: "20/07/2026",
-    author: "ICPC & Competitive Programming Team",
-    type: "Ebook / PDF",
-    category: "Giải Thuật ICPC",
-    fileUrl: "https://drive.google.com/file/d/sample_csd201_algorithms/view",
-    size: "8.2 MB (PDF)",
-    description: "Tổng hợp các dạng bài quy hoạch động, cây nhị phân, đồ thị Dijkstra và các bẫy thường gặp trong các kỳ thi FPTU.",
-    isSpotlight: true,
-  },
-  {
-    id: 4,
-    title: "Cheatsheet: Trọn Bộ Phím Tắt & Lệnh Git Thực Chiến Dành Cho Dev",
-    date: "10/07/2026",
-    author: "CLB FU-DEVER",
-    type: "Cheatsheet",
-    category: "Cheatsheet",
-    fileUrl: "https://drive.google.com/file/d/sample_git_cheatsheet/view",
-    size: "1.5 MB (PDF Infographic)",
-    description: "Bản tóm tắt trực quan các lệnh Rebase, Cherry-pick, Stash và giải quyết Conflict trong môi trường làm việc nhóm.",
-  },
-  {
-    id: 5,
-    title: "Slide Workshop: Nhập Môn Trí Tuệ Nhân Tạo & Xây Dựng AI RAG Pipeline",
-    date: "28/06/2026",
-    author: "AI Research Team DEVER",
-    type: "Slide",
-    category: "AI & Data Science",
-    fileUrl: "https://drive.google.com/file/d/sample_ai_rag_workshop/view",
-    size: "22.4 MB (PDF)",
-    description: "Hướng dẫn thực chiến tích hợp LangChain, Vector Database và OpenAI API vào ứng dụng web thực tế.",
-  },
-];
-
 export default function ResourcesPage() {
   const [resources, setResources] = useState<ResourceItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -155,8 +95,7 @@ export default function ResourcesPage() {
     setIsLoading(true);
     setIsError(false);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-      const res = await fetch(`${apiUrl}/api/v1/resources`);
+      const res = await apiFetch(`/api/v1/resources`);
       if (res.ok) {
         const json = await res.json();
         const serverData = Array.isArray(json) ? json : json?.data || [];
@@ -207,7 +146,7 @@ export default function ResourcesPage() {
   };
 
   const getResourceActionInfo = (item: ResourceItem): ResourceActionInfo => {
-    const apiUrl = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
+    const apiUrl = getApiServer();
     const rawUrl = (item.fileUrl || "").trim();
 
     if (rawUrl.includes("github.com")) {

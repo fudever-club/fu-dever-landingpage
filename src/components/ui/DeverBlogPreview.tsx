@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import Link from "next/link";
+import { apiFetch } from "@/src/lib/api";
 import {
   Clock,
   ArrowUpRight,
@@ -75,19 +76,17 @@ const FALLBACK_ARTICLES: BlogPostItem[] = [
   },
 ];
 
-const API_SERVER =
-  process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-
 export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewProps) {
   const [internalBlogs, setInternalBlogs] = useState<any[]>([]);
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  const likePendingRef = useRef<Set<string>>(new Set());
 
   useEffect(() => {
     // If props not passed or empty, self-fetch from API
     if (!propBlogs || propBlogs.length === 0) {
       const fetchLatest = async () => {
         try {
-          const res = await fetch(`${API_SERVER}/api/v1/blogs`);
+          const res = await apiFetch(`/api/v1/blogs`);
           if (res.ok) {
             const json = await res.json();
             const data = Array.isArray(json) ? json : json?.data || [];
@@ -112,6 +111,7 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
     }
 
     const normalized: BlogPostItem[] = sourceBlogs.map((b: any) => ({
+      _id: typeof b._id === "string" ? b._id : undefined,
       id: b._id || b.id || b.slug,
       slug: b.slug,
       title: b.title,
@@ -147,22 +147,39 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
     return merged.length > 0 ? merged : FALLBACK_ARTICLES;
   }, [sourceBlogs]);
 
-  const toggleLike = async (id: string | number, e: React.MouseEvent) => {
+  const toggleLike = async (article: BlogPostItem, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
-    const postId = String(id);
-    const isLiked = likedPosts[postId];
+    const postId = String(article.id);
+    if (likePendingRef.current.has(postId)) {
+      return;
+    }
+    likePendingRef.current.add(postId);
+    const wasLiked = Boolean(likedPosts[postId]);
     setLikedPosts((prev) => ({
       ...prev,
-      [postId]: !isLiked,
+      [postId]: !wasLiked,
     }));
 
-    // Call API optimistic
+    // Static fallback articles have no server id — local toggle only, no API call.
+    if (!article._id) {
+      likePendingRef.current.delete(postId);
+      return;
+    }
     try {
-      await fetch(`${API_SERVER}/api/v1/blogs/${postId}/like`, { method: "PUT" });
+      const res = await apiFetch(`/api/v1/blogs/${article._id}/like`, { method: "PUT" });
+      if (!res.ok) {
+        throw new Error(`Like failed with status ${res.status}`);
+      }
     } catch {
-      // ignore
+      // Roll back so the heart never claims a like the server rejected.
+      setLikedPosts((prev) => ({
+        ...prev,
+        [postId]: wasLiked,
+      }));
+    } finally {
+      likePendingRef.current.delete(postId);
     }
   };
 
@@ -287,7 +304,7 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={(e) => toggleLike(article.id, e)}
+                        onClick={(e) => toggleLike(article, e)}
                         className={`h-9 px-3 rounded-xl border flex items-center gap-1.5 text-xs font-bold transition-all active:scale-95 ${
                           isLiked
                             ? "bg-rose-50 border-rose-300 text-rose-600 shadow-xs"

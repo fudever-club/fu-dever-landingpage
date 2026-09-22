@@ -23,6 +23,7 @@ const getLeader = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: `${userEndpoint.GET_ALL_USERS}?filter={"isLeader": true}`,
   };
 
@@ -37,6 +38,7 @@ const getExcellent = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: `${userEndpoint.GET_ALL_USERS}?filter={"isExcellent": true}`,
   };
 
@@ -51,6 +53,7 @@ const getUser = async () => {
   let config = {
     method: "get",
     maxBodyLength: Infinity,
+    timeout: 8000,
     url: `${userEndpoint.GET_ALL_USERS}?page=1&limit=8&filter={"isLeader": false}`,
   };
 

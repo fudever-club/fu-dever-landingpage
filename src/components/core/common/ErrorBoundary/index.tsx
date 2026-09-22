@@ -2,6 +2,7 @@
 
 import React, { Component, ErrorInfo, ReactNode } from "react";
 import { AlertTriangle, RotateCcw, Home } from "lucide-react";
+import { getApiServer } from "@/src/lib/api";
 
 interface Props {
   children: ReactNode;
@@ -32,7 +33,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     if (typeof window !== "undefined") {
       try {
-        const apiServer = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
+        const apiServer = getApiServer();
         const payload = JSON.stringify({
           message: error?.message || "Landing Page Component Crash",
           stack: error?.stack,

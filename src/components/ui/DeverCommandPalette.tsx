@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   Search,
   BookOpen,
@@ -18,6 +18,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getApiServer } from "@/src/lib/api";
 
 interface SearchResult {
   id: string;
@@ -44,13 +45,10 @@ export default function DeverCommandPalette() {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasError, setHasError] = useState<boolean>(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(0);
+  const [retryCount, setRetryCount] = useState(0);
 
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const API_SERVER =
-    process.env.NEXT_PUBLIC_API_SERVER ||
-    "https://dever-backend-production.up.railway.app";
 
   // Custom event listener: 'open-command-palette'
   useEffect(() => {
@@ -77,8 +75,9 @@ export default function DeverCommandPalette() {
   // Focus input on open
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50);
+      const timer = setTimeout(() => inputRef.current?.focus(), 50);
       setSelectedIndex(0);
+      return () => clearTimeout(timer);
     } else {
       setQuery("");
       setResults([]);
@@ -86,40 +85,43 @@ export default function DeverCommandPalette() {
   }, [isOpen]);
 
   // Debounced API Search
-  const searchApi = useCallback(async (keyword: string) => {
-    if (!keyword.trim()) {
-      setResults([]);
+  useEffect(() => {
+    const controller = new AbortController();
+    setResults([]);
+    setHasError(false);
+    setSelectedIndex(0);
+
+    if (!isOpen || !query.trim()) {
       setLoading(false);
       return;
     }
 
     setLoading(true);
-    setHasError(false);
-
-    try {
-      const res = await fetch(
-        `${API_SERVER}/api/v1/search?q=${encodeURIComponent(keyword)}&limit=25`
-      );
-      const data = await res.json();
-      if (res.ok && data.status === "success") {
-        setResults(data.data || []);
-      } else {
-        setHasError(true);
+    const timer = setTimeout(async () => {
+      try {
+        const res = await fetch(
+          `${getApiServer()}/api/v1/search?q=${encodeURIComponent(query)}&limit=25`,
+          { signal: controller.signal }
+        );
+        const data = await res.json();
+        if (controller.signal.aborted) return;
+        if (res.ok && data.status === "success" && Array.isArray(data.data)) {
+          setResults(data.data);
+        } else {
+          setHasError(true);
+        }
+      } catch {
+        if (!controller.signal.aborted) setHasError(true);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
       }
-    } catch (err) {
-      setHasError(true);
-    } finally {
-      setLoading(false);
-    }
-  }, [API_SERVER]);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      searchApi(query);
     }, 250);
 
-    return () => clearTimeout(timer);
-  }, [query, searchApi]);
+    return () => {
+      clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query, isOpen, retryCount]);
 
   // Filtered by Category Tab
   const filtered =
@@ -129,7 +131,7 @@ export default function DeverCommandPalette() {
 
   // Keyboard navigation inside list
   const handleKeyDownList = (e: React.KeyboardEvent) => {
-    if (filtered.length === 0) return;
+    if (loading || hasError || filtered.length === 0 || e.nativeEvent.isComposing) return;
     if (e.key === "ArrowDown") {
       e.preventDefault();
       setSelectedIndex((prev) => (prev + 1) % filtered.length);
@@ -173,7 +175,6 @@ export default function DeverCommandPalette() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            onKeyDown={handleKeyDownList}
             className="bg-white dark:bg-slate-900 border border-blue-100 dark:border-slate-800 rounded-3xl max-w-2xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[80vh]"
           >
             {/* Top Search Input Bar */}
@@ -189,6 +190,7 @@ export default function DeverCommandPalette() {
                 placeholder="Nhập từ khóa tìm kiếm (VD: Next.js, LeetCode, PRF192, Gen 9)..."
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDownList}
                 className="w-full bg-transparent text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-400 focus:outline-none"
               />
               {query && (
@@ -273,7 +275,7 @@ export default function DeverCommandPalette() {
                   <p className="text-sm font-semibold">Lỗi khi tìm kiếm dữ liệu từ máy chủ.</p>
                   <button
                     type="button"
-                    onClick={() => searchApi(query)}
+                    onClick={() => setRetryCount((count) => count + 1)}
                     className="text-xs font-bold px-4 py-1.5 bg-rose-50 text-rose-600 rounded-xl border border-rose-200 hover:bg-rose-100"
                   >
                     Thử lại

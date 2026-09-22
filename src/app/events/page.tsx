@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
 import DeverEventHero from "@components/ui/DeverEventHero";
+import { apiFetch } from "@/src/lib/api";
 
 interface EventItem {
   _id?: string;
@@ -119,14 +120,11 @@ export default function EventsPage() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
 
-  const API_SERVER =
-    process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-
   useEffect(() => {
     async function fetchEvents() {
       try {
         setIsLoading(true);
-        const res = await fetch(`${API_SERVER}/api/v1/events`);
+        const res = await apiFetch(`/api/v1/events`);
         if (res.ok) {
           const json = await res.json();
           const serverData = Array.isArray(json) ? json : json?.data || [];
@@ -142,7 +140,7 @@ export default function EventsPage() {
       }
     }
     fetchEvents();
-  }, [API_SERVER]);
+  }, []);
 
   useEffect(() => {
     if (!selectedRegisterEvent) return;
@@ -360,9 +358,15 @@ export default function EventsPage() {
                         <button
                           onClick={() => setSelectedRegisterEvent(evt)}
                           type="button"
-                          className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white font-extrabold text-xs shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-[0.98]"
+                          disabled={evt.status === "Đã kết thúc" || evt.status === "Tạm hoãn"}
+                          aria-disabled={evt.status === "Đã kết thúc" || evt.status === "Tạm hoãn"}
+                          className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white font-extrabold text-xs shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
                         >
-                          Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                          {evt.status === "Đã kết thúc"
+                            ? "Đã Kết Thúc"
+                            : evt.status === "Tạm hoãn"
+                              ? "Tạm Hoãn"
+                              : <>Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></>}
                         </button>
                       </div>
                     </div>

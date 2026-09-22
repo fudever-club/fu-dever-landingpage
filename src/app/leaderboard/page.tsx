@@ -1,4 +1,5 @@
 import LeaderboardModule from "@components/modules/Leaderboard/Main";
+import { apiFetch } from "@/src/lib/api";
 
 export const metadata = {
   title: "FU-DEVER | Bảng xếp hạng",
@@ -27,28 +28,21 @@ type LeaderboardEntry = {
 };
 
 const getLeaderboard = async (): Promise<{ data: LeaderboardEntry[]; error: boolean }> => {
-  const apiServer =
-    process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-  const productionApi = "https://dever-backend-production.up.railway.app";
-
-  for (const baseUrl of [apiServer, productionApi]) {
-    try {
-      const response = await fetch(`${baseUrl}/api/v1/leetcode`, {
-        cache: "no-store",
-        next: { revalidate: 30 },
-      });
-      if (response.ok) {
-        const payload = await response.json();
-        if (Array.isArray(payload?.data) && payload.data.length > 0) {
-          return { data: payload.data, error: false };
-        }
+  try {
+    const response = await apiFetch(`/api/v1/leetcode`, {
+      cache: "no-store",
+    });
+    if (response.ok) {
+      const payload = await response.json();
+      if (Array.isArray(payload?.data) && payload.data.length > 0) {
+        return { data: payload.data, error: false };
       }
-    } catch {
-      // Continue to fallback API
     }
+  } catch {
+    // Fall through to the error state below.
   }
 
-  return { data: [], error: false };
+  return { data: [], error: true };
 };
 
 export default async function LeaderBoardPage() {
@@ -60,5 +54,4 @@ export default async function LeaderBoardPage() {
     </>
   );
 }
-export const revalidate = 60;
 export const dynamic = "force-dynamic";

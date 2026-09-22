@@ -1,6 +1,7 @@
 import React from "react";
 import { Metadata } from "next";
 import Link from "next/link";
+import { apiFetch } from "@/src/lib/api";
 import {
   Trophy,
   Flame,
@@ -83,33 +84,24 @@ async function fetchHallOfFame(): Promise<{
   podium: { first: LeaderMember | null; second: LeaderMember | null; third: LeaderMember | null };
   data: LeaderMember[];
 }> {
-  const apiServer = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-  const fallbackApi = "https://dever-backend-production.up.railway.app";
-
-  for (const url of [apiServer, fallbackApi]) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 2000);
-      const res = await fetch(`${url}/api/v1/gamification/hall-of-fame`, {
-        cache: "no-store",
-        signal: controller.signal,
-      });
-      clearTimeout(timeoutId);
-      if (res.ok) {
-        const payload = await res.json();
-        if (payload?.data && payload.data.length > 0) {
-          return {
-            podium: payload.podium || {
-              first: payload.data[0] || null,
-              second: payload.data[1] || null,
-              third: payload.data[2] || null,
-            },
-            data: payload.data,
-          };
-        }
+  try {
+    const res = await apiFetch(`/api/v1/gamification/hall-of-fame`, {
+      cache: "no-store",
+    });
+    if (res.ok) {
+      const payload = await res.json();
+      if (payload?.data && payload.data.length > 0) {
+        return {
+          podium: payload.podium || {
+            first: payload.data[0] || null,
+            second: payload.data[1] || null,
+            third: payload.data[2] || null,
+          },
+          data: payload.data,
+        };
       }
-    } catch {}
-  }
+    }
+  } catch {}
 
   return {
     podium: { first: null, second: null, third: null },

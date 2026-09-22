@@ -2,11 +2,11 @@ import React from "react";
 import MainMemberDetail from "@/src/components/modules/MemberDetail/Detail";
 import Link from "next/link";
 import { ArrowLeft, UserX } from "lucide-react";
+import { apiFetch } from "@/src/lib/api";
 
 const fetchUserDetail = async (idOrKey: string) => {
-  const API_SERVER = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
   try {
-    const res = await fetch(`${API_SERVER}/api/v1/users/${encodeURIComponent(idOrKey)}`, {
+    const res = await apiFetch(`/api/v1/users/${encodeURIComponent(idOrKey)}`, {
       cache: "no-store",
     });
     if (res.ok) {

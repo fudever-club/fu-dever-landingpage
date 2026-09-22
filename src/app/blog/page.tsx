@@ -1,10 +1,11 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BookOpen, Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverBlogPreview from "@components/ui/DeverBlogPreview";
 import DeverCircuitBackground from "@components/ui/DeverCircuitBackground";
+import { apiFetch } from "@/src/lib/api";
 
 interface BlogPost {
   _id?: string;
@@ -28,44 +29,6 @@ interface BlogPost {
 
 const DEFAULT_BLOG_COVER = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
 
-const FALLBACK_BLOGS: BlogPost[] = [
-  {
-    id: 1,
-    slug: "lam-chu-nextjs-14-app-router",
-    title: "Làm Chủ Next.js 14 App Router & Tối Ưu Hóa Server Components",
-    category: "Web & Frontend",
-    author: {
-      name: "Lê Đức Anh Phương",
-      role: "Lead Developer",
-      avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
-    },
-    date: "05/08/2026",
-    readTime: "6 phút đọc",
-    excerpt:
-      "Tổng hợp kinh nghiệm thực chiến kiến trúc Next.js 14 App Router, cách quản lý State mượt mà và khắc phục triệt để lỗi HMR useContext trong dự án lớn.",
-    likes: 142,
-    featured: true,
-    coverImage: "/images/dever_blog_hero.png",
-  },
-  {
-    id: 2,
-    slug: "kinh-nghiem-sanh-vai-icpc-2026",
-    title: "Bí Kíp Đua TOP LeetCode & Kinh Nghiệm Thi Đấu Giải ICPC 2026",
-    category: "Lập Trình Giải Thuật",
-    author: {
-      name: "Trần Văn Bảo Thắng",
-      role: "Algorithm Lead",
-      avatar: "https://i.ibb.co/TgXZgwv/445356269-973328174802658-3860307921523704298-n.jpg",
-    },
-    date: "01/08/2026",
-    readTime: "8 phút đọc",
-    excerpt:
-      "Chiến thuật phân chia bài tập, tối ưu thuật toán Quy hoạch động (DP) và cấu trúc dữ liệu Nâng cao giúp nhóm FU-DEVER đạt giải cao.",
-    likes: 98,
-    coverImage: "/images/dever_roadmap_banner.png",
-  },
-];
-
 const CATEGORIES = [
   "Tất cả",
   "Web & Frontend",
@@ -74,10 +37,6 @@ const CATEGORIES = [
   "AI / Machine Learning",
   "Kinh Nghiệm CLB",
 ];
-
-const API_SERVER =
-  process.env.NEXT_PUBLIC_API_SERVER ||
-  "http://localhost:5000";
 
 function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]; size?: "regular" | "large" }) {
   const name = author?.name || "DEVER Member";
@@ -125,26 +84,31 @@ export default function BlogPage() {
   const [selectedCategory, setSelectedCategory] = useState("Tất cả");
   const [searchQuery, setSearchQuery] = useState("");
   const [likedPosts, setLikedPosts] = useState<{ [key: string]: boolean }>({});
+  const likePendingRef = useRef<Set<string>>(new Set());
+
+  const fetchBlogs = async () => {
+    try {
+      setIsLoading(true);
+      setLoadError(false);
+      const res = await apiFetch(`/api/v1/blogs`);
+      if (res.ok) {
+        const json = await res.json();
+        const serverData = Array.isArray(json) ? json : json?.data || [];
+        setBlogs(serverData);
+      } else {
+        setLoadError(true);
+        setBlogs([]);
+      }
+    } catch (err) {
+      console.warn("Backend API unavailable:", err);
+      setLoadError(true);
+      setBlogs([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    async function fetchBlogs() {
-      try {
-        setIsLoading(true);
-        const res = await fetch(`${API_SERVER}/api/v1/blogs`);
-        if (res.ok) {
-          const json = await res.json();
-          const serverData = Array.isArray(json) ? json : json?.data || [];
-          setBlogs(serverData.length > 0 ? serverData : FALLBACK_BLOGS);
-        } else {
-          setBlogs(FALLBACK_BLOGS);
-        }
-      } catch (err) {
-        console.warn("Backend API unavailable:", err);
-        setBlogs(FALLBACK_BLOGS);
-      } finally {
-        setIsLoading(false);
-      }
-    }
     fetchBlogs();
   }, []);
 
@@ -162,24 +126,41 @@ export default function BlogPage() {
     e.stopPropagation();
 
     const postId = post._id || post.id?.toString() || "";
-    const isLiked = likedPosts[postId];
+    // Server only knows Mongo-backed posts — never send fallback/numeric ids.
+    if (!post._id || likePendingRef.current.has(postId)) {
+      return;
+    }
+    likePendingRef.current.add(postId);
+    const wasLiked = Boolean(likedPosts[postId]);
 
     // Optimistic UI update
-    setLikedPosts((prev) => ({ ...prev, [postId]: !isLiked }));
+    setLikedPosts((prev) => ({ ...prev, [postId]: !wasLiked }));
     setBlogs((prev) =>
       prev.map((b) =>
         (b._id === postId || b.id?.toString() === postId)
-          ? { ...b, likes: isLiked ? b.likes - 1 : b.likes + 1 }
+          ? { ...b, likes: wasLiked ? b.likes - 1 : b.likes + 1 }
           : b
       )
     );
 
-    if (post._id) {
-      try {
-        await fetch(`${API_SERVER}/api/v1/blogs/${post._id}/like`, { method: "PUT" });
-      } catch (err) {
-        console.error("Error liking blog:", err);
+    try {
+      const res = await apiFetch(`/api/v1/blogs/${post._id}/like`, { method: "PUT" });
+      if (!res.ok) {
+        throw new Error(`Like failed with status ${res.status}`);
       }
+    } catch (err) {
+      // Roll back the optimistic update so UI and DB never diverge silently.
+      console.error("Error liking blog:", err);
+      setLikedPosts((prev) => ({ ...prev, [postId]: wasLiked }));
+      setBlogs((prev) =>
+        prev.map((b) =>
+          (b._id === postId || b.id?.toString() === postId)
+            ? { ...b, likes: wasLiked ? b.likes + 1 : Math.max(0, b.likes - 1) }
+            : b
+        )
+      );
+    } finally {
+      likePendingRef.current.delete(postId);
     }
   };
 
@@ -255,6 +236,23 @@ export default function BlogPage() {
                 <div className="h-4 bg-slate-200 rounded w-2/3" />
               </div>
             ))}
+          </div>
+        ) : loadError ? (
+          <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">
+            <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4 border border-rose-100 shadow-xs">
+              <BookOpen className="w-8 h-8" />
+            </div>
+            <h3 className="text-xl font-black text-gray-900 mb-1.5">Không tải được bài viết</h3>
+            <p className="text-gray-600 text-xs mt-1 font-medium max-w-md mx-auto leading-relaxed">
+              Máy chủ nội dung tạm thời không phản hồi. Vui lòng thử lại sau giây lát.
+            </p>
+            <button
+              type="button"
+              onClick={fetchBlogs}
+              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 py-2.5 text-sm font-bold text-white shadow-sm transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]"
+            >
+              Thử lại
+            </button>
           </div>
         ) : blogs.length === 0 ? (
           <div className="text-center py-20 bg-white rounded-3xl shadow-sm border border-gray-200">

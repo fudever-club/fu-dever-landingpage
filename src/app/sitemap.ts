@@ -32,6 +32,11 @@ export default function sitemap() {
       priority: 0.8,
     },
     {
+      url: `${baseUrl}/project`,
+      lastModified: new Date(),
+      priority: 0.7,
+    },
+    {
       url: `${baseUrl}/resources`,
       lastModified: new Date(),
       priority: 0.7,

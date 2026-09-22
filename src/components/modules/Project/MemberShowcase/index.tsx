@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { ExternalLink, Star, Code2, Sparkles } from "lucide-react";
+import { apiFetch } from "@/src/lib/api";
 
 function GithubIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
@@ -62,10 +63,6 @@ const INITIAL_PROJECTS: OpenSourceProject[] = [
   },
 ];
 
-const API_SERVER =
-  process.env.NEXT_PUBLIC_API_SERVER ||
-  "http://localhost:5000";
-
 const formatExternalUrl = (url?: string): string => {
   if (!url) return "";
   const trimmed = url.trim();
@@ -79,25 +76,18 @@ export default function MemberShowcase() {
 
   useEffect(() => {
     async function fetchProjects() {
-      const endpoints = [
-        `${API_SERVER}/api/v1/opensource-projects`,
-        "https://dever-backend-production.up.railway.app/api/v1/opensource-projects",
-      ];
-
-      for (const url of endpoints) {
-        try {
-          const res = await fetch(url);
-          if (res.ok) {
-            const json = await res.json();
-            const serverData = Array.isArray(json) ? json : json?.data || [];
-            if (Array.isArray(serverData) && serverData.length > 0) {
-              setProjects(serverData);
-              return;
-            }
+      try {
+        const res = await apiFetch(`/api/v1/opensource-projects`);
+        if (res.ok) {
+          const json = await res.json();
+          const serverData = Array.isArray(json) ? json : json?.data || [];
+          if (Array.isArray(serverData) && serverData.length > 0) {
+            setProjects(serverData);
+            return;
           }
-        } catch {
-          // Continue to fallback
         }
+      } catch {
+        // Fall through to static initial projects below.
       }
       // Fallback to static initial projects if server unavailable
       setProjects(INITIAL_PROJECTS);

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import DeverBlogRenderer from "@components/ui/DeverBlogRenderer";
+import { apiFetch } from "@/src/lib/api";
 
 type Props = { params: { slug: string } };
 
@@ -59,32 +60,25 @@ Việc nắm vững Server Actions và cơ chế Suspense Streaming giúp lập 
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const API_SERVER =
-    process.env.NEXT_PUBLIC_API_SERVER ||
-    "http://localhost:5000";
-  const servers = [API_SERVER, "https://dever-backend-production.up.railway.app"];
-
-  for (const server of servers) {
-    try {
-      const response = await fetch(
-        `${server}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
-        { next: { revalidate: 60 } }
-      );
-      if (response.ok) {
-        const payload = await response.json();
-        const post = payload.data;
-        return {
-          title: `${post.title} | FU-DEVER Tech Blog`,
-          description: post.excerpt || "Chia sẻ kiến thức kỹ thuật từ CLB FU-DEVER.",
-          openGraph: {
-            title: post.title,
-            description: post.excerpt,
-            type: "article",
-          },
-        };
-      }
-    } catch {}
-  }
+  try {
+    const response = await apiFetch(
+      `/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      { next: { revalidate: 60 } }
+    );
+    if (response.ok) {
+      const payload = await response.json();
+      const post = payload.data;
+      return {
+        title: `${post.title} | FU-DEVER Tech Blog`,
+        description: post.excerpt || "Chia sẻ kiến thức kỹ thuật từ CLB FU-DEVER.",
+        openGraph: {
+          title: post.title,
+          description: post.excerpt,
+          type: "article",
+        },
+      };
+    }
+  } catch {}
 
   const fallback = FALLBACK_POSTS[params.slug];
   if (fallback) {
@@ -100,26 +94,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogDetailPage({ params }: Props) {
-  const API_SERVER =
-    process.env.NEXT_PUBLIC_API_SERVER ||
-    "http://localhost:5000";
-  const servers = [API_SERVER, "https://dever-backend-production.up.railway.app"];
+  try {
+    const response = await apiFetch(
+      `/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      { cache: "no-store" }
+    );
 
-  for (const server of servers) {
-    try {
-      const response = await fetch(
-        `${server}/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
-        { cache: "no-store" }
-      );
-
-      if (response.ok) {
-        const payload = await response.json();
-        if (payload?.data) {
-          return <DeverBlogRenderer post={payload.data} />;
-        }
+    if (response.ok) {
+      const payload = await response.json();
+      if (payload?.data) {
+        return <DeverBlogRenderer post={payload.data} />;
       }
-    } catch {}
-  }
+    }
+  } catch {}
 
   const fallbackPost = FALLBACK_POSTS[params.slug];
   if (fallbackPost) {

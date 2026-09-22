@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
+import { apiFetch } from "@/src/lib/api";
 import {
   Award,
   Building2,
@@ -77,8 +78,7 @@ export default function AlumniPage() {
     setIsLoading(true);
     setIsError(false);
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_SERVER || "http://localhost:5000";
-      const res = await fetch(`${apiUrl}/api/v1/alumni`, {
+      const res = await apiFetch(`/api/v1/alumni`, {
         cache: "no-store",
       });
       if (res.ok) {

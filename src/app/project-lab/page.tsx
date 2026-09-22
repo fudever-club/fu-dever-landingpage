@@ -1,38 +1,12 @@
 import { Metadata } from "next";
 import { ExternalLink, Lightbulb, UsersRound } from "lucide-react";
 import DeverProjectTerminal from "@components/ui/DeverProjectTerminal";
+import { apiFetch } from "@/src/lib/api";
 
 export const metadata: Metadata = {
   title: "FU-DEVER | Project Lab & Tìm Đồng Đội",
   description: "Không gian kết nối ý tưởng dự án và ghép đội làm sản phẩm thực tế dành cho các thành viên câu lạc bộ FU-DEVER.",
 };
-
-const openProjects = [
-  {
-    title: "Website Quản Lý Sự Kiện Sinh Viên FPT",
-    author: "Nguyễn Văn A (K17 - Leader)",
-    desc: "Dự án xây dựng nền tảng check-in QR Code và điểm danh tự động cho các sự kiện CLB trường FPT.",
-    hiring: ["Frontend (React/Tailwind)", "UI/UX Designer"],
-    status: "Đang tuyển (2 vị trí)",
-    badge: "Open Source",
-  },
-  {
-    title: "AI Quiz Scraper & Auto Generator",
-    author: "Trần Thị B (K18 - AI Lead)",
-    desc: "Ứng dụng tự động cào và sinh câu hỏi trắc nghiệm ôn tập cho sinh viên các môn chuyên ngành Software Engineering.",
-    hiring: ["Python Dev (FastAPI)", "DevOps"],
-    status: "Đang tuyển (1 vị trí)",
-    badge: "AI / ML",
-  },
-  {
-    title: "App Di Động Tìm Bạn Cùng Phòng KTX",
-    author: "Lê Hoàng C (K19 - Mobile Lead)",
-    desc: "Ứng dụng Flutter hỗ trợ sinh viên Hòa Lạc tìm bạn ở ghép KTX dựa trên thói quen và sở thích.",
-    hiring: ["Flutter Developer", "Backend (Node.js)"],
-    status: "Đang tuyển (3 vị trí)",
-    badge: "Mobile App",
-  },
-];
 
 type ProjectLabItem = {
   _id: string;
@@ -46,9 +20,7 @@ type ProjectLabItem = {
 
 const getProjectLabs = async (): Promise<ProjectLabItem[]> => {
   try {
-    const apiServer =
-      process.env.NEXT_PUBLIC_API_SERVER || "https://dever-backend-production.up.railway.app";
-    const response = await fetch(`${apiServer}/api/v1/project-lab`, { cache: "no-store" });
+    const response = await apiFetch(`/api/v1/project-lab`, { cache: "no-store" });
     if (!response.ok) return [];
     const payload = await response.json();
     return Array.isArray(payload?.data) ? payload.data : [];
@@ -99,14 +71,14 @@ export default async function ProjectLabPage() {
             <h2 className="text-2xl font-bold text-gray-800">Dự Án Đang Cần Đồng Đội</h2>
             <p className="text-gray-500 text-sm">Tham gia ngay để tích lũy kinh nghiệm làm dự án thực tế</p>
           </div>
-          <div className="flex flex-wrap gap-2">
-            <span className="bg-[#0098FF] text-white text-xs font-semibold px-4 py-2 rounded-lg cursor-pointer">
+          <div className="flex flex-wrap gap-2" aria-label="Nhóm dự án">
+            <span className="bg-[#0098FF] text-white text-xs font-semibold px-4 py-2 rounded-lg">
               Tất cả
             </span>
-            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200 cursor-pointer hover:border-[#0098FF]">
+            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200">
               Web Dev
             </span>
-            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200 cursor-pointer hover:border-[#0098FF]">
+            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200">
               AI / ML
             </span>
           </div>

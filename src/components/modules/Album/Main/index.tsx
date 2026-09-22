@@ -15,10 +15,15 @@ const MainAlbum = ({ album }: any) => {
   const inView = useInView(ref);
   const [images, setimages] = useState(album?.imageList || []);
   const [end, setEnd] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const pageRef = useRef(2);
   const loadingRef = useRef(false);
 
-  const getMoreAlbum = useCallback(async (pageNum: number) => {
+  const getMoreAlbum = useCallback(async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    setLoadError(false);
+    const pageNum = pageRef.current;
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -30,30 +35,29 @@ const MainAlbum = ({ album }: any) => {
 
     try {
       const response: any = await axios.request(config);
+      const nextImages = response?.data?.data?.album?.imageList;
+      if (!Array.isArray(nextImages)) throw new Error("Invalid album response");
       if (
+        nextImages.length === 0 ||
         response?.data?.data?.pagination?.currentPage >=
         response?.data?.data?.pagination?.totalPages
       ) {
         setEnd(true);
       }
-      if (response?.data?.data?.album?.imageList) {
-        setimages((prev: any[]) => [...prev, ...response.data.data.album.imageList]);
-      }
-    } catch (error) {
-      return error;
+      setimages((prev: any[]) => [...prev, ...nextImages]);
+      pageRef.current = pageNum + 1;
+    } catch {
+      setLoadError(true);
     } finally {
       loadingRef.current = false;
     }
   }, [album?.slug]);
 
   useEffect(() => {
-    if (inView && !end && !loadingRef.current) {
-      loadingRef.current = true;
-      const currentPage = pageRef.current;
-      pageRef.current += 1;
-      getMoreAlbum(currentPage);
+    if (inView && !end && !loadError) {
+      getMoreAlbum();
     }
-  }, [inView, end, getMoreAlbum]);
+  }, [inView, end, loadError, getMoreAlbum, images.length]);
 
   return (
     <section className="min-h-screen pt-4 pb-20">
@@ -94,14 +98,21 @@ const MainAlbum = ({ album }: any) => {
                 alt={image?.url || "Album image"}
                 width={400}
                 height={400}
-                blurDataURL={image?.url}
-                placeholder="blur"
                 className="w-full h-full lg:rounded-[16px] sm:rounded-[8px]"
               />
             </li>
           ))}
         </ul>
-        {!end && <div ref={ref} className="w-full h-[100px]" />}
+        {!end && <div ref={ref}>
+        {loadError ? (
+          <div role="alert" className="py-6 text-center space-y-3">
+            <p>Không thể tải thêm ảnh.</p>
+            <button type="button" onClick={getMoreAlbum} className="rounded-xl bg-[#0066CC] px-4 py-2 text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]">
+              Thử lại
+            </button>
+          </div>
+        ) : <div className="w-full h-[100px]" />}
+        </div>}
         <button
           onClick={() => {
             window.scrollTo({

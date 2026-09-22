@@ -1,7 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { apiFetch } from "@/src/lib/api";
 import {
   ArrowLeft,
   Clock,
@@ -127,9 +128,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
   const [toc, setToc] = useState<TocItem[]>([]);
   const [activeHeadingId, setActiveHeadingId] = useState<string>("");
   const [scrollProgress, setScrollProgress] = useState(0);
-
-  const API_SERVER =
-    process.env.NEXT_PUBLIC_API_SERVER || "https://dever-backend-production.up.railway.app";
+  const likePendingRef = useRef(false);
 
   // Check Bookmark state from localStorage
   useEffect(() => {
@@ -209,16 +208,25 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
 
   // Handle Likes
   const handleLike = async () => {
+    if (!post._id || likePendingRef.current) {
+      return;
+    }
+    likePendingRef.current = true;
     const nextState = !isLiked;
     setIsLiked(nextState);
     setLikes((prev) => (nextState ? prev + 1 : Math.max(0, prev - 1)));
 
-    if (post._id) {
-      try {
-        await fetch(`${API_SERVER}/api/v1/blogs/${post._id}/like`, { method: "PUT" });
-      } catch (err) {
-        // Quiet fallback
+    try {
+      const res = await apiFetch(`/api/v1/blogs/${post._id}/like`, { method: "PUT" });
+      if (!res.ok) {
+        throw new Error(`Like failed with status ${res.status}`);
       }
+    } catch (err) {
+      // Roll back so the displayed count never diverges from the server.
+      setIsLiked(!nextState);
+      setLikes((prev) => (nextState ? Math.max(0, prev - 1) : prev + 1));
+    } finally {
+      likePendingRef.current = false;
     }
   };
 
@@ -487,7 +495,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
   };
 
   return (
-    <main className="min-h-screen bg-[#F8FCFF] px-4 lg:px-8 pb-28 pt-24 font-sans antialiased">
+    <div className="min-h-screen bg-[#F8FCFF] px-4 lg:px-8 pb-28 pt-4 font-sans antialiased">
       {/* Top Global Scroll Progress Bar */}
       <div
         className="fixed top-0 left-0 h-1.5 bg-gradient-to-r from-[#0066CC] via-[#0080FF] to-[#00E5FF] z-50 transition-all duration-150 shadow-sm"
@@ -707,6 +715,6 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
           </aside>
         </div>
       </div>
-    </main>
+    </div>
   );
 }
