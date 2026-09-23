@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
@@ -43,10 +43,15 @@ const ListMember = ({ member = initialData }: { member: any }) => {
   const inView = useInView(ref);
   const [data, setData] = useState(member);
   const [end, setEnd] = useState(false);
+  const [loadError, setLoadError] = useState(false);
   const pageRef = useRef(2);
   const loadingRef = useRef(false);
 
-  const getMoreUser = async (pageNum: number) => {
+  const getMoreUser = useCallback(async () => {
+    if (loadingRef.current) return;
+    loadingRef.current = true;
+    setLoadError(false);
+    const pageNum = pageRef.current;
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -55,27 +60,25 @@ const ListMember = ({ member = initialData }: { member: any }) => {
 
     try {
       const response: any = await axios.request(config);
-      if (response?.data?.currentPage === response?.data?.totalPages) {
+      const users = response?.data?.data?.users;
+      if (!Array.isArray(users)) throw new Error("Invalid member response");
+      if (users.length === 0 || response.data.currentPage >= response.data.totalPages) {
         setEnd(true);
       }
-      if (response?.data?.data?.users) {
-        setData((prev: any[]) => [...prev, ...response.data.data.users]);
-      }
-    } catch (error) {
-      return error;
+      setData((prev: any[]) => [...prev, ...users]);
+      pageRef.current = pageNum + 1;
+    } catch {
+      setLoadError(true);
     } finally {
       loadingRef.current = false;
     }
-  };
+  }, []);
 
   useEffect(() => {
-    if (inView && !end && !loadingRef.current) {
-      loadingRef.current = true;
-      const currentPage = pageRef.current;
-      pageRef.current += 1;
-      getMoreUser(currentPage);
+    if (inView && !end && !loadError) {
+      getMoreUser();
     }
-  }, [inView, end]);
+  }, [inView, end, loadError, getMoreUser, data.length]);
 
   return (
     <article className="md:pb-[60px] sm:pb-[40px]">
@@ -148,7 +151,16 @@ const ListMember = ({ member = initialData }: { member: any }) => {
             );
           })}
         </motion.ul>
-        {!end && <Loading myRef={ref} />}
+        {!end && <div ref={ref}>
+        {loadError ? (
+          <div role="alert" className="py-6 text-center space-y-3">
+            <p>Không thể tải thêm thành viên.</p>
+            <button type="button" onClick={getMoreUser} className="rounded-xl bg-[#0066CC] px-4 py-2 text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]">
+              Thử lại
+            </button>
+          </div>
+        ) : <Loading />}
+        </div>}
       </div>
     </article>
   );

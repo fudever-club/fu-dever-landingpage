@@ -1,9 +1,12 @@
 const prefix = "/api/v1";
-const API_SERVER =
+// Trim: a trailing space/CR in the env value (easy via `set VAR=... &&`
+// chains or editor whitespace) would otherwise produce invalid request URLs.
+const API_SERVER = (
   process.env.NEXT_PUBLIC_API_SERVER ||
   (typeof window !== "undefined" && !window.location.hostname.includes("localhost")
     ? "https://dever-backend-production.up.railway.app"
-    : "http://localhost:5000");
+    : "http://localhost:5000")
+).trim();
 const userEndpoint = {
   GET_ALL_USERS: `${API_SERVER}${prefix}/users`,
   GET_USER_DETAIL_BY_ID: `${API_SERVER}${prefix}/users/{id}`,

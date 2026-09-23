@@ -34,7 +34,8 @@ const getLeaderboard = async (): Promise<{ data: LeaderboardEntry[]; error: bool
     });
     if (response.ok) {
       const payload = await response.json();
-      if (Array.isArray(payload?.data) && payload.data.length > 0) {
+      if (Array.isArray(payload?.data)) {
+        // An ok-but-empty board is an honest empty state, not a load error.
         return { data: payload.data, error: false };
       }
     }
