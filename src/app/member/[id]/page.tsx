@@ -2,6 +2,7 @@ import React from "react";
 import MainMemberDetail from "@/src/components/modules/MemberDetail/Detail";
 import Link from "next/link";
 import { ArrowLeft, UserX } from "lucide-react";
+import { permanentRedirect } from "next/navigation";
 import { apiFetch } from "@/src/lib/api";
 
 const fetchUserDetail = async (idOrKey: string) => {
@@ -65,6 +66,11 @@ const Member = async ({ params: { id } }: { params: { id: string } }) => {
         </div>
       </div>
     );
+  }
+
+  // Canonicalize legacy identifiers (_id/nickname) to the opaque profileKey URL.
+  if (user.profileKey && user.profileKey !== id) {
+    permanentRedirect(`/member/${user.profileKey}`);
   }
 
   return <MainMemberDetail user={user} />;
