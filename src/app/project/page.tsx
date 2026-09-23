@@ -33,6 +33,11 @@ export const metadata = {
 };
 export default async function Project() {
   const data: any = await getAllProject();
-  return <MainProject data={data?.data?.data ?? []} />;
+  const payload = data?.data;
+  if (!payload || !Array.isArray(payload?.data)) {
+    throw new Error("Project list request failed");
+  }
+  return <MainProject data={payload.data} />;
 }
-export const revalidate = 20;
+// Live catalog: never prerender stale failure/success at build.
+export const dynamic = "force-dynamic";

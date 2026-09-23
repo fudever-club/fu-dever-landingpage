@@ -18,18 +18,12 @@ import "swiper/css/navigation";
 import "swiper/css/thumbs";
 import "./styles.css";
 
-const DEFAULT_ACTIVITY_IMAGES = [
-  { _id: "1", url: "/images/pages/activity/activities/workshop.jpg", createdAt: "Workshop Chuyên Môn" },
-  { _id: "2", url: "/images/pages/activity/activities/training.jpg", createdAt: "Buổi Training Thuật Toán" },
-  { _id: "3", url: "/images/pages/activity/activities/contest.jpg", createdAt: "Cuộc Thi Lập Trình Contest" },
-];
-
 function Slider({ images }: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
-  const sliderImages =
-    images && Array.isArray(images) && images.length > 0
-      ? images
-      : DEFAULT_ACTIVITY_IMAGES;
+  // Honest states only: null = fetch failed, [] = no photos yet. Stock
+  // stand-ins must never impersonate club photos.
+  const hasImages = Array.isArray(images) && images.length > 0;
+  const loadFailed = images === null || images === undefined;
 
   return (
     <div className="w-full">
@@ -40,6 +34,17 @@ function Slider({ images }: any) {
           textPosition="left"
         ></SectionTitle>
         <div className="overflow-hidden mt-[20px] w-full">
+          {!hasImages ? (
+            <div
+              role={loadFailed ? "alert" : undefined}
+              className="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-10 text-center text-sm text-slate-500"
+            >
+              {loadFailed
+                ? "Không thể tải ảnh hoạt động. Vui lòng thử lại sau."
+                : "Chưa có ảnh hoạt động. Ban Chủ Nhiệm sẽ cập nhật sớm nhất."}
+            </div>
+          ) : (
+          <>
           <Swiper
             autoplay={{
               delay: 2500,
@@ -78,7 +83,7 @@ function Slider({ images }: any) {
               width: "100%",
             }}
           >
-            {sliderImages.map((image: any) => (
+            {images.map((image: any) => (
               <SwiperSlide key={image._id} style={{ width: "50%" }}>
                 <Image
                   loading="lazy"
@@ -96,8 +101,8 @@ function Slider({ images }: any) {
             onSwiper={(props: any) => setThumbsSwiper(props)}
             spaceBetween={10}
             grabCursor
-            loop={sliderImages.length > 3}
-            slidesPerView={Math.min(sliderImages.length, 8)}
+            loop={images.length > 3}
+            slidesPerView={Math.min(images.length, 8)}
             freeMode={true}
             watchSlidesProgress={true}
             modules={[FreeMode, Navigation, Thumbs]}
@@ -107,7 +112,7 @@ function Slider({ images }: any) {
               width: "100%",
             }}
           >
-            {sliderImages.map((image: any) => (
+            {images.map((image: any) => (
               <SwiperSlide key={image._id}>
                 <Image
                   src={image?.url}
@@ -121,6 +126,8 @@ function Slider({ images }: any) {
               </SwiperSlide>
             ))}
           </Swiper>
+          </>
+          )}
         </div>
       </div>
     </div>

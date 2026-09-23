@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Bolt,
   BrainCircuit,
@@ -116,31 +116,36 @@ function renderEventStatusBadge(status: string) {
 export default function EventsPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [loadError, setLoadError] = useState<boolean>(false);
   const [filterStatus, setFilterStatus] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
 
-  useEffect(() => {
-    async function fetchEvents() {
-      try {
-        setIsLoading(true);
-        const res = await apiFetch(`/api/v1/events`);
-        if (res.ok) {
-          const json = await res.json();
-          const serverData = Array.isArray(json) ? json : json?.data || [];
-          setEvents(serverData);
-        } else {
-          setEvents([]);
-        }
-      } catch (err) {
-        console.warn("Backend API unavailable:", err);
+  const fetchEvents = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setLoadError(false);
+      const res = await apiFetch(`/api/v1/events`);
+      if (res.ok) {
+        const json = await res.json();
+        const serverData = Array.isArray(json) ? json : json?.data || [];
+        setEvents(serverData);
+      } else {
         setEvents([]);
-      } finally {
-        setIsLoading(false);
+        setLoadError(true);
       }
+    } catch (err) {
+      console.warn("Backend API unavailable:", err);
+      setEvents([]);
+      setLoadError(true);
+    } finally {
+      setIsLoading(false);
     }
-    fetchEvents();
   }, []);
+
+  useEffect(() => {
+    fetchEvents();
+  }, [fetchEvents]);
 
   useEffect(() => {
     if (!selectedRegisterEvent) return;
@@ -286,6 +291,18 @@ export default function EventsPage() {
                   </div>
                 </div>
               ))}
+            </div>
+          ) : events.length === 0 && loadError ? (
+            <div role="alert" className="text-center py-16 bg-white rounded-3xl border border-dashed border-rose-200 shadow-xs space-y-3">
+              <p className="text-sm font-bold text-rose-600">Không thể tải danh sách sự kiện.</p>
+              <p className="text-xs text-slate-500">Vui lòng kiểm tra kết nối và thử lại.</p>
+              <button
+                type="button"
+                onClick={fetchEvents}
+                className="rounded-xl bg-[#0066CC] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]"
+              >
+                Thử lại
+              </button>
             </div>
           ) : events.length === 0 ? (
             <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 shadow-xs">

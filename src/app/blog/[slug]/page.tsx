@@ -102,7 +102,9 @@ export default async function BlogDetailPage({ params }: Props) {
 
     if (response.ok) {
       const payload = await response.json();
-      if (payload?.data) {
+      // A slug lookup returns a single object (or nothing); an array payload
+      // violates the contract and must not render as a post.
+      if (payload?.data && !Array.isArray(payload.data)) {
         return <DeverBlogRenderer post={payload.data} />;
       }
     }

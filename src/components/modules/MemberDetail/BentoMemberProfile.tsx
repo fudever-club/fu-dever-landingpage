@@ -578,7 +578,9 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <button
                   type="button"
                   onClick={() => setIsLiked(!isLiked)}
-                  className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"
+                  aria-label="Yêu thích bài hát"
+                  aria-pressed={isLiked}
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"
                   title="Yêu thích bài hát"
                 >
                   <Heart className={`w-4 h-4 ${isLiked ? "fill-rose-500 text-rose-500" : ""}`} />
@@ -587,7 +589,9 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <button
                   type="button"
                   onClick={() => setIsShuffle(!isShuffle)}
-                  className={`w-7 h-7 hidden sm:flex items-center justify-center transition-colors ${
+                  aria-label="Phát ngẫu nhiên"
+                  aria-pressed={isShuffle}
+                  className={`min-w-[44px] min-h-[44px] hidden sm:flex items-center justify-center transition-colors ${
                     isShuffle ? "text-cyan-400" : "text-slate-400 hover:text-white"
                   }`}
                   title="Phát ngẫu nhiên"
@@ -599,7 +603,8 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <button
                   type="button"
                   onClick={togglePlayAudio}
-                  className="w-9 h-9 rounded-full bg-gradient-to-r from-[#0066CC] to-[#0080FF] hover:brightness-110 text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md shadow-blue-600/30"
+                  aria-label={isPlaying ? "Tạm dừng" : "Phát nhạc"}
+                  className="min-w-[44px] min-h-[44px] rounded-full bg-gradient-to-r from-[#0066CC] to-[#0080FF] hover:brightness-110 text-white flex items-center justify-center transition-all hover:scale-105 active:scale-95 shadow-md shadow-blue-600/30"
                   title={isPlaying ? "Tạm dừng" : "Phát nhạc"}
                 >
                   {isPlaying ? (
@@ -612,7 +617,9 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <button
                   type="button"
                   onClick={() => setIsRepeat(!isRepeat)}
-                  className={`w-7 h-7 hidden sm:flex items-center justify-center transition-colors ${
+                  aria-label="Lặp lại"
+                  aria-pressed={isRepeat}
+                  className={`min-w-[44px] min-h-[44px] hidden sm:flex items-center justify-center transition-colors ${
                     isRepeat ? "text-cyan-400" : "text-slate-400 hover:text-white"
                   }`}
                   title="Lặp lại"
@@ -623,7 +630,9 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <button
                   type="button"
                   onClick={() => setIsMuted(!isMuted)}
-                  className="w-7 h-7 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+                  aria-label={isMuted ? "Bật âm thanh" : "Tắt tiếng"}
+                  aria-pressed={isMuted}
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center text-slate-400 hover:text-white transition-colors"
                   title={isMuted ? "Bật âm thanh" : "Tắt tiếng"}
                 >
                   {isMuted ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
@@ -635,6 +644,13 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             <div className="relative z-10 flex items-center gap-2 text-[10px] font-mono text-slate-400 pt-1">
               <span>{formatSec(progressSec)}</span>
               <div
+                role="slider"
+                tabIndex={0}
+                aria-label="Tua nhạc"
+                aria-valuemin={0}
+                aria-valuemax={durationSec}
+                aria-valuenow={progressSec}
+                aria-valuetext={`${formatSec(progressSec)} / ${formatSec(durationSec)}`}
                 onClick={(e) => {
                   if (!audioRef.current || durationSec <= 0) return;
                   const rect = e.currentTarget.getBoundingClientRect();
@@ -644,7 +660,21 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                   audioRef.current.currentTime = targetSec;
                   setProgressSec(targetSec);
                 }}
-                className="relative flex-1 h-1 rounded-full bg-slate-800 hover:h-1.5 cursor-pointer group/bar transition-all"
+                onKeyDown={(e) => {
+                  if (!audioRef.current || durationSec <= 0) return;
+                  const step = e.key === "Home" || e.key === "End" ? durationSec : 5;
+                  let target: number | null = null;
+                  if (e.key === "ArrowLeft") target = Math.max(0, progressSec - step);
+                  else if (e.key === "ArrowRight") target = Math.min(durationSec, progressSec + step);
+                  else if (e.key === "Home") target = 0;
+                  else if (e.key === "End") target = durationSec;
+                  if (target !== null) {
+                    e.preventDefault();
+                    audioRef.current.currentTime = target;
+                    setProgressSec(target);
+                  }
+                }}
+                className="relative flex-1 h-1 rounded-full bg-slate-800 hover:h-1.5 cursor-pointer group/bar transition-all focus-visible:outline-2 focus-visible:outline-cyan-400"
               >
                 <div
                   className="h-full bg-slate-400 group-hover/bar:bg-gradient-to-r group-hover/bar:from-[#0066CC] group-hover/bar:to-cyan-400 rounded-full transition-all"

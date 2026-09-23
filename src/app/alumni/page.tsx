@@ -87,6 +87,7 @@ export default function AlumniPage() {
         setAlumniList(serverData);
       } else {
         setAlumniList([]);
+        setIsError(true);
       }
     } catch (err) {
       console.warn("Backend API unavailable:", err);

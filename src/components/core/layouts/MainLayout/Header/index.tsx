@@ -318,7 +318,7 @@ function Header() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event("open-command-palette"))}
-            className="inline-flex md:hidden h-9 w-9 items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0066CC] border border-slate-200/80 transition-all active:scale-95 shrink-0"
+            className="inline-flex md:hidden min-h-[44px] min-w-[44px] items-center justify-center rounded-xl bg-slate-50 hover:bg-slate-100 text-[#0066CC] border border-slate-200/80 transition-all active:scale-95 shrink-0"
             title="Tìm kiếm nhanh"
             aria-label="Mở tìm kiếm nhanh"
           >
@@ -348,7 +348,7 @@ function Header() {
             aria-label={isOpenMenu ? "Đóng điều hướng" : "Mở điều hướng"}
             aria-expanded={isOpenMenu}
             onClick={() => setOpenMenu(!isOpenMenu)}
-            className="inline-flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-blue-50/80 hover:bg-blue-100 text-[#0066CC] border border-blue-100/60 lg:hidden shrink-0 active:scale-95 transition-all shadow-2xs"
+            className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-xl bg-blue-50/80 hover:bg-blue-100 text-[#0066CC] border border-blue-100/60 lg:hidden shrink-0 active:scale-95 transition-all shadow-2xs"
           >
             {isOpenMenu ? <X className="h-5 w-5" aria-hidden="true" /> : <Menu className="h-5 w-5" aria-hidden="true" />}
           </button>

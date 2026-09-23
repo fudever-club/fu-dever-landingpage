@@ -79,6 +79,11 @@ export default function DeverMatrixRain({
     let lastTime = 0;
     let animationFrameId: number;
 
+    // Honor reduced-motion: paint one static frame instead of animating.
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
     const render = (time: number) => {
       if (time - lastTime > speed) {
         lastTime = time;
@@ -126,7 +131,12 @@ export default function DeverMatrixRain({
       animationFrameId = requestAnimationFrame(render);
     };
 
-    animationFrameId = requestAnimationFrame(render);
+    if (prefersReducedMotion) {
+      // Paint exactly one frame as a static poster (time past the throttle).
+      render(speed + 1);
+    } else {
+      animationFrameId = requestAnimationFrame(render);
+    }
 
     return () => {
       cancelAnimationFrame(animationFrameId);

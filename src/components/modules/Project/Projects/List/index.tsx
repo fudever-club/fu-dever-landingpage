@@ -7,9 +7,7 @@ interface pageProps {
   totalPages: number;
 }
 
-const initialListProjects = [{}, {}];
-
-function List({ listProjects = initialListProjects }: any) {
+function List({ listProjects = [] }: any) {
   const [page, setPage] = useState<pageProps["page"]>(1);
 
   const getTotalPage = (value: string): number => {
@@ -19,6 +17,14 @@ function List({ listProjects = initialListProjects }: any) {
   const onChangePage = (value: number): void => {
     setPage(value);
   };
+
+  if (!Array.isArray(listProjects) || listProjects.length === 0) {
+    return (
+      <div className="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-10 text-center text-sm text-slate-500">
+        Chưa có dự án nào. Ban Chủ Nhiệm sẽ cập nhật sớm nhất.
+      </div>
+    );
+  }
 
   return (
     <div className="sm:space-y-[12px] md:space-y-[20px] xl:space-y-[24px] ">

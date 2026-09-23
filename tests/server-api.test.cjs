@@ -101,8 +101,18 @@ for (const route of ['blog/[slug]', 'leaderboard', 'hall-of-fame']) {
       const page = loadPage(route, async (url) => { requested.push(url); return respond(); });
       const props = { params: { slug: 'fixture-missing-post' } };
       if (page.generateMetadata) await page.generateMetadata(props);
-      try { await page.default(props); }
-      catch (error) { assert.equal(error.message, 'NOT_FOUND'); }
+      // blog/[slug] maps any failure to notFound(); hall-of-fame throws on
+      // failure (route error.tsx + retry) but renders honest empty on ok-empty;
+      // leaderboard degrades to an honest error flag instead of throwing.
+      const mustThrow = route === 'blog/[slug]' || (route === 'hall-of-fame' && scenario !== 'empty');
+      let threw = null;
+      try {
+        await page.default(props);
+      } catch (error) {
+        threw = error;
+      }
+      assert.equal(!!threw, mustThrow);
+      if (threw && route === 'blog/[slug]') assert.equal(threw.message, 'NOT_FOUND');
       assert.ok(requested.length > 0);
       assert.deepEqual([...new Set(requested.map((url) => new URL(url).origin))], ['http://127.0.0.1:5199']);
     });

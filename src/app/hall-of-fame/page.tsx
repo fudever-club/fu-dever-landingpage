@@ -84,24 +84,23 @@ async function fetchHallOfFame(): Promise<{
   podium: { first: LeaderMember | null; second: LeaderMember | null; third: LeaderMember | null };
   data: LeaderMember[];
 }> {
-  try {
-    const res = await apiFetch(`/api/v1/gamification/hall-of-fame`, {
-      cache: "no-store",
-    });
-    if (res.ok) {
-      const payload = await res.json();
-      if (payload?.data && payload.data.length > 0) {
-        return {
-          podium: payload.podium || {
-            first: payload.data[0] || null,
-            second: payload.data[1] || null,
-            third: payload.data[2] || null,
-          },
-          data: payload.data,
-        };
-      }
-    }
-  } catch {}
+  const res = await apiFetch(`/api/v1/gamification/hall-of-fame`, {
+    cache: "no-store",
+  });
+  if (!res.ok) {
+    throw new Error(`Hall of Fame request failed: ${res.status}`);
+  }
+  const payload = await res.json();
+  if (payload?.data && payload.data.length > 0) {
+    return {
+      podium: payload.podium || {
+        first: payload.data[0] || null,
+        second: payload.data[1] || null,
+        third: payload.data[2] || null,
+      },
+      data: payload.data,
+    };
+  }
 
   return {
     podium: { first: null, second: null, third: null },

@@ -7,31 +7,11 @@ import { EffectCards } from "swiper/modules";
 import Image from "next/image";
 import Link from "next/link";
 
-const DEFAULT_ALBUMS = [
-  {
-    title: "Workshop & Training",
-    name: "Workshop & Training",
-    slug: "workshop-training",
-    imageList: [
-      { url: "/images/pages/activity/activities/workshop.jpg" },
-      { url: "/images/pages/activity/activities/training.jpg" },
-      { url: "/images/pages/activity/activities/contest.jpg" },
-    ],
-  },
-  {
-    title: "Cuộc Thi Lập Trình",
-    name: "Contest Lập Trình",
-    slug: "contest-lap-trinh",
-    imageList: [
-      { url: "/images/pages/activity/activities/contest.jpg" },
-      { url: "/images/pages/activity/activities/workshop.jpg" },
-    ],
-  },
-];
-
 const Album = ({ albums }: any) => {
-  const displayAlbums =
-    albums && Array.isArray(albums) && albums.length > 0 ? albums : DEFAULT_ALBUMS;
+  // Honest states only: null = fetch failed, [] = no albums yet. Stock
+  // stand-ins must never impersonate club albums.
+  const hasAlbums = Array.isArray(albums) && albums.length > 0;
+  const loadFailed = albums === null || albums === undefined;
 
   return (
     <section className="overflow-hidden w-full h-full flex flex-col justify-center items-center bg-[#F8FCFF] ">
@@ -44,8 +24,18 @@ const Album = ({ albums }: any) => {
           subtitle={"Nơi các kĩ niệm của dever được lưu trữ"}
           textPosition="left"
         />
+        {!hasAlbums ? (
+          <div
+            role={loadFailed ? "alert" : undefined}
+            className="rounded-2xl border border-dashed border-slate-200 bg-white/60 p-10 text-center text-sm text-slate-500 mx-[40px]"
+          >
+            {loadFailed
+              ? "Không thể tải bộ sưu tập. Vui lòng thử lại sau."
+              : "Chưa có album hoạt động. Ban Chủ Nhiệm sẽ cập nhật sớm nhất."}
+          </div>
+        ) : (
         <ul className="grid lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:gap-[100px] lg:gap-[80px] md:gap-[60px] sm:gap-[40px] flex-wrap xl:px-[80px] px-[40px]">
-          {displayAlbums.map((album: any, index: number) => {
+          {albums.map((album: any, index: number) => {
             return (
               <li
                 className="flex flex-col gap-[20px] relative w-full items-center"
@@ -85,6 +75,7 @@ const Album = ({ albums }: any) => {
             );
           })}
         </ul>
+        )}
       </div>
     </section>
   );

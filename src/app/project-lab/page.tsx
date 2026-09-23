@@ -18,15 +18,16 @@ type ProjectLabItem = {
   contactUrl?: string | null;
 };
 
+// Live recruitment board: never prerender stale failure/success at build.
+export const dynamic = "force-dynamic";
+
 const getProjectLabs = async (): Promise<ProjectLabItem[]> => {
-  try {
-    const response = await apiFetch(`/api/v1/project-lab`, { cache: "no-store" });
-    if (!response.ok) return [];
-    const payload = await response.json();
-    return Array.isArray(payload?.data) ? payload.data : [];
-  } catch {
-    return [];
+  const response = await apiFetch(`/api/v1/project-lab`, { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error(`Project Lab request failed: ${response.status}`);
   }
+  const payload = await response.json();
+  return Array.isArray(payload?.data) ? payload.data : [];
 };
 
 export default async function ProjectLabPage() {
@@ -71,16 +72,17 @@ export default async function ProjectLabPage() {
             <h2 className="text-2xl font-bold text-gray-800">Dự Án Đang Cần Đồng Đội</h2>
             <p className="text-gray-500 text-sm">Tham gia ngay để tích lũy kinh nghiệm làm dự án thực tế</p>
           </div>
+          {/* Static category legend (no filtering yet — styled neutrally so it
+              does not mimic selectable filter pills). */}
           <div className="flex flex-wrap gap-2" aria-label="Nhóm dự án">
-            <span className="bg-[#0098FF] text-white text-xs font-semibold px-4 py-2 rounded-lg">
-              Tất cả
-            </span>
-            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200">
-              Web Dev
-            </span>
-            <span className="bg-white text-gray-600 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200">
-              AI / ML
-            </span>
+            {["Tất cả", "Web Dev", "AI / ML"].map((label) => (
+              <span
+                key={label}
+                className="bg-white text-gray-500 text-xs font-semibold px-4 py-2 rounded-lg border border-gray-200"
+              >
+                {label}
+              </span>
+            ))}
           </div>
         </div>
 
