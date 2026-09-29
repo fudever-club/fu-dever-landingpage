@@ -94,8 +94,13 @@ function Header() {
         {/* Centered Desktop Navigation Grouping */}
         <div className="hidden lg:flex min-w-0 items-center justify-center gap-4 xl:gap-6 2xl:gap-8 text-xs xl:text-sm font-semibold mx-auto">
           {/* Trang chủ */}
-          <button
-            onClick={() => handleDirect("/")}
+          <Link
+            href="/"
+            onClick={() => {
+              setOpenMenu(false);
+              setActiveDropdown(null);
+            }}
+            aria-current={pathname === "/" ? "page" : undefined}
             className={`${
               pathname === "/" ? "text-[#0098FF] font-bold" : "text-gray-700"
             } hover:text-[#0098FF] transition-all relative py-2`}
@@ -107,7 +112,7 @@ function Header() {
                 className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0098FF] rounded-full"
               />
             )}
-          </button>
+          </Link>
 
           {/* Group 1: Góc Học Tập */}
           <div
@@ -135,8 +140,12 @@ function Header() {
                   transition={{ duration: 0.15 }}
                   className="absolute top-full left-0 w-64 bg-white rounded-2xl shadow-xl border border-blue-50 p-2 text-sm flex flex-col gap-1 z-50 overflow-hidden"
                 >
-                  <button
-                    onClick={() => handleDirect("/blog")}
+                  <Link
+                    href="/blog"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Newspaper className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -144,10 +153,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Blog Kỹ Thuật</div>
                       <div className="text-xs text-slate-400">Chia sẻ kiến thức lập trình</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/events")}
+                  <Link
+                    href="/events"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <CalendarDays className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -155,10 +168,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Sự Kiện &amp; Workshop</div>
                       <div className="text-xs text-slate-400">Lịch trình hội thảo CLB</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/resources")}
+                  <Link
+                    href="/resources"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Library className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -166,7 +183,7 @@ function Header() {
                       <div className="font-semibold text-slate-800">Kho Tài Liệu</div>
                       <div className="text-xs text-slate-400">Slide workshop &amp; Mã nguồn mẫu</div>
                     </div>
-                  </button>
+                  </Link>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -198,8 +215,12 @@ function Header() {
                   transition={{ duration: 0.15 }}
                   className="absolute top-full left-0 w-64 bg-white rounded-2xl shadow-xl border border-blue-50 p-2 text-sm flex flex-col gap-1 z-50 overflow-hidden"
                 >
-                  <button
-                    onClick={() => handleDirect("/leaderboard")}
+                  <Link
+                    href="/leaderboard"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Trophy className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -207,10 +228,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Bảng Xếp Hạng</div>
                       <div className="text-xs text-slate-400">Đấu trường thuật toán LeetCode</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/member")}
+                  <Link
+                    href="/member"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <UsersRound className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -218,10 +243,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Thành Viên CLB</div>
                       <div className="text-xs text-slate-400">Danh sách ban chủ nhiệm &amp; thành viên</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/alumni")}
+                  <Link
+                    href="/alumni"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <GraduationCap className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -229,7 +258,7 @@ function Header() {
                       <div className="font-semibold text-slate-800">Cựu Thành Viên</div>
                       <div className="text-xs text-slate-400">Hall of Fame sinh viên xuất sắc</div>
                     </div>
-                  </button>
+                  </Link>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -261,8 +290,12 @@ function Header() {
                   transition={{ duration: 0.15 }}
                   className="absolute top-full left-0 w-64 bg-white rounded-2xl shadow-xl border border-blue-50 p-2 text-sm flex flex-col gap-1 z-50 overflow-hidden"
                 >
-                  <button
-                    onClick={() => handleDirect("/project")}
+                  <Link
+                    href="/project"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Rocket className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -270,10 +303,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Tất Cả Dự Án</div>
                       <div className="text-xs text-slate-400">Showcase sản phẩm CLB</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/project-lab")}
+                  <Link
+                    href="/project-lab"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Lightbulb className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -281,10 +318,14 @@ function Header() {
                       <div className="font-semibold text-slate-800">Project Lab</div>
                       <div className="text-xs text-slate-400">Gợi ý ý tưởng &amp; Ghép đội</div>
                     </div>
-                  </button>
+                  </Link>
 
-                  <button
-                    onClick={() => handleDirect("/activity")}
+                  <Link
+                    href="/activity"
+                    onClick={() => {
+                      setOpenMenu(false);
+                      setActiveDropdown(null);
+                    }}
                     className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-slate-100/80 text-left transition-colors text-slate-700 hover:text-[#0066CC]"
                   >
                     <Images className="h-4 w-4 shrink-0 text-[#0066CC]" aria-hidden="true" />
@@ -292,7 +333,7 @@ function Header() {
                       <div className="font-semibold text-slate-800">Hoạt Động CLB</div>
                       <div className="text-xs text-slate-400">Hình ảnh &amp; Kỷ niệm DEVER</div>
                     </div>
-                  </button>
+                  </Link>
                 </motion.div>
               )}
             </AnimatePresence>

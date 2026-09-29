@@ -1,11 +1,12 @@
-import React from "react";
+import React, { cache } from "react";
 import MainMemberDetail from "@/src/components/modules/MemberDetail/Detail";
 import Link from "next/link";
 import { ArrowLeft, UserX } from "lucide-react";
 import { permanentRedirect } from "next/navigation";
 import { apiFetch } from "@/src/lib/api";
 
-const fetchUserDetail = async (idOrKey: string) => {
+// Deduped across generateMetadata + Page within one render pass.
+const fetchUserDetail = cache(async (idOrKey: string) => {
   try {
     const res = await apiFetch(`/api/v1/users/${encodeURIComponent(idOrKey)}`, {
       cache: "no-store",
@@ -18,7 +19,7 @@ const fetchUserDetail = async (idOrKey: string) => {
     console.warn("Error fetching user detail from API:", error);
   }
   return null;
-};
+});
 
 export async function generateMetadata({
   params: { id },

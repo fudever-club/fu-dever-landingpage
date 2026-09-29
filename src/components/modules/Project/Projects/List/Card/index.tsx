@@ -4,6 +4,7 @@ import ViewMoreButton from "../../../ViewMoreButton";
 import Link from "next/link";
 import moment from "moment";
 import "moment/locale/vi";
+import { sanitizeHtml } from "@/src/lib/sanitize";
 
 function Card({
   _id,
@@ -21,12 +22,14 @@ function Card({
         <div className="w-[100%] h-[200px] sm:h-[66.66%] md:h-[50%] xl:h-[52.8%] overflow-hidden">
           <Image
             loading="lazy"
+            // TODO(phase-next): revisit `unoptimized` + batched 3D-moment
+            // effects here; kept as-is for this P1 pass.
             unoptimized
             src={image}
             width={500}
             height={500}
             className="w-[100%] h-[100%] rounded-t-[6px] object-cover"
-            alt="project image"
+            alt={tiltle ? `${tiltle} - Dự án FU-DEVER` : "Ảnh bìa dự án FU-DEVER"}
           />
         </div>
         <div className="w-[100%] sm:h-[33.34%] md:h-[50%] xl:h-[47.5%] p-4 sm:p-[10px_10px_20px_10px] md:p-[4px_4px_8px_4px] lg:p-[6px_6px_12px_6px] xl:p-[12px_12px_24px_12px] flex flex-col justify-between">
@@ -41,7 +44,7 @@ function Card({
                 {tiltle}
               </div>
               <div
-                dangerouslySetInnerHTML={{ __html: depcription }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHtml(depcription) }}
                 className="text-black opacity-[60%] text-[13px] sm:text-[12px] md:text-[8px] lg:text-[12px] xl:text-[16px] leading-relaxed sm:leading-[15px] md:leading-[20px] line-clamp-3 md:line-clamp-2 lg:line-clamp-3 overflow-hidden"
               />
             </div>

@@ -83,8 +83,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const fallback = FALLBACK_POSTS[params.slug];
   if (fallback) {
     return {
-      title: `${fallback.title} | FU-DEVER Tech Blog`,
-      description: fallback.excerpt,
+      title: `${fallback.title} | FU-DEVER Tech Blog (Bản lưu offline)`,
+      description: `[Bản lưu offline] ${fallback.excerpt}`,
     };
   }
 
@@ -112,7 +112,17 @@ export default async function BlogDetailPage({ params }: Props) {
 
   const fallbackPost = FALLBACK_POSTS[params.slug];
   if (fallbackPost) {
-    return <DeverBlogRenderer post={fallbackPost} />;
+    return (
+      <div>
+        <p
+          role="status"
+          className="mx-auto mt-4 w-fit rounded-full border border-amber-200 bg-amber-50 px-4 py-1.5 text-xs font-bold text-amber-700"
+        >
+          Bản lưu offline — hiển thị nội dung lưu trữ vì không kết nối được máy chủ.
+        </p>
+        <DeverBlogRenderer post={fallbackPost} />
+      </div>
+    );
   }
 
   notFound();

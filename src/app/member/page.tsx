@@ -1,5 +1,4 @@
-import axios from "axios";
-
+import { fetchJson } from "@/src/lib/api";
 import { userEndpoint } from "@/src/services/endpoint";
 
 import MainMember from "@components/modules/Member/Main";
@@ -19,60 +18,41 @@ export const metadata = {
   },
 };
 
-const getLeader = async () => {
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    timeout: 8000,
-    url: `${userEndpoint.GET_ALL_USERS}?filter={"isLeader": true}`,
-  };
+type UsersPayload = { data?: { users?: unknown[] } };
 
-  try {
-    const response = await axios.request(config);
-    return response;
-  } catch (error) {
-    return error;
+// Errors propagate to the route error boundary (`member/error.tsx`) so a
+// backend failure renders an honest error state, never a silent empty list.
+const getUsers = async (query: string): Promise<unknown[]> => {
+  const payload = await fetchJson<UsersPayload>(
+    `${userEndpoint.GET_ALL_USERS}?${query}`,
+    { next: { revalidate: 20 } }
+  );
+  const users = payload?.data?.users;
+  if (!Array.isArray(users)) {
+    throw new Error("Member list response violated the API contract");
   }
+  return users;
 };
-const getExcellent = async () => {
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    timeout: 8000,
-    url: `${userEndpoint.GET_ALL_USERS}?filter={"isExcellent": true}`,
-  };
 
-  try {
-    const response = await axios.request(config);
-    return response;
-  } catch (error) {
-    return error;
-  }
-};
-const getUser = async () => {
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    timeout: 8000,
-    url: `${userEndpoint.GET_ALL_USERS}?page=1&limit=8&filter={"isLeader": false}`,
-  };
-
-  try {
-    const response = await axios.request(config);
-    return response;
-  } catch (error) {
-    return error;
-  }
-};
+const getLeader = () =>
+  getUsers(`filter=${encodeURIComponent('{"isLeader": true}')}`);
+const getExcellent = () =>
+  getUsers(`filter=${encodeURIComponent('{"isExcellent": true}')}`);
+const getUser = () =>
+  getUsers(
+    `page=1&limit=8&filter=${encodeURIComponent('{"isLeader": false}')}`
+  );
 async function Member() {
-  const leaderData: any = await getLeader();
-  const excellentData: any = await getExcellent();
-  const memberData: any = await getUser();
+  const [leaderData, excellentData, memberData] = await Promise.all([
+    getLeader(),
+    getExcellent(),
+    getUser(),
+  ]);
   return (
     <MainMember
-      leaderData={leaderData?.data?.data?.users ?? []}
-      excellentData={excellentData?.data?.data?.users ?? []}
-      memberData={memberData?.data?.data?.users ?? []}
+      leaderData={leaderData}
+      excellentData={excellentData}
+      memberData={memberData}
     />
   );
 }

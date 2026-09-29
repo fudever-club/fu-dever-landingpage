@@ -213,7 +213,7 @@ function Banner() {
           }}
           className="absolute lg:top-[204px] xl:top-[335px] lg:left-[-90px] xl:left-[-70px] xl:w-auto xl:h-auto lg:w-auto lg:h-auto md:w-[68px] md:h-[111px] md:top-[216px] md:left-[-40px] hidden md:block lg:block xl:block"
         >
-          <Image loading="lazy" src={retangle1} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle1} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -226,7 +226,7 @@ function Banner() {
           }}
           className="absolute lg:top-[312px] xl:top-[373px] lg:left-[110px] xl:left-[250px] xl:w-auto xl:h-auto lg:w-[23px] lg:h-[21px] hidden md:hidden xl:block lg:block"
         >
-          <Image loading="lazy" src={retangle2} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle2} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -239,7 +239,7 @@ function Banner() {
           }}
           className="absolute xl:top-[277px] xl:right-[160px] xl:w-auto xl:h-auto lg:w-[45px] lg:h-[45px] lg:top-[297px] lg:right-[80px]  hidden md:hidden xl:block lg:block"
         >
-          <Image loading="lazy" src={retangle3} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle3} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -252,7 +252,7 @@ function Banner() {
           }}
           className="absolute xl:top-[179px] xl:right-[-30px] xl:w-auto xl:h-auto lg:w-[61px] lg:h-[73px] lg:right-[-40px] lg:top-[114px] md:w-[61px] md:h-[73px] md:top-[246px] right-[-40px] hidden md:block lg:block xl:block"
         >
-          <Image loading="lazy" src={retangle4} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle4} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -265,7 +265,7 @@ function Banner() {
           }}
           className="absolute xl:bottom-[91px] xl:right-[427px] lg:right-[340px] lg:bottom-[137px] hidden md:hidden xl:block lg:block"
         >
-          <Image loading="lazy" src={retangle5} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle5} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -278,7 +278,7 @@ function Banner() {
           }}
           className="absolute xl:bottom-[147px] xl:left-[553px] xl:w-auto xl:h-auto lg:w-[31px] lg:h-[30px] lg:bottom-[159px] lg:left-[356px] md:bottom-[30px] md:left-[264px] bottom-[63px] right-[46px]"
         >
-          <Image loading="lazy" src={retangle6} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle6} alt="" />
         </motion.div>
         <motion.div
           animate={{
@@ -291,7 +291,7 @@ function Banner() {
           }}
           className="absolute xl:top-[108px] xl:right-[571px] xl:w-auto xl:h-auto lg:w-[33px] lg:h-[33px] lg:top-[142px] lg:right-[311px] md:top-[108px] md:right-[240px] top-[96px] left-[40px]"
         >
-          <Image loading="lazy" src={retangle7} alt="Picture of the author" />
+          <Image loading="lazy" src={retangle7} alt="" />
         </motion.div>
       </motion.div>
     </motion.section>

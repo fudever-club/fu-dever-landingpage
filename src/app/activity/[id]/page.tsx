@@ -1,21 +1,24 @@
 import MainAlbum from "@/src/components/modules/Album/Main";
 import { activityEndpointer } from "@/src/services/endpoint";
-import axios from "axios";
+import { ApiError, fetchJson } from "@/src/lib/api";
 import { notFound } from "next/navigation";
 
-const getAlbumBySlug = async (slug: string) => {
-  let config = {
-    method: "get",
-    maxBodyLength: Infinity,
-    timeout: 8000,
-    url: activityEndpointer.GET_ALBUM_BY_SLUG.replace("{slug}", slug),
-  };
+type AlbumPayload = { data?: { album?: unknown } };
 
+// 404 surfaces as notFound(); any other failure throws so the route error
+// boundary (`activity/[id]/error.tsx`) renders an honest error with retry.
+const getAlbumBySlug = async (slug: string) => {
   try {
-    const response = await axios.request(config);
-    return response;
+    const payload = await fetchJson<AlbumPayload>(
+      activityEndpointer.GET_ALBUM_BY_SLUG.replace("{slug}", encodeURIComponent(slug)),
+      { next: { revalidate: 60 } }
+    );
+    return payload?.data?.album ?? null;
   } catch (error) {
-    return error;
+    if (error instanceof ApiError && error.status === 404) {
+      notFound();
+    }
+    throw error;
   }
 };
 export async function generateMetadata({
@@ -23,8 +26,7 @@ export async function generateMetadata({
 }: {
   params: { id: string };
 }) {
-  const data: any = await getAlbumBySlug(id);
-  const album = data?.data?.data?.album;
+  const album: any = await getAlbumBySlug(id);
   const coverImage = album?.imageList?.[0];
   return {
     title: `FU-DEVER | ${album?.name}`,
@@ -42,11 +44,11 @@ export async function generateMetadata({
 }
 
 const Album = async ({ params: { id } }: { params: { id: string } }) => {
-  const data: any = await getAlbumBySlug(id);
-  if (!data?.data?.data?.album) {
+  const album = await getAlbumBySlug(id);
+  if (!album) {
     notFound();
   }
-  return <MainAlbum album={data?.data?.data?.album ?? []} />;
+  return <MainAlbum album={album ?? []} />;
 };
 
 export default Album;

@@ -1,5 +1,6 @@
 import SectionTittle from "@components/core/common/SectionTitle";
 import React from "react";
+import { sanitizeHtml } from "@/src/lib/sanitize";
 
 const AboutMe = ({ user }: any) => {
   return (
@@ -12,7 +13,7 @@ const AboutMe = ({ user }: any) => {
         <div
           className=" font-regular xl:text-[18px] lg:text-[16px] sm:text-[14px] leading-[150%]"
           dangerouslySetInnerHTML={{
-            __html: `<div>${user?.description ?? "Chưa có thông tin"}</div>`,
+            __html: sanitizeHtml(`<div>${user?.description ?? "Chưa có thông tin"}</div>`),
           }}
         ></div>
       </div>
