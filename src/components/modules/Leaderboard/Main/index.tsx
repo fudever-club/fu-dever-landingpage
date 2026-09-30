@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -8,10 +8,16 @@ import {
   Flame,
   Search,
   ChevronRight,
+  ChevronDown,
   User as UserIcon,
   Sparkles,
   Award,
+  CalendarDays,
+  Clock,
+  Inbox,
+  RotateCcw,
 } from "lucide-react";
+import { apiFetch } from "@/src/lib/api";
 import avatar_default from "@images/pages/leaderBoard/avatar_default.png";
 import { TiltedCard } from "@components/ui/TiltedCard";
 import DeverCodeParallaxBackground from "@components/ui/DeverCodeParallaxBackground";
@@ -69,6 +75,442 @@ function LeaderboardAvatar({
         <span className="font-extrabold tracking-tight">{initials}</span>
       )}
     </div>
+  );
+}
+
+type SeasonItem = {
+  _id: string;
+  name?: string | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  status?: string | null;
+};
+
+type SeasonEntryBreakdown = {
+  easy?: number | null;
+  medium?: number | null;
+  hard?: number | null;
+  unknown?: number | null;
+};
+
+type SeasonLeaderboardEntry = {
+  leetcodeUsername?: string | null;
+  solved?: number | null;
+  score?: number | null;
+  breakdown?: SeasonEntryBreakdown | null;
+  user?: {
+    firstname?: string | null;
+    lastname?: string | null;
+    avatar?: string | null;
+    profileKey?: string | null;
+  } | null;
+};
+
+type SeasonBoard = {
+  season?: SeasonItem | null;
+  scoringComplete: boolean;
+  entries: SeasonLeaderboardEntry[];
+};
+
+const formatSeasonDate = (value?: string | null): string => {
+  if (!value) return "";
+  const time = new Date(value).getTime();
+  if (Number.isNaN(time)) return "";
+  return new Date(value).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+};
+
+const getSeasonFullName = (user?: SeasonLeaderboardEntry["user"]): string => {
+  if (!user) return "Thành viên DEVER";
+  const name = [user.firstname, user.lastname].filter(Boolean).join(" ");
+  return name || "Thành viên ẩn danh";
+};
+
+function SeasonLeaderboardBoard() {
+  const [seasons, setSeasons] = useState<SeasonItem[]>([]);
+  const [selectedId, setSelectedId] = useState<string>("");
+  const [board, setBoard] = useState<SeasonBoard | null>(null);
+  const [loadingSeasons, setLoadingSeasons] = useState(true);
+  const [loadingBoard, setLoadingBoard] = useState(false);
+  const [seasonsError, setSeasonsError] = useState(false);
+  const [boardError, setBoardError] = useState(false);
+  const [noActiveSeason, setNoActiveSeason] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    const loadSeasons = async () => {
+      setLoadingSeasons(true);
+      setSeasonsError(false);
+      try {
+        const response = await apiFetch(`/api/v1/seasons`, {
+          cache: "no-store",
+        });
+        if (cancelled) return;
+        if (response.ok) {
+          const payload = await response.json();
+          const list: SeasonItem[] = Array.isArray(payload?.data)
+            ? payload.data.filter(
+                (item: unknown): item is SeasonItem =>
+                  typeof item === "object" && item !== null && "_id" in item,
+              )
+            : [];
+          setSeasons(list);
+          if (list.length > 0) {
+            const active =
+              list.find((item) => item?.status === "active") ?? list[0];
+            setSelectedId((previous) => previous || active?._id || "");
+          } else {
+            setSelectedId("");
+          }
+        } else {
+          setSeasons([]);
+          setSeasonsError(true);
+        }
+      } catch {
+        if (!cancelled) {
+          setSeasons([]);
+          setSeasonsError(true);
+        }
+      } finally {
+        if (!cancelled) setLoadingSeasons(false);
+      }
+    };
+    loadSeasons();
+    return () => {
+      cancelled = true;
+    };
+  }, [reloadKey]);
+
+  useEffect(() => {
+    if (loadingSeasons) return;
+    let cancelled = false;
+    const loadBoard = async () => {
+      setLoadingBoard(true);
+      setBoardError(false);
+      setNoActiveSeason(false);
+      try {
+        const path = selectedId
+          ? `/api/v1/seasons/leaderboard?seasonId=${encodeURIComponent(selectedId)}`
+          : `/api/v1/seasons/leaderboard`;
+        const response = await apiFetch(path, { cache: "no-store" });
+        if (cancelled) return;
+        if (response.status === 404) {
+          setBoard(null);
+          setNoActiveSeason(true);
+          return;
+        }
+        if (!response.ok) {
+          setBoardError(true);
+          return;
+        }
+        const payload = await response.json();
+        const data = payload?.data;
+        if (data === null || data === undefined) {
+          setBoard(null);
+          setNoActiveSeason(true);
+          return;
+        }
+        if (!Array.isArray(data?.entries)) {
+          setBoardError(true);
+          return;
+        }
+        const entries = [...(data.entries as SeasonLeaderboardEntry[])].sort(
+          (a, b) => (b?.score ?? 0) - (a?.score ?? 0),
+        );
+        setBoard({
+          season: (data?.season as SeasonItem | null) ?? null,
+          scoringComplete: data?.scoringComplete !== false,
+          entries,
+        });
+      } catch {
+        if (!cancelled) setBoardError(true);
+      } finally {
+        if (!cancelled) setLoadingBoard(false);
+      }
+    };
+    loadBoard();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedId, loadingSeasons, reloadKey]);
+
+  const isLoading = loadingSeasons || loadingBoard;
+  const selectedSeason =
+    seasons.find((item) => item._id === selectedId) ?? board?.season ?? null;
+  const entries = board?.entries ?? [];
+  const scoringComplete = board?.scoringComplete ?? true;
+  const showBoardError = !isLoading && boardError;
+  const showSeasonsError = !isLoading && seasonsError && !board;
+  const showNoSeason = !isLoading && !boardError && noActiveSeason;
+  const showEmptyEntries =
+    !isLoading && !boardError && !noActiveSeason && board !== null && entries.length === 0;
+
+  const seasonRange = selectedSeason
+    ? [formatSeasonDate(selectedSeason.startDate), formatSeasonDate(selectedSeason.endDate)]
+        .filter(Boolean)
+        .join(" – ")
+    : "";
+
+  return (
+    <section
+      aria-label="Bảng xếp hạng mùa giải"
+      className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-10"
+    >
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-4 sm:p-6 shadow-xl shadow-slate-200/50 dark:shadow-none space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
+          <div className="min-w-0">
+            <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-[#0066CC] shrink-0" /> Bảng Xếp Hạng Mùa Giải
+            </h2>
+            <p className="text-xs text-slate-500 flex items-center gap-1.5 mt-1">
+              <CalendarDays className="w-3.5 h-3.5 shrink-0" />
+              {selectedSeason?.name ? (
+                <span className="truncate">
+                  {selectedSeason.name}
+                  {seasonRange ? ` • ${seasonRange}` : ""}
+                </span>
+              ) : (
+                <span>Mùa giải đang diễn ra</span>
+              )}
+            </p>
+          </div>
+
+          <div className="w-full sm:w-64">
+            <label
+              htmlFor="season-select"
+              className="sr-only"
+            >
+              Chọn mùa giải
+            </label>
+            <div className="relative">
+              <select
+                id="season-select"
+                value={selectedId}
+                disabled={loadingSeasons || seasons.length === 0}
+                onChange={(event) => setSelectedId(event.target.value)}
+                className="w-full appearance-none pl-3 pr-9 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-[#0066CC] transition-all disabled:opacity-50"
+              >
+                {seasons.length === 0 && <option value="">Chọn mùa giải</option>}
+                {seasons.map((season) => (
+                  <option
+                    key={season._id}
+                    value={season._id}
+                  >
+                    {season.name || "Mùa giải"}
+                    {season.status === "active" ? " • Đang diễn ra" : ""}
+                  </option>
+                ))}
+              </select>
+              <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
+        </div>
+
+        {!scoringComplete && board && !isLoading && (
+          <p className="m-0">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-[11px] sm:text-xs font-bold">
+              <Clock className="w-3.5 h-3.5 shrink-0" />
+              Điểm đang hoàn thiện — sync admin
+            </span>
+          </p>
+        )}
+
+        <div
+          aria-live="polite"
+          className="space-y-2.5"
+        >
+          {isLoading && (
+            <div
+              aria-busy="true"
+              className="space-y-2.5"
+            >
+              {[0, 1, 2, 3].map((skeleton) => (
+                <div
+                  key={skeleton}
+                  className="flex items-center gap-3 p-3 sm:p-4 rounded-2xl border border-slate-100 dark:border-slate-800 animate-pulse motion-reduce:animate-none"
+                >
+                  <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0" />
+                  <div className="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-700 shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-3 w-2/5 rounded bg-slate-200 dark:bg-slate-700" />
+                    <div className="h-2.5 w-1/3 rounded bg-slate-100 dark:bg-slate-800" />
+                  </div>
+                  <div className="h-4 w-14 rounded bg-slate-200 dark:bg-slate-700 shrink-0" />
+                </div>
+              ))}
+            </div>
+          )}
+
+          {(showBoardError || showSeasonsError) && (
+            <div
+              role="alert"
+              className="rounded-2xl border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/30 p-4 sm:p-5 text-center space-y-2"
+            >
+              <p className="text-sm font-bold text-rose-600 dark:text-rose-400 m-0">
+                Không thể tải bảng xếp hạng mùa giải.
+              </p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                Vui lòng kiểm tra kết nối và thử lại sau ít phút.
+              </p>
+              <button
+                type="button"
+                disabled={isLoading}
+                onClick={() => setReloadKey((key) => key + 1)}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0066CC] px-4 py-2 text-xs sm:text-sm font-semibold text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98] disabled:opacity-50"
+              >
+                <RotateCcw className="w-3.5 h-3.5" /> Thử lại
+              </button>
+            </div>
+          )}
+
+          {showNoSeason && (
+            <div className="py-10 text-center space-y-2">
+              <Inbox className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600" />
+              <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 m-0">
+                Chưa có mùa giải nào đang diễn ra
+              </p>
+              <p className="text-xs text-slate-400 m-0">
+                Ban tổ chức sẽ công bố mùa giải mới trong thời gian tới.
+              </p>
+            </div>
+          )}
+
+          {showEmptyEntries && (
+            <div className="py-10 text-center space-y-2">
+              <Inbox className="w-8 h-8 mx-auto text-slate-300 dark:text-slate-600" />
+              <p className="text-sm font-semibold text-slate-600 dark:text-slate-300 m-0">
+                Mùa giải này chưa có dữ liệu xếp hạng.
+              </p>
+            </div>
+          )}
+
+          {!isLoading && !boardError && board && entries.length > 0 && (
+            <>
+              <div className="flex items-center justify-between px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <span className="w-7 sm:w-8 text-center shrink-0">Hạng</span>
+                  <span>Thành viên</span>
+                </div>
+                <div className="flex items-center gap-4 sm:gap-6">
+                  <span className="hidden sm:inline-block">Đã giải</span>
+                  <span className="text-right">Điểm</span>
+                </div>
+              </div>
+              <ol className="space-y-2.5 list-none m-0 p-0">
+                {entries.map((entry, index) => {
+                  const rank = index + 1;
+                  const profileKey = entry?.user?.profileKey;
+                  const fullName = getSeasonFullName(entry?.user);
+                  const solved = entry?.solved ?? 0;
+                  const score = entry?.score ?? 0;
+                  const easy = entry?.breakdown?.easy ?? 0;
+                  const medium = entry?.breakdown?.medium ?? 0;
+                  const hard = entry?.breakdown?.hard ?? 0;
+                  const unknown = entry?.breakdown?.unknown ?? 0;
+                  const isTop1 = rank === 1;
+                  const isTop2 = rank === 2;
+                  const isTop3 = rank === 3;
+
+                  const rowContent = (
+                    <div
+                      className={`p-3 sm:p-4 rounded-2xl border transition-all duration-200 ${
+                        isTop1
+                          ? "bg-amber-50/60 dark:bg-amber-950/20 border-amber-300 dark:border-amber-700/50 shadow-sm"
+                          : isTop2
+                          ? "bg-slate-50/80 dark:bg-slate-800/40 border-slate-300 dark:border-slate-700"
+                          : isTop3
+                          ? "bg-amber-50/30 dark:bg-amber-950/10 border-amber-200 dark:border-amber-800/30"
+                          : "bg-white dark:bg-slate-900 border-slate-100 dark:border-slate-800 hover:border-blue-200 dark:hover:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-slate-800/50"
+                      } hover:shadow-md active:scale-[0.99]`}
+                    >
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2.5 sm:gap-3.5 min-w-0 flex-1">
+                          <span
+                            className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
+                              isTop1
+                                ? "bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 shadow-md font-black"
+                                : isTop2
+                                ? "bg-slate-300 text-slate-900 font-black"
+                                : isTop3
+                                ? "bg-amber-700 text-white font-black"
+                                : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
+                            }`}
+                          >
+                            {rank}
+                          </span>
+                          <LeaderboardAvatar
+                            src={entry?.user?.avatar}
+                            name={fullName}
+                          />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-xs sm:text-sm font-bold text-slate-900 dark:text-white truncate flex items-center gap-1.5 m-0">
+                              <span className="truncate">{fullName}</span>
+                              {isTop1 && <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
+                            </p>
+                            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5 font-mono">
+                              @{entry?.leetcodeUsername || "member"}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="text-right shrink-0 pl-2">
+                          <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
+                            {score} pts
+                          </div>
+                          <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
+                            {solved} bài
+                          </div>
+                        </div>
+                        {profileKey && (
+                          <ChevronRight className="w-4 h-4 text-slate-400 ml-1 hidden sm:block shrink-0" />
+                        )}
+                      </div>
+                      <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-9 sm:pl-12">
+                        <span className="inline-flex items-center rounded-md border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                          E {easy}
+                        </span>
+                        <span className="inline-flex items-center rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                          M {medium}
+                        </span>
+                        <span className="inline-flex items-center rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 text-[10px] font-bold text-rose-700 dark:text-rose-300">
+                          H {hard}
+                        </span>
+                        {unknown > 0 && (
+                          <span className="inline-flex items-center rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                            ? {unknown}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  );
+
+                  return (
+                    <li key={`${entry?.leetcodeUsername || "member"}-${rank}`}>
+                      {profileKey ? (
+                        <Link
+                          href={`/member/${encodeURIComponent(profileKey)}`}
+                          className="block"
+                        >
+                          {rowContent}
+                        </Link>
+                      ) : (
+                        rowContent
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+              <p className="text-[11px] text-slate-400 px-1 m-0">
+                E: Dễ • M: Trung bình • H: Khó • Xếp hạng theo tổng điểm mùa giải.
+              </p>
+            </>
+          )}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -131,6 +573,9 @@ export default function LeaderboardModule({
               Tuyên dương các thành viên có thành tích giải bài và rèn luyện thuật toán xuất sắc nhất của Câu lạc bộ FU-DEVER.
             </p>
           </section>
+
+          {/* Season leaderboard (per-season score ranking) */}
+          <SeasonLeaderboardBoard />
 
           {/* Fluid Top 3 Podium Section with TiltedCard 3D Parallax */}
           {leaderboardData.length >= 3 && !hasLoadError && (
