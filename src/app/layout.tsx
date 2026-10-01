@@ -2,6 +2,7 @@ import { Be_Vietnam_Pro, JetBrains_Mono } from "next/font/google";
 import { Metadata } from "next";
 
 import MainLayout from "@components/core/layouts/MainLayout";
+import ServiceWorkerRegister from "@components/core/ServiceWorkerRegister";
 
 import "./globals.css";
 
@@ -70,6 +71,7 @@ export default function RootLayout({
         />
       </head>
       <body className={`${deverSans.variable} ${deverMono.variable} font-sans`}>
+        <ServiceWorkerRegister />
         <MainLayout>{children}</MainLayout>
       </body>
     </html>
