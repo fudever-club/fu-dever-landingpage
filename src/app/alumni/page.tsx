@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
+import MentorSection from "@/src/components/modules/Alumni/MentorSection";
 import {
   Award,
   Building2,
@@ -412,6 +413,8 @@ export default function AlumniPage() {
           </div>
         )}
       </section>
+
+      <MentorSection />
     </div>
   );
 }
