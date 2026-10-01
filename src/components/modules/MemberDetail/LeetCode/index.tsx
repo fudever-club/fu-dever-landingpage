@@ -1,8 +1,12 @@
 import SectionTittle from "@components/core/common/SectionTitle";
-import moment from "moment";
+import dayjs from "dayjs";
 import Link from "next/link";
 import React from "react";
-import "moment/locale/vi";
+import "dayjs/locale/vi";
+import localizedFormat from "dayjs/plugin/localizedFormat";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("vi");
 
 const LEETCODE_URL = "https://leetcode.com/problems/{id}/description";
 
@@ -25,7 +29,7 @@ const LeetCode = ({ submissionList }: any) => {
                 >
                   <h2 className="truncate lg:text-[20px] md:text-[14px]">{infor?.title}</h2>
                   <p className="lg:text-[16px] md:text-[12px]">
-                    {moment(new Date(infor?.timestamp * 1000))?.format("L")}
+                    {dayjs(new Date(infor?.timestamp * 1000))?.format("L")}
                   </p>
                 </Link>
               </li>

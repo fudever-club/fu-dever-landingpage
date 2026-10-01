@@ -1,7 +1,14 @@
 import Image from "next/image";
 import time from "@icons/pages/project/time.svg";
 import Direction from "./Direction";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+import relativeTime from "dayjs/plugin/relativeTime";
+import customParseFormat from "dayjs/plugin/customParseFormat";
+
+dayjs.extend(relativeTime);
+dayjs.extend(customParseFormat);
+dayjs.locale("vi");
 
 function Banner({ _id, image, tiltle, slug, postTime }: any) {
   return (
@@ -35,7 +42,7 @@ function Banner({ _id, image, tiltle, slug, postTime }: any) {
                       alt="time"
                     ></Image>
                     <div className="sm:text-[8px] md:text-[16px]">
-                      {moment(postTime, "YYYYMMDD").fromNow()}
+                      {dayjs(postTime, "YYYYMMDD").fromNow()}
                     </div>
                   </div>
                 </div>

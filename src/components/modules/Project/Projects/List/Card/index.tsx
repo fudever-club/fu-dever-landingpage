@@ -2,8 +2,12 @@ import React from "react";
 import Image from "next/image";
 import ViewMoreButton from "../../../ViewMoreButton";
 import Link from "next/link";
-import moment from "moment";
-import "moment/locale/vi";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
+dayjs.locale("vi");
 import { sanitizeHtml } from "@/src/lib/sanitize";
 
 function Card({
@@ -36,7 +40,7 @@ function Card({
           <div className="space-y-[8px]">
             <div className="flex space-x-[8px] items-center justify-between">
               <div className="text-black text-[11px] sm:text-[8px] lg:text-[10px]">
-                {moment(new Date(postTime), "YYYYMMDD").fromNow()}
+                {dayjs(new Date(postTime)).fromNow()}
               </div>
             </div>
             <div className="xl:space-y-[8px] lg:space-y-[4px] text-[13px] sm:text-[12px] md:text-[8px] lg:text-[12px]">

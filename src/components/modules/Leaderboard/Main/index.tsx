@@ -65,14 +65,13 @@ function LeaderboardAvatar({
       {!imgError && src ? (
         <img
           src={src}
-          alt=""
-          aria-hidden="true"
+          alt={name}
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}
           loading="lazy"
         />
       ) : (
-        <span className="font-extrabold tracking-tight">{initials}</span>
+        <span role="img" aria-label={name} className="font-extrabold tracking-tight">{initials}</span>
       )}
     </div>
   );

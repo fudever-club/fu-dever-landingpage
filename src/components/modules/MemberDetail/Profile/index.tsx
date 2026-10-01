@@ -3,9 +3,13 @@ import React from "react";
 import position from "@icons/pages/member/detail/position.svg";
 import dob from "@icons/pages/member/detail/cake.svg";
 import id_person from "@icons/pages/member/detail/id_person.svg";
-import moment from "moment";
+import dayjs from "dayjs";
+import "dayjs/locale/vi";
+import localizedFormat from "dayjs/plugin/localizedFormat";
 import Social from "../Social";
-import "moment/locale/vi";
+
+dayjs.extend(localizedFormat);
+dayjs.locale("vi");
 const decs = [
   { label: "Địa chỉ email:", dataIndex: "email" },
   { label: "Sinh sống:", dataIndex: "hometown" },
@@ -51,7 +55,7 @@ const Profile = ({ user }: { user: any }) => {
               height={30}
             ></Image>
             <p className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-regular flex leading-none">
-              {user?.dob ? moment(user?.dob).format("L") : "không có"}
+              {user?.dob ? dayjs(user?.dob).format("L") : "không có"}
             </p>
           </span>
           <span className="flex gap-[8px] items-center w-fit">
