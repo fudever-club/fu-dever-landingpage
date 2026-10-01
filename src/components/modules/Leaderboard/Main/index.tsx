@@ -390,12 +390,12 @@ function SeasonLeaderboardBoard() {
 
           {!isLoading && !boardError && board && entries.length > 0 && (
             <>
-              <div className="flex items-center justify-between px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-                <div className="flex items-center gap-3 sm:gap-4">
+              <div className="flex items-center justify-between gap-3 px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <div className="flex min-w-0 items-center gap-3 sm:gap-4">
                   <span className="w-7 sm:w-8 text-center shrink-0">Hạng</span>
-                  <span>Thành viên</span>
+                  <span className="truncate">Thành viên</span>
                 </div>
-                <div className="flex items-center gap-4 sm:gap-6">
+                <div className="flex shrink-0 items-center gap-4 sm:gap-6">
                   <span className="hidden sm:inline-block">Đã giải</span>
                   <span className="text-right">Điểm</span>
                 </div>
@@ -557,7 +557,7 @@ export default function LeaderboardModule({
         <DeverCodeParallaxBackground className="w-full">
           {/* Title & Season Badge */}
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4 pb-4 mb-4 sm:mb-6">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[#0066CC] dark:text-blue-400 text-xs sm:text-sm font-bold mb-4 tracking-wide uppercase shadow-sm">
+            <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[#0066CC] dark:text-blue-400 text-xs sm:text-sm font-bold mb-4 tracking-wide uppercase shadow-sm">
               <Flame className="w-4 h-4 text-amber-500 animate-pulse" />
               Bảng Vinh Danh Thuật Toán • FU-DEVER
             </div>
@@ -582,7 +582,7 @@ export default function LeaderboardModule({
             <section className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 pb-10">
               <div className="grid grid-cols-3 gap-2 sm:gap-6 md:gap-8 items-end justify-center">
                 {/* Rank 2 - Silver (Left on desktop, order-1) */}
-                <div className="flex flex-col items-center order-1 group">
+                <div className="flex min-w-0 flex-col items-center order-1 group">
                   <div className="w-full max-w-[110px] sm:max-w-[180px] md:max-w-[240px] aspect-[3/4]">
                     <TiltedCard
                       imageSrc={user2?.user?.avatar || avatar_default}
@@ -620,7 +620,7 @@ export default function LeaderboardModule({
                 </div>
 
                 {/* Rank 1 - Gold Champion (Center, elevated, order-2) */}
-                <div className="flex flex-col items-center order-2 -translate-y-3 sm:-translate-y-6 group">
+                <div className="flex min-w-0 flex-col items-center order-2 -translate-y-3 sm:-translate-y-6 group">
                   <div className="w-full max-w-[130px] sm:max-w-[210px] md:max-w-[280px] aspect-[3/4] relative">
                     <TiltedCard
                       imageSrc={user1?.user?.avatar || avatar_default}
@@ -658,7 +658,7 @@ export default function LeaderboardModule({
                 </div>
 
                 {/* Rank 3 - Bronze (Right on desktop, order-3) */}
-                <div className="flex flex-col items-center order-3 group">
+                <div className="flex min-w-0 flex-col items-center order-3 group">
                   <div className="w-full max-w-[110px] sm:max-w-[180px] md:max-w-[240px] aspect-[3/4]">
                     <TiltedCard
                       imageSrc={user3?.user?.avatar || avatar_default}
@@ -726,12 +726,12 @@ export default function LeaderboardModule({
           </div>
 
           {/* Table Header Row */}
-          <div className="flex items-center justify-between px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
-            <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center justify-between gap-3 px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">
+            <div className="flex min-w-0 items-center gap-3 sm:gap-4">
               <span className="w-7 sm:w-8 text-center shrink-0">Hạng</span>
-              <span>Thành viên</span>
+              <span className="truncate">Thành viên</span>
             </div>
-            <div className="flex items-center gap-6 sm:gap-8">
+            <div className="flex shrink-0 items-center gap-6 sm:gap-8">
               <span className="hidden md:inline-block">LeetCode ID</span>
               <span className="text-right">Điểm số (AC)</span>
             </div>

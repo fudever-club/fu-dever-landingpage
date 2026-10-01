@@ -83,7 +83,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
   return (
     <article className="md:pb-[60px] sm:pb-[40px]">
       <div className="xl:max-w-[1280px] mx-[auto] px-[auto]">
-        <div className="justify-between relative items-end md:flex-row flex sm:flex-col md:items-end sm:items-start xl:gap-0 sm:gap-[25px] w-[100%] h-[auto]">
+        <div className="justify-between relative flex w-full flex-col gap-4 sm:gap-[25px] md:flex-row md:items-end xl:gap-0 h-[auto]">
           <SectionTittle
             title="CÁC THÀNH VIÊN CỦA CÂU LẠC BỘ"
             subtitle="Những thành viên đầy nhiệt huyết"
@@ -138,8 +138,8 @@ const ListMember = ({ member = initialData }: { member: any }) => {
                           <h4 className="font-bold text-sm sm:text-base truncate leading-snug">
                             {fullName}
                           </h4>
-                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center mt-1">
-                            <span className="truncate opacity-90">{user?.MSSV ? `MSSV: ${user.MSSV}` : position}</span>
+                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center gap-2 mt-1">
+                            <span className="min-w-0 flex-1 truncate opacity-90">{user?.MSSV ? `MSSV: ${user.MSSV}` : position}</span>
                             {user?.gen && <span className="font-bold shrink-0 ml-1">GEN {user.gen}</span>}
                           </div>
                         </div>

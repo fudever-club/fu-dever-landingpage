@@ -39,7 +39,7 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
   return (
     <article className="md:py-[60px] sm:py-[40px]">
       <div className="xl:max-w-[1280px] mx-[auto]">
-        <div className="justify-between relative items-end md:flex-row flex sm:flex-col md:items-end sm:items-start xl:gap-0 sm:gap-[25px] w-[100%] h-[auto]">
+        <div className="justify-between relative flex w-full flex-col gap-4 sm:gap-[25px] md:flex-row md:items-end xl:gap-0 h-[auto]">
           <SectionTittle
             title="CÁC THÀNH VIÊN LÃNH ĐẠO CỦA CÂU LẠC BỘ"
             subtitle="Những trụ cột đặc biệt của chúng tôi"
@@ -58,7 +58,7 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
                 <motion.li
                   variants={child}
                   key={`skeleton-${index}`}
-                  className="overflow-hidden rounded-[20px_0] xl:w-[calc((100%-40px*3)/4)] md:w-[calc((100%-35px*3)/4)] xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204] sm:aspect-[93/123] sm:w-[calc((100%-20px*1)/2)] relative"
+                  className="overflow-hidden rounded-[20px_0] w-full sm:w-[calc((100%-20px*1)/2)] md:w-[calc((100%-35px*3)/4)] xl:w-[calc((100%-40px*3)/4)] xl:aspect-[29/40] lg:aspect-[7/10] md:aspect-[146/204] sm:aspect-[93/123] aspect-[3/4] relative"
                 >
                   <Sekeleton />
                 </motion.li>
@@ -104,8 +104,8 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
                           <h4 className="font-bold text-sm sm:text-base truncate leading-snug">
                             {fullName}
                           </h4>
-                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center mt-1">
-                            <span className="truncate opacity-90">{position}</span>
+                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center gap-2 mt-1">
+                            <span className="min-w-0 flex-1 truncate opacity-90">{position}</span>
                             {user?.gen && <span className="font-bold shrink-0 ml-1">GEN {user.gen}</span>}
                           </div>
                         </div>
