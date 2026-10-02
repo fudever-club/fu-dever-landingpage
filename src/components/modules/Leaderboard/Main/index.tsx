@@ -63,9 +63,12 @@ function LeaderboardAvatar({
   return (
     <div className="relative flex h-10 w-10 sm:h-11 sm:w-11 shrink-0 items-center justify-center rounded-full bg-blue-100 text-[#0066CC] font-bold text-xs border border-blue-200 overflow-hidden select-none">
       {!imgError && src ? (
-        <img
+        <Image
           src={src}
           alt={name}
+          width={44}
+          height={44}
+          sizes="44px"
           className="h-full w-full object-cover"
           onError={() => setImgError(true)}
           loading="lazy"

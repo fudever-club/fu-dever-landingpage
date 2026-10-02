@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
 import {
@@ -433,6 +434,9 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             key={index}
             className="my-6 rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-white font-sans"
           >
+            {/* TODO(allowlist): markdown body images keep <img> — author-pasted
+                URLs can point at any host outside next.config.mjs
+                remotePatterns; converting would return 400 for those hosts. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               src={imgSrc}
@@ -584,10 +588,13 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
 
             {/* Cover Image */}
             <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src={post.coverImage || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80"}
                 alt={post.title}
+                width={1200}
+                height={675}
+                sizes="(max-width: 1024px) 100vw, 768px"
+                loading="lazy"
                 onError={(e) => {
                   e.currentTarget.src = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
                 }}
@@ -605,9 +612,13 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
               <div className="flex items-center gap-3.5">
                 <div className="h-12 w-12 rounded-2xl bg-gradient-to-tr from-[#004C99] to-[#0080FF] text-white font-extrabold text-sm flex items-center justify-center shadow-md font-sans overflow-hidden border border-blue-200">
                   {post.author?.avatar ? (
-                    <img
+                    <Image
                       src={post.author.avatar}
                       alt={post.author.name || "Tác giả"}
+                      width={96}
+                      height={96}
+                      sizes="48px"
+                      loading="lazy"
                       className="w-full h-full object-cover"
                     />
                   ) : (

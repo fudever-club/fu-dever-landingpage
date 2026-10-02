@@ -83,15 +83,15 @@ function Slider({ images }: any) {
               width: "100%",
             }}
           >
-            {images.map((image: any) => (
+            {images.map((image: any, index: number) => (
               <SwiperSlide key={image._id} style={{ width: "50%" }}>
                 <Image
                   loading="lazy"
-                  unoptimized
                   src={image?.url}
-                  alt={image?.createdAt || "FU-DEVER Activity"}
+                  alt={image?.name || `Ảnh hoạt động FU-DEVER ${index + 1}`}
                   width={400}
                   height={400}
+                  sizes="50vw"
                   className="w-full h-full aspect-[16/9] object-cover"
                 ></Image>
               </SwiperSlide>
@@ -112,14 +112,14 @@ function Slider({ images }: any) {
               width: "100%",
             }}
           >
-            {images.map((image: any) => (
+            {images.map((image: any, index: number) => (
               <SwiperSlide key={image._id}>
                 <Image
                   src={image?.url}
-                  unoptimized
-                  alt={image?.createdAt || "FU-DEVER Activity"}
+                  alt={image?.name || `Ảnh hoạt động FU-DEVER ${index + 1}`}
                   width={400}
                   height={400}
+                  sizes="(max-width: 768px) 25vw, 12vw"
                   loading="lazy"
                   className="w-full transition-all aspect-[16/9] object-cover cursor-pointer grayscale"
                 ></Image>

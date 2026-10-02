@@ -93,11 +93,11 @@ const MainAlbum = ({ album }: any) => {
             <li key={index} className="lg:py-2 sm:py-2">
               <Image
                 loading="lazy"
-                unoptimized
                 src={image?.url}
-                alt={image?.url || "Album image"}
+                alt={image?.name || `${album?.name || "Album FU-DEVER"} — ảnh ${index + 1}`}
                 width={400}
                 height={400}
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
                 className="w-full h-full lg:rounded-[16px] sm:rounded-[8px]"
               />
             </li>

@@ -61,11 +61,15 @@ export default function DeverActivityGallery() {
             className="group relative rounded-2xl overflow-hidden bg-slate-900 border border-slate-200 dark:border-slate-800 cursor-pointer shadow-sm hover:shadow-xl transition-all duration-300"
           >
             <div className="relative h-64 w-full overflow-hidden">
-              <img
+              <Image
                 src={img.src}
                 alt={img.title}
+                width={800}
+                height={450}
+                sizes="(max-width: 768px) 100vw, 33vw"
+                loading="lazy"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'><rect width='100%' height='100%' fill='%2306101E'/><rect width='100%' height='100%' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%230066CC' stop-opacity='0.4'/><stop offset='100%' stop-color='%23004C99' stop-opacity='0.8'/></linearGradient></defs><circle cx='400' cy='225' r='120' fill='%230066CC' opacity='0.2'/><text x='50%' y='48%' font-family='sans-serif' font-weight='bold' font-size='24' fill='%23FFFFFF' text-anchor='middle'>FU-DEVER Activity</text></svg>";
+                  e.currentTarget.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450' viewBox='0 0 800 450'><rect width='100%' height='100%' fill='%2306101E'/><rect width='100%' height='100%' fill='url(%23g)'/><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0%' stop-color='%230066CC' stop-opacity='0.4'/><stop offset='100%' stop-color='%23004C99' stop-opacity='0.8'/></linearGradient></defs><circle cx='400' cy='225' r='120' fill='%230066CC' opacity='0.2'/><text x='50%' y='48%' font-family='sans-serif' font-weight='bold' font-size='24' fill='%23FFFFFF' text-anchor='middle'>FU-DEVER Activity</text></svg>";
                 }}
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
               />
@@ -101,9 +105,13 @@ export default function DeverActivityGallery() {
 
           <div className="max-w-4xl w-full space-y-4 text-center">
             <div className="relative max-h-[75vh] w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl">
-              <img
+              <Image
                 src={images[selectedIdx].src}
                 alt={images[selectedIdx].title}
+                width={1200}
+                height={800}
+                sizes="100vw"
+                loading="lazy"
                 className="w-full max-h-[75vh] object-contain mx-auto"
               />
             </div>

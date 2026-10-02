@@ -57,12 +57,14 @@ function MemberCardImage({ user }: { user: any }) {
   }
 
   return (
-    <img
+    <Image
+      src={user.avatar}
+      alt={fullName}
+      width={300}
+      height={400}
+      sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
       loading="lazy"
       className="pointer-events-none object-cover rounded-2xl w-full h-full shadow-sm border border-slate-200"
-      alt=""
-      aria-hidden="true"
-      src={user.avatar}
       onError={() => setImgError(true)}
     />
   );

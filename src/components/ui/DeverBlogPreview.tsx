@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
 import {
@@ -280,9 +281,13 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
                       <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#0066CC] to-cyan-400 p-0.5 shrink-0 shadow-xs">
                         <div className="w-full h-full rounded-full bg-white text-[#0066CC] font-bold text-xs flex items-center justify-center font-mono border border-blue-100 overflow-hidden">
                           {article.author.avatar ? (
-                            <img
+                            <Image
                               src={article.author.avatar}
                               alt={article.author.name}
+                              width={72}
+                              height={72}
+                              sizes="36px"
+                              loading="lazy"
                               className="w-full h-full object-cover"
                             />
                           ) : (

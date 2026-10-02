@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useCallback, useEffect, useState } from "react";
+import Image from "next/image";
 import {
   AlertTriangle,
   ArrowRight,
@@ -37,9 +38,12 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
         <div className="flex items-start gap-4">
           <div className="relative shrink-0">
             {mentor.avatar ? (
-              <img
+              <Image
                 src={mentor.avatar}
                 alt={mentor.name}
+                width={64}
+                height={64}
+                sizes="64px"
                 loading="lazy"
                 className="h-16 w-16 rounded-2xl border-2 border-blue-100 object-cover shadow-sm"
               />

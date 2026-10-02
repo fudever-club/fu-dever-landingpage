@@ -26,12 +26,12 @@ function Card({
         <div className="w-[100%] h-[200px] sm:h-[66.66%] md:h-[50%] xl:h-[52.8%] overflow-hidden">
           <Image
             loading="lazy"
-            // TODO(phase-next): revisit `unoptimized` + batched 3D-moment
-            // effects here; kept as-is for this P1 pass.
-            unoptimized
+            // Allowlist covers R2 proxy + Drive/Unsplash/i.ibb.co (next.config.mjs),
+            // so the optimized loader applies here.
             src={image}
             width={500}
             height={500}
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 30vw"
             className="w-[100%] h-[100%] rounded-t-[6px] object-cover"
             alt={tiltle ? `${tiltle} - Dự án FU-DEVER` : "Ảnh bìa dự án FU-DEVER"}
           />

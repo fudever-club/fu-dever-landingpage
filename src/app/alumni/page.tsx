@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
 import MentorSection from "@/src/components/modules/Alumni/MentorSection";
@@ -329,9 +330,13 @@ export default function AlumniPage() {
                   <div className="flex items-start gap-4">
                     <div className="relative">
                       {item.avatar ? (
-                        <img
+                        <Image
                           src={item.avatar}
                           alt={item.name}
+                          width={64}
+                          height={64}
+                          sizes="64px"
+                          loading="lazy"
                           className="w-16 h-16 rounded-2xl object-cover border-2 border-blue-100 shadow-sm"
                         />
                       ) : (

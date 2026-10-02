@@ -56,10 +56,11 @@ const Album = ({ albums }: any) => {
                     <SwiperSlide key={imgIdx}>
                       <Image
                         src={image?.url}
-                        unoptimized
-                        alt=""
+                        alt={image?.name || `${album?.name || "Album FU-DEVER"} — ảnh ${imgIdx + 1}`}
                         width={400}
                         height={400}
+                        sizes="(max-width: 768px) 50vw, 33vw"
+                        loading="lazy"
                         className="w-full aspect-square object-cover"
                       />
                     </SwiperSlide>

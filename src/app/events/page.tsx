@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import {
   Bolt,
   BrainCircuit,
@@ -331,12 +332,14 @@ export default function EventsPage() {
                   >
                     <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52 bg-slate-100">
                       {resolvedImg ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
+                        <Image
                           src={resolvedImg}
                           alt={evt.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          width={800}
+                          height={450}
+                          sizes="(max-width: 1024px) 100vw, 400px"
                           loading="lazy"
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                       ) : (
                         <DeverKnowledgeCanvas kind="event" title={evt.title} />

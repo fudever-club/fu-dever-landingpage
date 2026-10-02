@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { BookOpen, Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverBlogPreview from "@components/ui/DeverBlogPreview";
@@ -57,9 +58,13 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
     <div className="flex items-center gap-2.5">
       <div className={`relative shrink-0 overflow-hidden rounded-full border-2 border-white bg-gradient-to-br from-[#0066CC] to-cyan-500 shadow-md shadow-blue-900/15 ${avatarSize}`}>
         {showImage ? (
-          <img
-            src={avatarUrl}
+          <Image
+            src={avatarUrl || ""}
             alt={name}
+            width={88}
+            height={88}
+            sizes="(max-width: 768px) 32px, 44px"
+            loading="lazy"
             onError={() => setImgError(true)}
             className="w-full h-full object-cover"
           />
@@ -282,10 +287,13 @@ export default function BlogPage() {
                 >
                   <div>
                     <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
+                      <Image
                         src={post.coverImage || DEFAULT_BLOG_COVER}
                         alt={post.title}
+                        width={800}
+                        height={450}
+                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        loading="lazy"
                         onError={(e) => {
                           e.currentTarget.src = DEFAULT_BLOG_COVER;
                         }}

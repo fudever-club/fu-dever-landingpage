@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import { apiFetch } from "@/src/lib/api";
 import {
   Calendar,
@@ -261,12 +262,14 @@ export default function DeverEventShowcase() {
               >
                 {resolvedImg && (
                   <div className="relative h-40 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={resolvedImg}
                       alt={evt.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      width={600}
+                      height={340}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       loading="lazy"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                     />
                   </div>
                 )}

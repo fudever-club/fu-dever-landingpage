@@ -1,5 +1,6 @@
 import React from "react";
 import { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
 import {
@@ -139,9 +140,13 @@ export default async function HallOfFamePage() {
                 <div className="order-2 md:order-1 flex flex-col items-center">
                   <div className="relative mb-3 flex flex-col items-center">
                     <div className="relative">
-                      <img
+                      <Image
                         src={podium.second.avatar || "/icons/layout/logo.png"}
                         alt={podium.second.name}
+                        width={80}
+                        height={80}
+                        sizes="80px"
+                        loading="lazy"
                         className="h-20 w-20 rounded-full object-cover ring-4 ring-slate-300 shadow-lg"
                       />
                       <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-700 font-black shadow ring-2 ring-white">
@@ -169,9 +174,13 @@ export default async function HallOfFamePage() {
                 <div className="relative mb-4 flex flex-col items-center">
                   <Crown className="h-10 w-10 text-amber-500 mb-1 animate-pulse drop-shadow-sm" />
                   <div className="relative">
-                    <img
+                    <Image
                       src={podium.first.avatar || "/icons/layout/logo.png"}
                       alt={podium.first.name}
+                      width={96}
+                      height={96}
+                      sizes="96px"
+                      loading="lazy"
                       className="h-24 w-24 rounded-full object-cover ring-4 ring-amber-400 shadow-2xl"
                     />
                     <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-white font-black shadow-lg ring-2 ring-white text-lg">
@@ -199,9 +208,13 @@ export default async function HallOfFamePage() {
                 <div className="order-3 flex flex-col items-center">
                   <div className="relative mb-3 flex flex-col items-center">
                     <div className="relative">
-                      <img
+                      <Image
                         src={podium.third.avatar || "/icons/layout/logo.png"}
                         alt={podium.third.name}
+                        width={80}
+                        height={80}
+                        sizes="80px"
+                        loading="lazy"
                         className="h-20 w-20 rounded-full object-cover ring-4 ring-amber-700/40 shadow-lg"
                       />
                       <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-amber-800 text-white font-black shadow ring-2 ring-white">
@@ -288,9 +301,13 @@ export default async function HallOfFamePage() {
                     </td>
                     <td className="py-4 px-3">
                       <div className="flex items-center gap-3">
-                        <img
+                        <Image
                           src={member.avatar || "/icons/layout/logo.png"}
                           alt={member.name}
+                          width={40}
+                          height={40}
+                          sizes="40px"
+                          loading="lazy"
                           className="h-10 w-10 rounded-full object-cover ring-2 ring-slate-100"
                         />
                         <div>
