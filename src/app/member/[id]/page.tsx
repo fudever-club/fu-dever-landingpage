@@ -22,10 +22,12 @@ const fetchUserDetail = cache(async (idOrKey: string) => {
 });
 
 export async function generateMetadata({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  // Awaited for Next 15+ async params; resolves immediately on Next 14.
+  const { id } = await params;
   const user = await fetchUserDetail(id);
   const name = user ? `${user?.firstname || ""} ${user?.lastname || ""}`.trim() : "Hồ sơ thành viên";
   return {
@@ -42,7 +44,8 @@ export async function generateMetadata({
   };
 }
 
-const Member = async ({ params: { id } }: { params: { id: string } }) => {
+const Member = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   const user = await fetchUserDetail(id);
 
   if (!user) {

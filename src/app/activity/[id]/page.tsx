@@ -22,10 +22,11 @@ const getAlbumBySlug = async (slug: string) => {
   }
 };
 export async function generateMetadata({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const album: any = await getAlbumBySlug(id);
   const coverImage = album?.imageList?.[0];
   return {
@@ -43,7 +44,8 @@ export async function generateMetadata({
   };
 }
 
-const Album = async ({ params: { id } }: { params: { id: string } }) => {
+const Album = async ({ params }: { params: Promise<{ id: string }> }) => {
+  const { id } = await params;
   const album = await getAlbumBySlug(id);
   if (!album) {
     notFound();

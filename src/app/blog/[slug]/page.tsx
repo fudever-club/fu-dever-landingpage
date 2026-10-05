@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import DeverBlogRenderer from "@components/ui/DeverBlogRenderer";
 import { apiFetch } from "@/src/lib/api";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 const FALLBACK_POSTS: Record<string, any> = {
   "lam-chu-nextjs-14-app-router": {
@@ -60,9 +60,11 @@ Việc nắm vững Server Actions và cơ chế Suspense Streaming giúp lập 
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  // Awaited for Next 15+ async params; resolves immediately on Next 14.
+  const { slug } = await params;
   try {
     const response = await apiFetch(
-      `/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      `/api/v1/blogs/slug/${encodeURIComponent(slug)}`,
       { next: { revalidate: 60 } }
     );
     if (response.ok) {
@@ -80,7 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   } catch {}
 
-  const fallback = FALLBACK_POSTS[params.slug];
+  const fallback = FALLBACK_POSTS[slug];
   if (fallback) {
     return {
       title: `${fallback.title} | FU-DEVER Tech Blog (Bản lưu offline)`,
@@ -94,9 +96,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function BlogDetailPage({ params }: Props) {
+  const { slug } = await params;
   try {
     const response = await apiFetch(
-      `/api/v1/blogs/slug/${encodeURIComponent(params.slug)}`,
+      `/api/v1/blogs/slug/${encodeURIComponent(slug)}`,
       { cache: "no-store" }
     );
 
@@ -110,7 +113,7 @@ export default async function BlogDetailPage({ params }: Props) {
     }
   } catch {}
 
-  const fallbackPost = FALLBACK_POSTS[params.slug];
+  const fallbackPost = FALLBACK_POSTS[slug];
   if (fallbackPost) {
     return (
       <div>

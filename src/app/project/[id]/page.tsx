@@ -24,10 +24,11 @@ const getDetailProject = async (id: string) => {
 };
 
 export async function generateMetadata({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const project: any = await getDetailProject(id);
   const title = project?.title ?? "Dự án";
   return {
@@ -46,10 +47,11 @@ export async function generateMetadata({
 }
 
 export default async function Page({
-  params: { id },
+  params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
+  const { id } = await params;
   const project = await getDetailProject(id);
   if (!project) {
     notFound();
