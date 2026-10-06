@@ -21,7 +21,7 @@ export default function RootLoading() {
         </div>
       </div>
 
-      <p className="text-xs font-semibold text-slate-500 font-sans tracking-wide animate-pulse">
+      <p className="text-xs font-semibold text-slate-500 font-sans tracking-wide animate-pulse motion-reduce:animate-none">
         Đang tải nội dung...
       </p>
 
@@ -30,7 +30,7 @@ export default function RootLoading() {
         {[1, 2, 3].map((i) => (
           <div
             key={i}
-            className="p-5 rounded-2xl bg-white border border-slate-100 shadow-xs space-y-3 animate-pulse"
+            className="p-5 rounded-2xl bg-white border border-slate-100 shadow-xs space-y-3 animate-pulse motion-reduce:animate-none"
           >
             <div className="h-40 rounded-xl bg-slate-100" />
             <div className="h-4 bg-slate-100 rounded w-3/4" />

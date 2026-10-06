@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import SectionTittle from "@components/core/common/SectionTitle";
 import Sekeleton from "@/src/components/core/common/Sekeleton";
 import { TiltedCard } from "@components/ui/TiltedCard";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 const parent: any = {
   show: {
@@ -36,6 +37,7 @@ const child: any = {
 const initialData = Array(4).fill(null);
 
 const ListLeaderMember = ({ data = initialData }: { data: any }) => {
+  const prefersReducedMotion = usePrefersReducedMotion();
   return (
     <article className="md:py-[60px] sm:py-[40px]">
       <div className="xl:max-w-[1280px] mx-[auto]">
@@ -47,8 +49,9 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
           />
         </div>
         <motion.ul
-          initial="hidden"
-          whileInView="show"
+          initial={prefersReducedMotion ? false : "hidden"}
+          whileInView={prefersReducedMotion ? undefined : "show"}
+          animate={prefersReducedMotion ? "show" : undefined}
           variants={parent}
           className="mt-6 sm:mt-8 md:mt-10 xl:mt-7 w-full gap-3.5 sm:gap-5 md:gap-8 xl:gap-10 flex-wrap flex justify-center sm:justify-start"
         >
@@ -84,7 +87,7 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
                   <TiltedCard
                     imageSrc={user?.avatar || "/images/pages/leaderBoard/avatar_default.png"}
                     altText={`${fullName} - ${position}`}
-                    captionText={`✨ ${fullName} • ${position} ${kCohort ? `(${kCohort})` : ""}`}
+                    captionText={`${fullName} • ${position} ${kCohort ? `(${kCohort})` : ""}`}
                     rotateAmplitude={12}
                     scaleOnHover={1.06}
                     showMobileWarning={false}
@@ -95,7 +98,7 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
                       <div className="h-[auto] w-[100%] rounded-br-[20px] overflow-hidden">
                         {/* K Cohort Tag */}
                         {kCohort && (
-                          <div className="flex justify-center py-1 px-3 w-fit ml-auto rounded-tl-lg bg-[#FF7171] text-white text-[11px] font-bold shadow-sm">
+                          <div className="flex justify-center py-1 px-3 w-fit ml-auto rounded-tl-lg bg-[#0066CC] text-white text-xs font-bold shadow-sm">
                             {kCohort}
                           </div>
                         )}
@@ -104,7 +107,7 @@ const ListLeaderMember = ({ data = initialData }: { data: any }) => {
                           <h4 className="font-bold text-sm sm:text-base truncate leading-snug">
                             {fullName}
                           </h4>
-                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center gap-2 mt-1">
+                          <div className="text-xs text-white flex justify-between items-center gap-2 mt-1">
                             <span className="min-w-0 flex-1 truncate opacity-90">{position}</span>
                             {user?.gen && <span className="font-bold shrink-0 ml-1">GEN {user.gen}</span>}
                           </div>

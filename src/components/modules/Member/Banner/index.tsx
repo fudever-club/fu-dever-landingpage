@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import arrow from "@icons/pages/member/banner/arrow.svg";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 const parent: any = {
   show: {
@@ -46,10 +47,10 @@ function MemberCardImage({ user }: { user: any }) {
         <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0066CC] to-[#0080FF] text-white font-black text-xs sm:text-sm shadow-md mb-1.5 sm:mb-2">
           {initials}
         </div>
-        <span className="text-[11px] sm:text-xs font-bold text-slate-800 line-clamp-1 leading-tight">
+        <span className="text-xs font-bold text-slate-800 line-clamp-1 leading-tight">
           {fullName}
         </span>
-        <span className="text-[9px] sm:text-[10px] font-bold text-[#0066CC] mt-0.5">
+        <span className="text-xs font-bold text-[#0066CC] mt-0.5">
           {user?.position?.name || "Tiêu biểu"}
         </span>
       </div>
@@ -73,21 +74,23 @@ function MemberCardImage({ user }: { user: any }) {
 const TopTypical = ({ data }: { data: any }) => {
   // Only display valid users or up to 5 items
   const displayList = Array.isArray(data) && data.length > 0 ? data.slice(0, 5) : [];
+  const prefersReducedMotion = usePrefersReducedMotion();
 
   return (
     <article className="xl:max-w-[1440px] mx-auto">
       <div className="xl:px-[80px] md:px-[40px] sm:px-[20px] px-4 flex flex-col text-center">
-        <h1 className="font-black text-[#0098FF] drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-tight mx-auto">
+        <h1 className="font-black text-[#0066CC] drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-tight mx-auto">
           TRONG FU - DEVER CÓ AI?
         </h1>
-        <p className="text-[#0065A9] font-bold text-xs sm:text-sm md:text-base lg:text-lg mt-3 sm:mt-4 mb-2">
+        <p className="text-[#0066CC] font-bold text-xs sm:text-sm md:text-base lg:text-lg mt-3 sm:mt-4 mb-2">
           2026 - Những gương mặt tiêu biểu của câu lạc bộ
         </p>
 
         {displayList.length > 0 && (
           <motion.ul
-            initial="hidden"
-            whileInView={"show"}
+            initial={prefersReducedMotion ? false : "hidden"}
+            whileInView={prefersReducedMotion ? undefined : "show"}
+            animate={prefersReducedMotion ? "show" : undefined}
             variants={parent}
             className="flex flex-wrap justify-center items-stretch gap-2.5 sm:gap-4 lg:gap-6 my-6 w-full"
           >
@@ -104,10 +107,10 @@ const TopTypical = ({ data }: { data: any }) => {
           </motion.ul>
         )}
 
-        <p className="mt-4 text-xs sm:text-sm md:text-base text-[#0065A9] font-bold">
+        <p className="mt-4 text-xs sm:text-sm md:text-base text-[#0066CC] font-bold">
           Mỗi thành viên là một phần nhỏ trong sự phát triển thành công của câu lạc bộ.
         </p>
-        <div className="mt-3 mx-auto w-48 sm:w-80 md:w-96 lg:w-[500px] bg-[#0098FF] h-1 rounded-full"></div>
+        <div className="mt-3 mx-auto w-48 sm:w-80 md:w-96 lg:w-[500px] bg-[#0066CC] h-1 rounded-full"></div>
         <Image
           loading="lazy"
           className="pointer-events-none w-5 h-7 sm:w-6 sm:h-9 mx-auto my-3"

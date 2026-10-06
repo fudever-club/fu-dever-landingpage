@@ -55,7 +55,7 @@ export function renderShowcaseStatusBadge(status?: string) {
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-[#0066CC] border border-blue-200 shadow-sm">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0066CC]"></span>
           </span>
           <CheckCircle2 className="w-3 h-3 text-[#0066CC]" />
@@ -66,10 +66,10 @@ export function renderShowcaseStatusBadge(status?: string) {
       return (
         <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-rose-50 text-rose-600 border border-rose-200 shadow-sm">
           <span className="relative flex h-1.5 w-1.5">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
           </span>
-          <Radio className="w-3 h-3 text-rose-600 animate-pulse" />
+          <Radio className="w-3 h-3 text-rose-600 animate-pulse motion-reduce:animate-none" />
           <span>Đang diễn ra</span>
         </span>
       );
@@ -195,7 +195,7 @@ export default function DeverEventShowcase() {
           {[1, 2, 3].map((n) => (
             <div
               key={n}
-              className="bg-slate-100 dark:bg-slate-900/60 rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 animate-pulse"
+              className="bg-slate-100 dark:bg-slate-900/60 rounded-xl p-5 border border-slate-200 dark:border-slate-800 space-y-4 animate-pulse motion-reduce:animate-none"
             >
               <div className="h-4 bg-slate-200 dark:bg-slate-800 rounded w-1/3" />
               <div className="h-6 bg-slate-200 dark:bg-slate-800 rounded w-3/4" />

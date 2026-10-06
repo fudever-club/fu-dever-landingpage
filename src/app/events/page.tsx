@@ -72,7 +72,7 @@ function renderEventStatusBadge(status: string) {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50/95 text-[#0066CC] border border-blue-200 shadow-sm backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066CC]"></span>
           </span>
           <CheckCircle2 className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />
@@ -83,10 +83,10 @@ function renderEventStatusBadge(status: string) {
       return (
         <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-50/95 text-rose-600 border border-rose-200 shadow-sm backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
+            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
           </span>
-          <Radio className="h-3.5 w-3.5 text-rose-600 animate-pulse" aria-hidden="true" />
+          <Radio className="h-3.5 w-3.5 text-rose-600 animate-pulse motion-reduce:animate-none" aria-hidden="true" />
           <span>Đang diễn ra</span>
         </span>
       );
@@ -175,7 +175,7 @@ export default function EventsPage() {
     {
       key: "Đang diễn ra",
       label: "Đang diễn ra",
-      icon: <Radio className="h-3.5 w-3.5 text-rose-500 animate-pulse" aria-hidden="true" />,
+      icon: <Radio className="h-3.5 w-3.5 text-rose-500 animate-pulse motion-reduce:animate-none" aria-hidden="true" />,
       count: events.filter((e) => e.status === "Đang diễn ra").length,
     },
     {
@@ -258,7 +258,7 @@ export default function EventsPage() {
                   key={tab.key}
                   type="button"
                   onClick={() => setFilterStatus(tab.key)}
-                  className={`inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer active:scale-95 ${
+                  className={`inline-flex items-center gap-2 px-3.5 min-h-[44px] py-1.5 rounded-full text-xs font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer active:scale-95 ${
                     isActive
                       ? "bg-[#0066CC] text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-500/20"
                       : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/80"
@@ -267,7 +267,7 @@ export default function EventsPage() {
                   <span className={isActive ? "text-white" : ""}>{tab.icon}</span>
                   <span>{tab.label}</span>
                   <span
-                    className={`px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
+                    className={`px-1.5 py-0.5 rounded-full text-xs font-bold ${
                       isActive ? "bg-white/20 text-white" : "bg-slate-200/70 text-slate-600"
                     }`}
                   >
@@ -282,7 +282,7 @@ export default function EventsPage() {
           {isLoading ? (
             <div className="space-y-6">
               {[1, 2].map((i) => (
-                <div key={i} className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-pulse">
+                <div key={i} className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-pulse motion-reduce:animate-none">
                   <div className="lg:col-span-4 h-48 rounded-xl bg-slate-200" />
                   <div className="lg:col-span-8 space-y-3">
                     <div className="h-6 bg-slate-200 rounded w-3/4" />

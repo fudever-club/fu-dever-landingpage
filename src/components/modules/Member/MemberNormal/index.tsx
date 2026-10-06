@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import SectionTittle from "@components/core/common/SectionTitle";
 import { useInView } from "framer-motion";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 import { userEndpoint } from "@/src/services/endpoint";
 import axios from "axios";
 import Loading from "@components/modules/Member/Loading";
@@ -41,6 +42,7 @@ const initialData = Array(10).fill(null);
 const ListMember = ({ member = initialData }: { member: any }) => {
   const ref = useRef(null);
   const inView = useInView(ref);
+  const prefersReducedMotion = usePrefersReducedMotion();
   const [data, setData] = useState(member);
   const [end, setEnd] = useState(false);
   const [loadError, setLoadError] = useState(false);
@@ -91,7 +93,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
           />
         </div>
         <motion.ul
-          initial="hidden"
+          initial={prefersReducedMotion ? false : "hidden"}
           animate="show"
           variants={parent}
           className="mt-6 sm:mt-8 md:mt-10 xl:mt-7 w-full gap-3.5 sm:gap-5 md:gap-8 xl:gap-10 flex-wrap flex justify-center sm:justify-start"
@@ -118,7 +120,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
                   <TiltedCard
                     imageSrc={user?.avatar || "/images/pages/leaderBoard/avatar_default.png"}
                     altText={`${fullName} - Thành viên DEVER`}
-                    captionText={`🚀 ${fullName} • ${position} ${kCohort ? `(${kCohort})` : ""}`}
+                    captionText={`${fullName} • ${position} ${kCohort ? `(${kCohort})` : ""}`}
                     rotateAmplitude={12}
                     scaleOnHover={1.06}
                     showMobileWarning={false}
@@ -129,7 +131,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
                       <div className="h-[auto] w-[100%] rounded-br-[20px] overflow-hidden">
                         {/* K Cohort Tag */}
                         {kCohort && (
-                          <div className="flex justify-center py-1 px-3 w-fit ml-auto rounded-tl-lg bg-[#C69C6D] text-white text-[11px] font-bold shadow-sm">
+                          <div className="flex justify-center py-1 px-3 w-fit ml-auto rounded-tl-lg bg-[#0066CC] text-white text-xs font-bold shadow-sm">
                             {kCohort}
                           </div>
                         )}
@@ -138,8 +140,8 @@ const ListMember = ({ member = initialData }: { member: any }) => {
                           <h4 className="font-bold text-sm sm:text-base truncate leading-snug">
                             {fullName}
                           </h4>
-                          <div className="text-[11px] sm:text-xs text-blue-100 flex justify-between items-center gap-2 mt-1">
-                            <span className="min-w-0 flex-1 truncate opacity-90">{user?.MSSV ? `MSSV: ${user.MSSV}` : position}</span>
+                          <div className="text-xs text-blue-100 flex justify-between items-center gap-2 mt-1">
+                            <span title={user?.MSSV ? `MSSV: ${user.MSSV}` : position} className="min-w-0 flex-1 truncate opacity-90">{user?.MSSV ? `MSSV: ${user.MSSV}` : position}</span>
                             {user?.gen && <span className="font-bold shrink-0 ml-1">GEN {user.gen}</span>}
                           </div>
                         </div>
@@ -155,7 +157,7 @@ const ListMember = ({ member = initialData }: { member: any }) => {
         {loadError ? (
           <div role="alert" className="py-6 text-center space-y-3">
             <p>Không thể tải thêm thành viên.</p>
-            <button type="button" onClick={getMoreUser} className="rounded-xl bg-[#0066CC] px-4 py-2 text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]">
+            <button type="button" onClick={getMoreUser} className="rounded-xl bg-[#0066CC] px-4 min-h-[44px] py-2 text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]">
               Thử lại
             </button>
           </div>

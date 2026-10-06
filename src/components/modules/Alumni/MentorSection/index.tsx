@@ -56,7 +56,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
               </div>
             )}
             {mentor.graduationGen && (
-              <span className="absolute -bottom-1.5 -right-1.5 rounded-md bg-[#0066CC] px-2 py-0.5 text-[10px] font-black text-white shadow">
+              <span className="absolute -bottom-1.5 -right-1.5 rounded-md bg-[#0066CC] px-2 py-0.5 text-xs font-black text-white shadow">
                 {mentor.graduationGen}
               </span>
             )}
@@ -72,7 +72,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
               </p>
             )}
             {mentor.workplace && (
-              <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-0.5 text-[11px] font-bold text-[#0066CC]">
+              <span className="mt-1 inline-flex items-center gap-1 rounded-md bg-blue-50 px-2 py-0.5 text-xs font-bold text-[#0066CC]">
                 <Building2 className="h-3 w-3" aria-hidden="true" />
                 {mentor.workplace}
               </span>
@@ -97,7 +97,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
             {mentor.mentoringTopics.map((topic) => (
               <span
                 key={topic}
-                className="rounded-md bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-700"
+                className="rounded-md bg-slate-100 px-2 py-0.5 text-xs font-semibold text-slate-700"
               >
                 #{topic}
               </span>
@@ -106,7 +106,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
         )}
       </div>
 
-      <p className="mt-4 flex items-center gap-1.5 border-t border-slate-100 pt-4 text-[11px] font-semibold text-slate-500">
+      <p className="mt-4 flex items-center gap-1.5 border-t border-slate-100 pt-4 text-xs font-semibold text-slate-500">
         <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" aria-hidden="true" />
         Kết nối qua Cổng Thành Viên (dành cho thành viên CLB)
       </p>
@@ -121,7 +121,7 @@ function MentorSkeleton() {
         <div
           key={n}
           aria-hidden="true"
-          className="animate-pulse space-y-4 rounded-3xl border border-slate-200 bg-white p-6"
+          className="animate-pulse motion-reduce:animate-none space-y-4 rounded-3xl border border-slate-200 bg-white p-6"
         >
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-2xl bg-slate-200" />
@@ -182,7 +182,7 @@ export default function MentorSection() {
         <div className="max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-1.5 backdrop-blur-md">
             <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
-            <span className="text-xs font-black uppercase tracking-wider text-blue-50">
+            <span className="text-xs font-black uppercase tracking-wider text-white">
               Cố vấn &amp; Mentor FU-DEVER
             </span>
           </div>
@@ -192,7 +192,7 @@ export default function MentorSection() {
           >
             Học trực tiếp từ anh chị đi trước
           </h2>
-          <p className="text-sm font-medium leading-relaxed text-blue-100 lg:text-base">
+          <p className="text-sm font-medium leading-relaxed text-white lg:text-base">
             Đội ngũ cố vấn là các cựu thành viên đang làm việc trong ngành công
             nghệ, đồng hành cùng thành viên CLB qua định hướng nghề nghiệp,
             review CV và mentoring chuyên môn theo chủ đề.
@@ -201,12 +201,12 @@ export default function MentorSection() {
             href={CLIENT_SIGN_IN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 py-2.5 text-xs font-extrabold text-[#004C99] shadow-md transition-all hover:bg-blue-50 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 min-h-[44px] py-2.5 text-xs font-extrabold text-[#004C99] shadow-md transition-all hover:bg-blue-50 active:scale-[0.98]"
           >
             <span>Tham gia CLB để kết nối</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </a>
-          <p className="text-[11px] font-medium text-blue-200">
+          <p className="text-xs font-bold text-white">
             CLB duy trì hình thức invite-only: kết nối mentor dành cho thành
             viên đã được xác thực trên Cổng Thành Viên.
           </p>
@@ -227,7 +227,7 @@ export default function MentorSection() {
             <button
               type="button"
               onClick={fetchMentors}
-              className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 py-2.5 text-xs font-extrabold text-white shadow-md transition-all hover:bg-[#004C99]"
+              className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 min-h-[44px] py-2.5 text-xs font-extrabold text-white shadow-md transition-all hover:bg-[#004C99]"
             >
               <RefreshCw className="h-4 w-4" aria-hidden="true" /> Thử Lại
             </button>
@@ -258,7 +258,7 @@ export default function MentorSection() {
                 href={CLIENT_SIGN_IN_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-[#004C99] active:scale-[0.98]"
+                className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 min-h-[44px] py-2.5 text-xs font-bold text-white shadow-md transition-all hover:bg-[#004C99] active:scale-[0.98]"
               >
                 <span>Tham gia CLB để kết nối</span>
                 <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />

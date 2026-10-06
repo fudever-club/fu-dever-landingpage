@@ -314,7 +314,7 @@ function SeasonLeaderboardBoard() {
 
         {!scoringComplete && board && !isLoading && (
           <p className="m-0">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-[11px] sm:text-xs font-bold">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300 text-xs sm:text-xs font-bold">
               <Clock className="w-3.5 h-3.5 shrink-0" />
               Điểm đang hoàn thiện — sync admin
             </span>
@@ -453,7 +453,7 @@ function SeasonLeaderboardBoard() {
                               <span className="truncate">{fullName}</span>
                               {isTop1 && <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
                             </p>
-                            <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5 font-mono">
+                            <p className="text-xs sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5 font-mono">
                               @{entry?.leetcodeUsername || "member"}
                             </p>
                           </div>
@@ -462,7 +462,7 @@ function SeasonLeaderboardBoard() {
                           <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
                             {score} pts
                           </div>
-                          <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
+                          <div className="text-xs sm:text-xs text-slate-500 dark:text-slate-400">
                             {solved} bài
                           </div>
                         </div>
@@ -471,17 +471,17 @@ function SeasonLeaderboardBoard() {
                         )}
                       </div>
                       <div className="mt-2 flex flex-wrap items-center gap-1.5 pl-9 sm:pl-12">
-                        <span className="inline-flex items-center rounded-md border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 text-[10px] font-bold text-emerald-700 dark:text-emerald-300">
+                        <span className="inline-flex items-center rounded-md border border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/40 px-1.5 py-0.5 text-xs font-bold text-emerald-700 dark:text-emerald-300">
                           E {easy}
                         </span>
-                        <span className="inline-flex items-center rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 text-[10px] font-bold text-amber-700 dark:text-amber-300">
+                        <span className="inline-flex items-center rounded-md border border-amber-200 dark:border-amber-900 bg-amber-50 dark:bg-amber-950/40 px-1.5 py-0.5 text-xs font-bold text-amber-700 dark:text-amber-300">
                           M {medium}
                         </span>
-                        <span className="inline-flex items-center rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 text-[10px] font-bold text-rose-700 dark:text-rose-300">
+                        <span className="inline-flex items-center rounded-md border border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/40 px-1.5 py-0.5 text-xs font-bold text-rose-700 dark:text-rose-300">
                           H {hard}
                         </span>
                         {unknown > 0 && (
-                          <span className="inline-flex items-center rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 text-[10px] font-bold text-slate-500 dark:text-slate-400">
+                          <span className="inline-flex items-center rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 px-1.5 py-0.5 text-xs font-bold text-slate-500 dark:text-slate-400">
                             ? {unknown}
                           </span>
                         )}
@@ -505,7 +505,7 @@ function SeasonLeaderboardBoard() {
                   );
                 })}
               </ol>
-              <p className="text-[11px] text-slate-400 px-1 m-0">
+              <p className="text-xs text-slate-400 px-1 m-0">
                 E: Dễ • M: Trung bình • H: Khó • Xếp hạng theo tổng điểm mùa giải.
               </p>
             </>
@@ -560,7 +560,7 @@ export default function LeaderboardModule({
           {/* Title & Season Badge */}
           <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center pt-4 pb-4 mb-4 sm:mb-6">
             <div className="inline-flex max-w-full flex-wrap items-center justify-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-[#0066CC] dark:text-blue-400 text-xs sm:text-sm font-bold mb-4 tracking-wide uppercase shadow-sm">
-              <Flame className="w-4 h-4 text-amber-500 animate-pulse" />
+              <Flame className="w-4 h-4 text-amber-500 animate-pulse motion-reduce:animate-none" />
               Bảng Vinh Danh Thuật Toán • FU-DEVER
             </div>
 
@@ -601,10 +601,10 @@ export default function LeaderboardModule({
                           <span className="w-6 h-6 sm:w-8 sm:h-8 bg-slate-300 text-slate-900 rounded-full inline-flex items-center justify-center font-black text-xs sm:text-sm shadow-md mx-auto mb-1">
                             2
                           </span>
-                          <p className="text-[10px] sm:text-xs font-bold text-slate-200 truncate">
+                          <p className="text-xs sm:text-xs font-bold text-slate-200 truncate">
                             {getFullName(user2?.user)}
                           </p>
-                          <p className="text-[9px] sm:text-[11px] font-semibold text-cyan-300">
+                          <p className="text-xs font-bold text-white">
                             {getPoints(user2)} pts
                           </p>
                         </div>
@@ -615,7 +615,7 @@ export default function LeaderboardModule({
                     <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                       {user2?.leetcodeUsername || "LeetCoder"}
                     </p>
-                    <p className="text-[11px] text-slate-500 font-medium">
+                    <p className="text-xs text-slate-500 font-medium">
                       Đã giải: {getSolvedCount(user2)} bài
                     </p>
                   </div>
@@ -627,7 +627,7 @@ export default function LeaderboardModule({
                     <TiltedCard
                       imageSrc={user1?.user?.avatar || avatar_default}
                       altText={getFullName(user1?.user)}
-                      captionText={`👑 QUÁN QUÂN • @${user1?.leetcodeUsername || "Champion"} • ${getPoints(user1)} PTS`}
+                      captionText={`QUÁN QUÂN • @${user1?.leetcodeUsername || "Champion"} • ${getPoints(user1)} PTS`}
                       rotateAmplitude={14}
                       scaleOnHover={1.12}
                       showMobileWarning={false}
@@ -639,10 +639,10 @@ export default function LeaderboardModule({
                           <span className="w-7 h-7 sm:w-9 sm:h-9 bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 rounded-full inline-flex items-center justify-center font-black text-xs sm:text-base shadow-lg mx-auto mb-1 border border-white">
                             1
                           </span>
-                          <p className="text-[11px] sm:text-sm font-black text-amber-200 truncate">
+                          <p className="text-xs sm:text-sm font-black text-amber-200 truncate">
                             {getFullName(user1?.user)}
                           </p>
-                          <p className="text-[10px] sm:text-xs font-bold text-yellow-300">
+                          <p className="text-xs sm:text-xs font-bold text-yellow-300">
                             {getPoints(user1)} pts
                           </p>
                         </div>
@@ -653,7 +653,7 @@ export default function LeaderboardModule({
                     <p className="text-xs sm:text-base font-extrabold text-amber-600 dark:text-amber-400 flex items-center justify-center gap-1">
                       <Sparkles className="w-3.5 h-3.5" /> {user1?.leetcodeUsername || "Champion"}
                     </p>
-                    <p className="text-[11px] sm:text-xs text-slate-500 font-medium">
+                    <p className="text-xs sm:text-xs text-slate-500 font-medium">
                       Đã giải: {getSolvedCount(user1)} bài
                     </p>
                   </div>
@@ -677,10 +677,10 @@ export default function LeaderboardModule({
                           <span className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs sm:text-sm shadow-md mx-auto mb-1 border border-amber-400">
                             3
                           </span>
-                          <p className="text-[10px] sm:text-xs font-bold text-slate-200 truncate">
+                          <p className="text-xs sm:text-xs font-bold text-slate-200 truncate">
                             {getFullName(user3?.user)}
                           </p>
-                          <p className="text-[9px] sm:text-[11px] font-semibold text-amber-300">
+                          <p className="text-xs font-semibold text-white">
                             {getPoints(user3)} pts
                           </p>
                         </div>
@@ -691,7 +691,7 @@ export default function LeaderboardModule({
                     <p className="text-xs sm:text-sm font-bold text-slate-800 dark:text-slate-200">
                       {user3?.leetcodeUsername || "LeetCoder"}
                     </p>
-                    <p className="text-[11px] text-slate-500 font-medium">
+                    <p className="text-xs text-slate-500 font-medium">
                       Đã giải: {getSolvedCount(user3)} bài
                     </p>
                   </div>
@@ -810,7 +810,7 @@ export default function LeaderboardModule({
                           <span>{fullName}</span>
                           {isTop1 && <Award className="w-3.5 h-3.5 text-amber-500 shrink-0" />}
                         </p>
-                        <p className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5">
+                        <p className="text-xs sm:text-xs text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5">
                           {entry?.user?.major || "Chuyên ngành KTMT/SE"} • K{entry?.user?.gen || "21"}
                         </p>
                       </div>
@@ -828,7 +828,7 @@ export default function LeaderboardModule({
                       <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
                         {getPoints(entry)} pts
                       </div>
-                      <div className="text-[10px] sm:text-xs text-slate-500 dark:text-slate-400">
+                      <div className="text-xs sm:text-xs text-slate-500 dark:text-slate-400">
                         {getSolvedCount(entry)} bài
                       </div>
                     </div>

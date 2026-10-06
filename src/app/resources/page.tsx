@@ -449,7 +449,7 @@ export default function ResourcesPage() {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="bg-white rounded-2xl p-6 border border-slate-200 space-y-4 animate-pulse"
+                className="bg-white rounded-2xl p-6 border border-slate-200 space-y-4 animate-pulse motion-reduce:animate-none"
               >
                 <div className="flex justify-between items-center">
                   <div className="h-6 w-24 bg-slate-200 rounded-full" />

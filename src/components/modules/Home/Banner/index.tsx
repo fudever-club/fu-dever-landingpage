@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { useState, useRef } from "react";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 import image1 from "@images/pages/home/banner/image1.png";
 import image2 from "@images/pages/home/banner/image2.png";
@@ -40,6 +41,7 @@ const animationTitle: any = {
 function Banner() {
   const [client, setClient] = useState<obj>({ x: 0, y: 0 });
   const ref = useRef<any>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   return (
     <motion.section
       animate={{
@@ -49,6 +51,8 @@ function Banner() {
       }}
       ref={ref}
       onMouseMove={({ clientX, clientY }: React.MouseEvent) => {
+        // Parallax follows the pointer only when motion is welcome.
+        if (prefersReducedMotion) return;
         setClient(() => {
           const x =
             ((clientX - ref?.current?.clientWidth / 2) /
@@ -78,9 +82,9 @@ function Banner() {
           >
             FU-DEVER
             <motion.span
-              animate="show"
+              animate={prefersReducedMotion ? undefined : "show"}
               variants={animationTitle}
-              className="w-[120px] animate-line h-[4px] bg-gradient-to-r from-[#0066CC] to-[#0080FF] rounded-full absolute top-[50px] xl:top-[54px]"
+              className="w-[120px] animate-line motion-reduce:animate-none h-[4px] bg-gradient-to-r from-[#0066CC] to-[#0080FF] rounded-full absolute top-[50px] xl:top-[54px]"
             ></motion.span>
           </h1>
           <h2 className="mt-4 text-xl font-semibold leading-tight text-slate-900 md:text-2xl xl:text-3xl">
@@ -112,32 +116,32 @@ function Banner() {
       {/* 4 Floating Members on Mobile (All 4 Corners) */}
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, -6, 0], rotate: [0, 1.5, 0] }}
-        transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { y: 0, rotate: 0 } : { y: [0, -6, 0], rotate: [0, 1.5, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
         className="pointer-events-none absolute top-4 -left-2 z-[1] h-24 w-20 md:hidden opacity-75"
       >
         <Image loading="lazy" src={image1} alt="" className="h-full w-full object-contain" />
       </motion.div>
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, 8, 0], rotate: [0, -1, 0] }}
-        transition={{ duration: 5.0, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { y: 0, rotate: 0 } : { y: [0, 8, 0], rotate: [0, -1, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 5.0, repeat: Infinity, ease: "easeInOut" }}
         className="pointer-events-none absolute -bottom-6 -left-4 z-[1] h-36 w-28 md:hidden"
       >
         <Image loading="lazy" src={image2} alt="" className="h-full w-full object-contain" />
       </motion.div>
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, -6, 0], rotate: [0, -1.5, 0] }}
-        transition={{ duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { y: 0, rotate: 0 } : { y: [0, -6, 0], rotate: [0, -1.5, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 4.8, repeat: Infinity, ease: "easeInOut" }}
         className="pointer-events-none absolute top-4 -right-2 z-[1] h-24 w-20 md:hidden opacity-75"
       >
         <Image loading="lazy" src={image3} alt="" className="h-full w-full object-contain" />
       </motion.div>
       <motion.div
         aria-hidden="true"
-        animate={{ y: [0, 8, 0], rotate: [0, 1, 0] }}
-        transition={{ duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
+        animate={prefersReducedMotion ? { y: 0, rotate: 0 } : { y: [0, 8, 0], rotate: [0, 1, 0] }}
+        transition={prefersReducedMotion ? { duration: 0 } : { duration: 5.4, repeat: Infinity, ease: "easeInOut" }}
         className="pointer-events-none absolute -bottom-6 -right-4 z-[1] h-36 w-28 md:hidden"
       >
         <Image loading="lazy" src={image4} alt="" className="h-full w-full object-contain" />

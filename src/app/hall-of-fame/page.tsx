@@ -40,31 +40,31 @@ const BADGE_DEFINITIONS = [
   {
     id: "algorithmic_prodigy",
     title: "Algorithmic Prodigy",
-    icon: "🏆",
-    color: "#F59E0B",
-    bgColor: "#FEF3C7",
+    Icon: Trophy,
+    color: "#0066CC",
+    bgColor: "#EFF6FF",
     desc: "Vinh danh thành viên đạt thành tích xuất sắc trên Bảng xếp hạng LeetCode.",
   },
   {
     id: "pro_tech_author",
     title: "Pro Tech Author",
-    icon: "✍️",
-    color: "#8B5CF6",
-    bgColor: "#EDE9FE",
+    Icon: Award,
+    color: "#0066CC",
+    bgColor: "#EFF6FF",
     desc: "Tác giả kỹ thuật tiêu biểu chia sẻ kiến thức chuyên môn cho cộng đồng DEVER.",
   },
   {
     id: "speed_coder",
     title: "Speed Coder",
-    icon: "⚡",
-    color: "#EF4444",
-    bgColor: "#FEE2E2",
+    Icon: Zap,
+    color: "#0066CC",
+    bgColor: "#EFF6FF",
     desc: "Chiến binh chăm chỉ duy trì chuỗi hoạt động điểm danh liên tục 7 ngày.",
   },
   {
     id: "core_contributor",
     title: "Core Contributor",
-    icon: "🌟",
+    Icon: Star,
     color: "#0066CC",
     bgColor: "#EFF6FF",
     desc: "Đóng góp dự án mã nguồn mở và sáng kiến kỹ thuật trong hệ sinh thái FU-DEVER.",
@@ -72,9 +72,9 @@ const BADGE_DEFINITIONS = [
   {
     id: "security_sentinel",
     title: "Security Sentinel",
-    icon: "🛡️",
-    color: "#10B981",
-    bgColor: "#D1FAE5",
+    Icon: Shield,
+    color: "#0066CC",
+    bgColor: "#EFF6FF",
     desc: "Thành viên gương mẫu hoàn thiện 100% hồ sơ bảo mật và thông tin cá nhân.",
   },
 ];
@@ -172,7 +172,7 @@ export default async function HallOfFamePage() {
               {/* Rank 1 (Gold - Elevated) */}
               <div className="order-1 md:order-2 flex flex-col items-center">
                 <div className="relative mb-4 flex flex-col items-center">
-                  <Crown className="h-10 w-10 text-amber-500 mb-1 animate-pulse drop-shadow-sm" />
+                  <Crown className="h-10 w-10 text-amber-500 mb-1 animate-pulse motion-reduce:animate-none drop-shadow-sm" />
                   <div className="relative">
                     <Image
                       src={podium.first.avatar || "/icons/layout/logo.png"}
@@ -199,7 +199,7 @@ export default async function HallOfFamePage() {
                   <Trophy className="h-10 w-10 text-amber-500 mb-1" />
                   <span className="text-base font-black text-amber-700">QUÁN QUÂN</span>
                   <span className="text-xs font-semibold text-amber-600">Level {podium.first.level}</span>
-                  <span className="text-[11px] text-slate-500 mt-1">🔥 {podium.first.streakDays} ngày liên tiếp</span>
+                  <span className="text-xs text-slate-500 mt-1 inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5 text-orange-500" aria-hidden="true" /> {podium.first.streakDays} ngày liên tiếp</span>
                 </div>
               </div>
 
@@ -373,9 +373,9 @@ export default async function HallOfFamePage() {
                   <div className="flex items-center gap-4 mb-4">
                     <span
                       style={{ backgroundColor: badge.bgColor }}
-                      className="flex h-14 w-14 items-center justify-center rounded-2xl text-2xl shadow-inner group-hover:scale-110 transition-transform duration-300"
+                      className="flex h-14 w-14 items-center justify-center rounded-2xl shadow-inner group-hover:scale-110 transition-transform duration-300 motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                     >
-                      {badge.icon}
+                      <badge.Icon className="h-7 w-7" style={{ color: badge.color }} aria-hidden="true" />
                     </span>
                     <div>
                       <h3 className="font-bold text-slate-900 text-base">{badge.title}</h3>

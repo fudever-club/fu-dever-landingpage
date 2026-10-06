@@ -8,7 +8,7 @@
 }
 
 .borderStrock {
-  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%230098FFFF' stroke-width='4' stroke-dasharray='16.3' stroke-dashoffset='6' stroke-linecap='square'/%3e%3c/svg%3e");
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%230066CCFF' stroke-width='4' stroke-dasharray='16.3' stroke-dashoffset='6' stroke-linecap='square'/%3e%3c/svg%3e");
 }
 
 :root, html, body {
@@ -27,8 +27,8 @@
 
 .stroke-text {
   color: white;
-  text-shadow: 1px 1px 0 #0098ff, -1px -1px 0 #0098ff, 1px -1px 0 #0098ff,
-    -1px 1px 0 #0098ff, 1px 1px 0 #0098ff;
+  text-shadow: 1px 1px 0 #0066cc, -1px -1px 0 #0066cc, 1px -1px 0 #0066cc,
+    -1px 1px 0 #0066cc, 1px 1px 0 #0066cc;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -57,13 +57,13 @@ body {
 
 .stroke-text
  {
-     color: white;
-     text-shadow:
-         1px 1px 0 #0098FF,
-       -1px -1px 0 #0098FF,  
-        1px -1px 0 #0098FF,
-        -1px 1px 0 #0098FF,
-         1px 1px 0 #0098FF;
+      color: white;
+      text-shadow:
+          1px 1px 0 #0066CC,
+        -1px -1px 0 #0066CC,  
+         1px -1px 0 #0066CC,
+         -1px 1px 0 #0066CC,
+          1px 1px 0 #0066CC;
   }
 
 /* Respect users who prefer reduced motion: kill infinite/pulse animation. */

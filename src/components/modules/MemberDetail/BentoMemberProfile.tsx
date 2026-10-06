@@ -393,7 +393,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <span className="font-bold text-sm tracking-tight text-slate-900 leading-none">
                   {fullName}
                 </span>
-                <span className="text-[11px] font-mono text-slate-500 font-semibold mt-0.5">
+                <span className="text-xs font-mono text-slate-500 font-semibold mt-0.5">
                   {user?.nickname ? `@${user.nickname}` : "fu-dever.member"}
                 </span>
               </div>
@@ -442,7 +442,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
 
               <div className="inline-flex items-center gap-1.5 h-8 px-3.5 rounded-full bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200 shadow-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping motion-reduce:animate-none" />
                 <span>{genCohort}</span>
               </div>
             </div>
@@ -521,18 +521,18 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             <div className="relative z-10 flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Headphones className="w-3.5 h-3.5 text-cyan-400" />
-                <span className="text-[10.5px] uppercase tracking-[0.16em] font-mono font-bold text-slate-300">
+                <span className="text-xs uppercase tracking-[0.16em] font-mono font-bold text-slate-300">
                   CODING SOUNDTRACK // LO-FI
                 </span>
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping motion-reduce:animate-none" />
               </div>
 
               {/* Cyan/Blue Soundwave */}
               <div className="flex items-end gap-1 h-3.5">
-                <span className={`w-0.5 bg-cyan-400 rounded-full transition-all ${isPlaying ? "h-3.5 animate-pulse" : "h-1"}`} />
-                <span className={`w-0.5 bg-[#0080FF] rounded-full transition-all ${isPlaying ? "h-2.5 animate-pulse" : "h-1"}`} />
-                <span className={`w-0.5 bg-cyan-300 rounded-full transition-all ${isPlaying ? "h-3 animate-pulse" : "h-1"}`} />
-                <span className={`w-0.5 bg-[#0066CC] rounded-full transition-all ${isPlaying ? "h-1.5 animate-pulse" : "h-1"}`} />
+                <span className={`w-0.5 bg-cyan-400 rounded-full transition-all ${isPlaying ? "h-3.5 animate-pulse motion-reduce:animate-none" : "h-1"}`} />
+                <span className={`w-0.5 bg-[#0080FF] rounded-full transition-all ${isPlaying ? "h-2.5 animate-pulse motion-reduce:animate-none" : "h-1"}`} />
+                <span className={`w-0.5 bg-cyan-300 rounded-full transition-all ${isPlaying ? "h-3 animate-pulse motion-reduce:animate-none" : "h-1"}`} />
+                <span className={`w-0.5 bg-[#0066CC] rounded-full transition-all ${isPlaying ? "h-1.5 animate-pulse motion-reduce:animate-none" : "h-1"}`} />
               </div>
             </div>
 
@@ -567,7 +567,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                   <h4 className="text-xs sm:text-sm font-bold text-white truncate hover:text-cyan-300 cursor-pointer transition-colors">
                     {songTitle}
                   </h4>
-                  <p className="text-[11px] text-slate-400 truncate hover:text-slate-200 cursor-pointer">
+                  <p className="text-xs text-slate-400 truncate hover:text-slate-200 cursor-pointer">
                     {songArtist}
                   </p>
                 </div>
@@ -641,7 +641,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             </div>
 
             {/* Bottom: Modern Audio Scrub Bar */}
-            <div className="relative z-10 flex items-center gap-2 text-[10px] font-mono text-slate-400 pt-1">
+            <div className="relative z-10 flex items-center gap-2 text-xs font-mono text-slate-400 pt-1">
               <span>{formatSec(progressSec)}</span>
               <div
                 role="slider"
@@ -688,11 +688,11 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
           {/* TILE 3: Badge Rack (1x1 - Pearl Lavender Card with Jewel Badges) */}
           <div className="tile md:col-span-1 bg-gradient-to-br from-purple-50/70 via-indigo-50/40 to-slate-50 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] border border-purple-200/70 hover:border-purple-400 transition-all duration-200">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 text-[10.5px] uppercase tracking-[0.16em] font-bold font-mono text-purple-900">
+              <div className="flex items-center gap-1.5 text-xs uppercase tracking-[0.16em] font-bold font-mono text-purple-900">
                 <Award className="w-3.5 h-3.5 text-purple-600" />
                 <span>BADGE RACK</span>
               </div>
-              <span className="text-[10px] font-mono font-bold text-purple-700">
+              <span className="text-xs font-mono font-bold text-purple-700">
                 {userBadges.length} DANH HIỆU
               </span>
             </div>
@@ -718,7 +718,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               </div>
             )}
 
-            <p className="text-[10px] text-purple-800/80 text-center font-medium">
+            <p className="text-xs text-purple-800/80 text-center font-medium">
               {userBadges.length > 0 ? "Bấm để xem chi tiết danh hiệu" : "Tham gia hoạt động để mở khóa"}
             </p>
           </div>
@@ -726,10 +726,10 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
           {/* TILE 4: Sunset Streak & Heatmap (1x1 - Coral / Sunset Gradient) */}
           <div className="tile md:col-span-1 bg-gradient-to-br from-rose-50 via-orange-50/70 to-amber-50 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] border border-rose-200/80 hover:border-rose-400 transition-all duration-200">
             <div className="flex items-center justify-between">
-              <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold font-mono text-rose-900 flex items-center gap-1">
-                <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse" /> {streakDays}D STREAK
+              <span className="text-xs uppercase tracking-[0.16em] font-bold font-mono text-rose-900 flex items-center gap-1">
+                <Flame className="w-3.5 h-3.5 fill-rose-500 text-rose-500 animate-pulse motion-reduce:animate-none" /> {streakDays}D STREAK
               </span>
-              <div className="inline-flex items-center gap-1 bg-rose-200/60 text-rose-950 rounded-full px-2 py-0.5 text-[10.5px] font-bold border border-rose-300/60">
+              <div className="inline-flex items-center gap-1 bg-rose-200/60 text-rose-950 rounded-full px-2 py-0.5 text-xs font-bold border border-rose-300/60">
                 <TrendingUp className="w-3 h-3 text-rose-700" />
                 <span>+AC</span>
               </div>
@@ -766,7 +766,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               <span className="text-2xl font-black text-rose-950 tracking-tight leading-none block font-mono">
                 {leetcodeSolved} <span className="text-rose-600 text-lg font-bold">AC</span>
               </span>
-              <p className="text-[11px] text-rose-800/80 font-medium truncate">
+              <p className="text-xs text-rose-800/80 font-medium truncate">
                 {leetcodeUsername ? `@${leetcodeUsername} • LeetCode` : "LeetCode Problems Solved"}
               </p>
             </div>
@@ -788,7 +788,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <FolderGit2 className="w-6 h-6" />
               </div>
               <div className="space-y-1.5 min-w-0">
-                <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold text-slate-500 block font-mono">
+                <span className="text-xs uppercase tracking-[0.16em] font-bold text-slate-500 block font-mono">
                   {projectsList.length > 0 ? `DỰ ÁN TIÊU BIỂU • ${projectsList.length} DỰ ÁN` : "DỰ ÁN TIÊU BIỂU • DEVER OPEN SOURCE"}
                 </span>
                 <h3 className="text-base sm:text-lg font-bold text-slate-900 truncate group-hover:text-[#0066CC] transition-colors">
@@ -797,12 +797,12 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                 <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
                   {projectsList.length > 0 ? (
                     projectsList[0]?.tech?.slice(0, 3).map((t: string, idx: number) => (
-                      <span key={idx} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                      <span key={idx} className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
                         {t}
                       </span>
                     ))
                   ) : (
-                    <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-[11px] font-semibold">
+                    <span className="px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-700 text-xs font-semibold">
                       Open Source Ecosystem
                     </span>
                   )}
@@ -813,7 +813,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                         e.stopPropagation();
                         setSelectedDrawer("projects");
                       }}
-                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
+                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-xs font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
                     >
                       Xem chi tiết →
                     </button>
@@ -821,7 +821,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                     <Link
                       href="/project#open-source"
                       onClick={(e) => e.stopPropagation()}
-                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-[10.5px] font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
+                      className="px-2 py-0.5 rounded-full bg-blue-50 text-[#0066CC] text-xs font-bold border border-blue-200 hover:bg-blue-100 transition-colors"
                     >
                       Khám phá →
                     </Link>
@@ -853,7 +853,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                   <Marker width={26} anchor={mapCoordinates} color="#0066CC" />
                 </Map>
               ) : (
-                <div className="w-full h-full bg-teal-50/60 animate-pulse" />
+                <div className="w-full h-full bg-teal-50/60 animate-pulse motion-reduce:animate-none" />
               )}
             </div>
 
@@ -862,15 +862,15 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
             {/* Top Status Tag */}
             <div className="relative z-20 p-3 flex items-center justify-between pointer-events-none">
-              <span className="px-2 py-0.5 rounded-full bg-white/95 border border-teal-200/80 text-[10px] font-mono font-bold text-teal-800 shadow-xs flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse" />
+              <span className="px-2 py-0.5 rounded-full bg-white/95 border border-teal-200/80 text-xs font-mono font-bold text-teal-800 shadow-xs flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-teal-500 animate-pulse motion-reduce:animate-none" />
                 <span>OPENSTREETMAP</span>
               </span>
             </div>
 
             {/* Bottom Strip */}
             <div className="relative z-20 p-3 pt-0 flex items-center justify-between">
-              <div className="h-7 px-2.5 rounded-full bg-white/95 border border-teal-200 text-[11px] font-bold text-teal-950 flex items-center gap-1 shadow-xs truncate max-w-[140px]">
+              <div className="h-7 px-2.5 rounded-full bg-white/95 border border-teal-200 text-xs font-bold text-teal-950 flex items-center gap-1 shadow-xs truncate max-w-[140px]">
                 <MapPin className="w-3 h-3 text-[#0066CC] shrink-0" />
                 <span className="truncate">{userLocation}</span>
               </div>
@@ -886,7 +886,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             className="tile md:col-span-1 bg-gradient-to-br from-amber-50 via-yellow-50/50 to-orange-50 text-slate-900 rounded-3xl shadow-xs p-4 sm:p-5 flex flex-col justify-between min-h-[176px] transition-all duration-200 border border-amber-200/80 hover:border-amber-400 cursor-pointer group"
           >
             <div className="flex items-center justify-between text-amber-800">
-              <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold font-mono">
+              <span className="text-xs uppercase tracking-[0.16em] font-bold font-mono">
                 THE TECH HUB
               </span>
               <BookOpen className="w-4 h-4 group-hover:rotate-12 transition-transform text-amber-600" />
@@ -905,10 +905,10 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
           {/* TILE 8: Toolbox Tile (2-wide - Multi-colored Tech Chips) */}
           <div className="tile md:col-span-2 bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-6 shadow-xs flex flex-col justify-center min-h-[176px] transition-all duration-200 hover:border-[#0066CC]/50">
             <div className="flex items-center justify-between mb-3">
-              <span className="text-[10.5px] uppercase tracking-[0.16em] font-bold text-slate-500 font-mono">
+              <span className="text-xs uppercase tracking-[0.16em] font-bold text-slate-500 font-mono">
                 TOOLBOX &amp; TECH STACK
               </span>
-              <span className="text-[10px] font-mono font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
+              <span className="text-xs font-mono font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200">
                 {skillsList.length} KỸ NĂNG
               </span>
             </div>
@@ -1032,7 +1032,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                           {proj.tech.map((t: string, tIdx: number) => (
                             <span
                               key={tIdx}
-                              className="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-[11px] font-mono font-semibold text-slate-700"
+                              className="px-2.5 py-0.5 rounded-lg bg-white border border-slate-200 text-xs font-mono font-semibold text-slate-700"
                             >
                               {t}
                             </span>
@@ -1056,10 +1056,10 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
                       className="p-4 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-2 hover:border-amber-400 transition-colors"
                     >
                       <div className="flex items-center justify-between">
-                        <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10.5px] font-bold">
+                        <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
                           {art.category || "Kỹ thuật"}
                         </span>
-                        <span className="text-[11px] font-mono text-slate-500">{art.date}</span>
+                        <span className="text-xs font-mono text-slate-500">{art.date}</span>
                       </div>
                       <h3 className="text-sm sm:text-base font-bold text-slate-900 leading-snug">
                         {art.title}
@@ -1099,7 +1099,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
               <h3 className="text-lg font-black text-slate-900">
                 {selectedBadge.name}
               </h3>
-              <span className={`inline-block px-3 py-0.5 rounded-full text-[11px] font-bold border ${selectedBadge.bgColor}`}>
+              <span className={`inline-block px-3 py-0.5 rounded-full text-xs font-bold border ${selectedBadge.bgColor}`}>
                 {selectedBadge.badgeLabel}
               </span>
             </div>

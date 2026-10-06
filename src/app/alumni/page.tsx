@@ -139,7 +139,7 @@ export default function AlumniPage() {
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-sm">
               Mạng Lưới Cựu Thành Viên <br />
-              <span className="text-cyan-200">
+              <span className="text-white font-bold">
                 Gen 1 Đến Gen 6 (Hơn 9+ Năm)
               </span>
             </h1>
@@ -210,7 +210,7 @@ export default function AlumniPage() {
                   key={comp}
                   type="button"
                   onClick={() => setSelectedCompany(comp)}
-                  className={`px-3 py-1 rounded-lg text-[11px] font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
                     selectedCompany === comp
                       ? "bg-blue-100 text-[#004C99] border border-blue-300 shadow-xs"
                       : "text-slate-600 hover:bg-slate-100"
@@ -229,7 +229,7 @@ export default function AlumniPage() {
             {[1, 2, 3, 4, 5, 6].map((n) => (
               <div
                 key={n}
-                className="bg-white rounded-3xl p-6 border border-slate-200 space-y-4 animate-pulse"
+                className="bg-white rounded-3xl p-6 border border-slate-200 space-y-4 animate-pulse motion-reduce:animate-none"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-slate-200 rounded-full" />
@@ -344,7 +344,7 @@ export default function AlumniPage() {
                           {item.name.charAt(0)}
                         </div>
                       )}
-                      <span className="absolute -bottom-1.5 -right-1.5 px-2 py-0.5 rounded-md text-[10px] font-black bg-[#0066CC] text-white shadow">
+                      <span className="absolute -bottom-1.5 -right-1.5 px-2 py-0.5 rounded-md text-xs font-black bg-[#0066CC] text-white shadow">
                         {item.graduationGen || "Alumni"}
                       </span>
                     </div>
@@ -357,7 +357,7 @@ export default function AlumniPage() {
                         {item.headline}
                       </p>
                       {item.workplace && (
-                        <span className="inline-flex items-center gap-1 mt-1 text-[11px] font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-md">
+                        <span className="inline-flex items-center gap-1 mt-1 text-xs font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-md">
                           <Building2 className="w-3 h-3" /> {item.workplace}
                         </span>
                       )}
@@ -377,13 +377,13 @@ export default function AlumniPage() {
                   {/* Mentoring Status & Advisory Badges */}
                   <div className="flex flex-wrap items-center gap-2 text-xs pt-1">
                     {item.isAdvisoryBoard && (
-                      <span className="inline-flex items-center gap-1 text-[11px] font-black text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
+                      <span className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
                         <Crown className="w-3 h-3 text-amber-600" />
                         Ban Cố Vấn CLB
                       </span>
                     )}
-                    <span className="inline-flex items-center gap-1.5 text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse motion-reduce:animate-none" />
                       Sẵn sàng Mentoring OJT
                     </span>
                   </div>
@@ -392,7 +392,7 @@ export default function AlumniPage() {
                   {item.mentoringTopics && item.mentoringTopics.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 pt-1">
                       {item.mentoringTopics.map((topic, tidx) => (
-                        <span key={tidx} className="text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
+                        <span key={tidx} className="text-xs font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
                           #{topic}
                         </span>
                       ))}
@@ -406,7 +406,7 @@ export default function AlumniPage() {
                     href={item.profileUrl || "https://linkedin.com"}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full py-2.5 px-4 rounded-xl text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] active:scale-[0.98] text-white shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] active:scale-[0.98] text-white shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
                   >
                     <Globe className="h-3.5 w-3.5" />
                     <span>Kết Nối LinkedIn &amp; Hỏi Đáp</span>

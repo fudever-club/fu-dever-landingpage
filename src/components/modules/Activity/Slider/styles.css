@@ -1,3 +1,28 @@
 .swiper-slide-thumb-active img {
     filter: grayscale(0) !important;
 }
+
+/* 44px minimum hit-area for slider navigation controls (touch target). */
+.mySwiper .swiper-button-next,
+.mySwiper .swiper-button-prev,
+.mySwiper2 .swiper-button-next,
+.mySwiper2 .swiper-button-prev {
+    min-width: 44px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mySwiper .swiper-button-next::after,
+.mySwiper .swiper-button-prev::after {
+    font-size: 20px;
+}
+
+/* Desktop keeps the legacy half-width coverflow slide; mobile shows 1.15
+   slides via the Swiper breakpoint so neighbours peek without overflow. */
+@media (min-width: 1024px) {
+    .mySwiper .activity-main-slide {
+        width: 50%;
+    }
+}

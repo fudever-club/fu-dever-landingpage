@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { apiFetch } from "@/src/lib/api";
+import DeverBlogCover from "@components/ui/DeverBlogCover";
 import {
   ArrowLeft,
   Clock,
@@ -46,6 +47,33 @@ interface TocItem {
   id: string;
   text: string;
   level: number;
+}
+
+// Handcrafted DEVER gradient cover — used whenever a post has no cover
+// image (or it fails to load) instead of generic stock-photo URLs.
+function BlogDetailCover({ src, title }: { src?: string; title: string }) {
+  const [imgError, setImgError] = useState(false);
+  if (!src || imgError) {
+    return (
+      <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md h-56 lg:h-72">
+        <DeverBlogCover title={title} className="h-full" />
+      </div>
+    );
+  }
+  return (
+    <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md">
+      <Image
+        src={src}
+        alt={title}
+        width={1200}
+        height={675}
+        sizes="(max-width: 1024px) 100vw, 768px"
+        loading="lazy"
+        onError={() => setImgError(true)}
+        className="w-full max-h-[380px] object-cover"
+      />
+    </div>
+  );
 }
 
 // Clean Code Block with 1-Click Copy (No Execution Sandbox)
@@ -446,7 +474,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             />
             {altText && altText !== "Hình ảnh minh họa" && (
               <p className="text-center text-xs text-slate-500 font-semibold py-2 px-4 bg-slate-50 border-t border-slate-100 font-sans">
-                📷 {altText}
+                {altText}
               </p>
             )}
           </div>
@@ -587,20 +615,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             </h1>
 
             {/* Cover Image */}
-            <div className="mb-8 rounded-2xl overflow-hidden border border-slate-200 shadow-md">
-              <Image
-                src={post.coverImage || "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80"}
-                alt={post.title}
-                width={1200}
-                height={675}
-                sizes="(max-width: 1024px) 100vw, 768px"
-                loading="lazy"
-                onError={(e) => {
-                  e.currentTarget.src = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
-                }}
-                className="w-full max-h-[380px] object-cover"
-              />
-            </div>
+            <BlogDetailCover src={post.coverImage} title={post.title} />
 
             {/* Excerpt Lead */}
             <p className="text-[15px] sm:text-base font-semibold leading-relaxed text-slate-800 bg-slate-50 border border-slate-200/80 p-4 lg:p-5 rounded-2xl mb-8 font-sans shadow-2xs">
@@ -670,7 +685,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
                   <h3 className="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-2 font-sans">
                     <BookOpen className="h-4 w-4 text-[#0066CC]" /> Mục Lục Bài Viết
                   </h3>
-                  <span className="text-[11px] font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-md font-sans">
+                  <span className="text-xs font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-md font-sans">
                     {Math.round(scrollProgress)}%
                   </span>
                 </div>

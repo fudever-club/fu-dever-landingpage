@@ -136,7 +136,7 @@ export default function MemberShowcase() {
         {loading && projects.length === 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white dark:bg-gray-800 rounded-3xl p-7 border border-slate-200 dark:border-gray-700 animate-pulse space-y-4">
+              <div key={i} className="bg-white dark:bg-gray-800 rounded-3xl p-7 border border-slate-200 dark:border-gray-700 animate-pulse motion-reduce:animate-none space-y-4">
                 <div className="flex justify-between items-center">
                   <div className="h-5 w-24 bg-slate-200 dark:bg-gray-700 rounded-full" />
                   <div className="h-5 w-12 bg-slate-200 dark:bg-gray-700 rounded-full" />

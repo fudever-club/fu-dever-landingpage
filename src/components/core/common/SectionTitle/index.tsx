@@ -26,16 +26,16 @@ function SectionTittle({ title, subtitle, textPosition, size }: TittlePros) {
             size === "sm"
               ? "text-[16px] md:text-[18px] lg:text-[20px] xl:text-[24px]"
               : "text-[24px] md:text-[24px] lg:text-[32px] xl:text-[40px]"
-          } text-[#0098FF]`}
+          } text-[#0066CC]`}
         >
-          {title.toUpperCase()}
+          {title}
         </h2>
         <h3 className="font-[400] text-[16px] md:text-[16px] lg:text-[24px] xl:text-[28px] text-[#22181C] mt-[4px]">
           {subtitle}
         </h3>
       </div>
       <div
-        className={`${size === "sm" ? "w-[8px]" : " w-[10px]"} bg-[#FF0000]`}
+        className={`${size === "sm" ? "w-[8px]" : " w-[10px]"} bg-[#0066CC]`}
         style={{
           margin:
             textPosition === "left" ? "0px 10px 0px 0px" : "0px 0px 0px 10px",

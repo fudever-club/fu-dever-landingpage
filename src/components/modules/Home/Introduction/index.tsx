@@ -91,7 +91,7 @@ function Introduction() {
         <div className="pointer-events-none absolute left-0 top-0 z-10 h-full w-16 md:w-32 bg-gradient-to-r from-[#003B80] to-transparent" />
         <div className="pointer-events-none absolute right-0 top-0 z-10 h-full w-16 md:w-32 bg-gradient-to-l from-[#003B80] to-transparent" />
 
-        <div className="animate-marquee-ribbon flex items-center">
+        <div className="animate-marquee-ribbon motion-reduce:animate-none flex items-center">
           {/* Loop 1 */}
           {MARQUEE_ITEMS.map((item, idx) => (
             <div key={`m1-${idx}`} className="flex items-center shrink-0">

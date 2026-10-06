@@ -76,14 +76,14 @@ const Not_found = () => {
               }}
               onClick={() => setOpen(true)}
               contentEditable={true}
-              className="z-[2] cursor-pointer text-[#000] font-[500] lg:text-[16px] md:text-[14px] sm:text-[12px] border-[#0098FF] border-[2px] rounded-[10px] absolute h-[auto] min-h-[128px] max-w-[100%] outline-0 md:p-[20px] sm:p-[15px] sm:pt-[30px] top-0 left-0 w-[100%] text-left "
+              className="z-[2] cursor-pointer text-[#000] font-[500] lg:text-[16px] md:text-[14px] sm:text-[12px] border-[#0066CC] border-[2px] rounded-[10px] absolute h-[auto] min-h-[128px] max-w-[100%] outline-0 md:p-[20px] sm:p-[15px] sm:pt-[30px] top-0 left-0 w-[100%] text-left "
             ></div>
             <p
               className={`z-[1] absolute left-[20px] ${
                 open
                   ? "top-0 opacity-[0.55]"
                   : "md:top-[20px] sm:top-[30px] opacity-[1]"
-              } font-[500] md:text-[16px] sm:text-[12px] transition-[top,opacity] duration-[0.5s] mr-[5px] text-[#0098FF]`}
+              } font-[500] md:text-[16px] sm:text-[12px] transition-[top,opacity] duration-[0.5s] mr-[5px] text-[#0066CC]`}
             >
               Hãy gửi cho tôi phản hồi của bạn nếu bạn cho rằng đây là vấn đề
               của chúng tôi.

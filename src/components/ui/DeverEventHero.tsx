@@ -160,7 +160,7 @@ export default function DeverEventHero({
             {/* LEFT: Clean & Minimalist Headline */}
             <div className="lg:col-span-7 space-y-4">
               <div className="inline-flex items-center gap-2 bg-white/10 px-3.5 py-1 rounded-full border border-white/20 text-xs font-semibold text-blue-100 backdrop-blur-xs">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping motion-reduce:animate-none" />
                 <span>FU-DEVER WORKSHOPS &amp; EVENTS</span>
               </div>
 
@@ -200,13 +200,13 @@ export default function DeverEventHero({
               >
                 {/* Event Name */}
                 <div className="space-y-1 mb-3">
-                  <span className="text-[11px] font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
+                  <span className="text-xs font-mono font-bold text-cyan-400 uppercase tracking-wider flex items-center gap-1.5">
                     {isLoading ? (
-                      <span className="inline-block h-3.5 w-24 bg-slate-800 rounded animate-pulse" />
+                      <span className="inline-block h-3.5 w-24 bg-slate-800 rounded animate-pulse motion-reduce:animate-none" />
                     ) : hasRealEvent ? (
                       event?.isFeatured ? (
                         <>
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping motion-reduce:animate-none" />
                           SỰ KIỆN NỔI BẬT
                         </>
                       ) : (
@@ -218,7 +218,7 @@ export default function DeverEventHero({
                   </span>
                   <h3 className="text-base sm:text-lg font-bold text-white leading-snug line-clamp-2">
                     {isLoading ? (
-                      <span className="inline-block h-6 w-3/4 bg-slate-800 rounded animate-pulse" />
+                      <span className="inline-block h-6 w-3/4 bg-slate-800 rounded animate-pulse motion-reduce:animate-none" />
                     ) : hasRealEvent ? (
                       event?.title
                     ) : (
@@ -233,7 +233,7 @@ export default function DeverEventHero({
                     <Calendar className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                     <span>
                       {isLoading ? (
-                        <span className="inline-block h-3.5 w-40 bg-slate-800 rounded animate-pulse" />
+                        <span className="inline-block h-3.5 w-40 bg-slate-800 rounded animate-pulse motion-reduce:animate-none" />
                       ) : hasRealEvent ? (
                         `${event?.date || "Đang cập nhật"} ${event?.time ? `(${event.time})` : ""}`
                       ) : (
@@ -245,7 +245,7 @@ export default function DeverEventHero({
                     <MapPin className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
                     <span className="truncate">
                       {isLoading ? (
-                        <span className="inline-block h-3.5 w-48 bg-slate-800 rounded animate-pulse" />
+                        <span className="inline-block h-3.5 w-48 bg-slate-800 rounded animate-pulse motion-reduce:animate-none" />
                       ) : hasRealEvent ? (
                         event?.location || "FPT University Đà Nẵng"
                       ) : (
@@ -261,25 +261,25 @@ export default function DeverEventHero({
                     <span className="text-sm sm:text-base font-bold text-white block">
                       {String(timeLeft.days).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] text-slate-400">Ngày</span>
+                    <span className="text-xs text-slate-400">Ngày</span>
                   </div>
                   <div>
                     <span className="text-sm sm:text-base font-bold text-white block">
                       {String(timeLeft.hours).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] text-slate-400">Giờ</span>
+                    <span className="text-xs text-slate-400">Giờ</span>
                   </div>
                   <div>
                     <span className="text-sm sm:text-base font-bold text-white block">
                       {String(timeLeft.minutes).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] text-slate-400">Phút</span>
+                    <span className="text-xs text-slate-400">Phút</span>
                   </div>
                   <div>
                     <span className="text-sm sm:text-base font-bold text-cyan-400 block">
                       {String(timeLeft.seconds).padStart(2, "0")}
                     </span>
-                    <span className="text-[10px] text-slate-400">Giây</span>
+                    <span className="text-xs text-slate-400">Giây</span>
                   </div>
                 </div>
 
@@ -287,7 +287,7 @@ export default function DeverEventHero({
                 <div className="flex items-center justify-between gap-3 pt-3 border-t border-slate-800">
                   <div className="flex items-center gap-2 text-slate-400">
                     <QrCode className="w-7 h-7 text-white" />
-                    <span className="text-[11px] font-mono text-slate-400 leading-tight">
+                    <span className="text-xs font-mono text-slate-400 leading-tight">
                       Check-in <br />
                       <strong className="text-slate-200">
                         {hasRealEvent && event?.checkinUrl && event.checkinUrl !== "#"
@@ -307,7 +307,7 @@ export default function DeverEventHero({
                       <ArrowRight className="w-3.5 h-3.5" />
                     </button>
                   ) : (
-                    <span className="text-[11px] text-slate-400 italic">
+                    <span className="text-xs text-slate-400 italic">
                       Theo dõi để cập nhật
                     </span>
                   )}

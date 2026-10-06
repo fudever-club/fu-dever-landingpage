@@ -13,6 +13,7 @@ import Tiktok from "@icons/pages/home/product/Tiktok.svg";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 type obj = {
   x: number;
@@ -22,11 +23,16 @@ type obj = {
 function Product() {
   const [client, setClient] = useState<obj>({ x: 0, y: 0 });
   const ref = useRef<any>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const parallax = (fx: number, fy: number) =>
+    prefersReducedMotion ? { x: 0, y: 0 } : { x: client.x * fx, y: client.y * fy };
 
   return (
     <section
       ref={ref}
       onMouseMove={({ clientX, clientY }: React.MouseEvent) => {
+        // Keep product cards static for reduced-motion users.
+        if (prefersReducedMotion) return;
         setClient(() => {
           const width = ref?.current?.clientWidth || 1200;
           const height = ref?.current?.clientHeight || 600;
@@ -42,8 +48,8 @@ function Product() {
           {/* 4 Product Cards with interactive parallax & hover micro-interactions */}
           <div className="grid grid-cols-2 gap-4 md:gap-6 order-2 lg:order-1">
             <motion.div
-              animate={{ x: client.x * 0.6, y: client.y * 0.6 }}
-              transition={{ type: "tween", ease: "easeOut", duration: 0.2 }}
+              animate={parallax(0.6, 0.6)}
+              transition={prefersReducedMotion ? { duration: 0 } : { type: "tween", ease: "easeOut", duration: 0.2 }}
               className="group relative flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm p-6 shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1"
             >
               <Image
@@ -58,8 +64,8 @@ function Product() {
             </motion.div>
 
             <motion.div
-              animate={{ x: client.x * -0.6, y: client.y * -0.6 }}
-              transition={{ type: "tween", ease: "easeOut", duration: 0.2 }}
+              animate={parallax(-0.6, -0.6)}
+              transition={prefersReducedMotion ? { duration: 0 } : { type: "tween", ease: "easeOut", duration: 0.2 }}
               className="group relative flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm p-6 shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1"
             >
               <Image
@@ -74,8 +80,8 @@ function Product() {
             </motion.div>
 
             <motion.div
-              animate={{ x: client.x * 0.4, y: client.y * 0.4 }}
-              transition={{ type: "tween", ease: "easeOut", duration: 0.2 }}
+              animate={parallax(0.4, 0.4)}
+              transition={prefersReducedMotion ? { duration: 0 } : { type: "tween", ease: "easeOut", duration: 0.2 }}
               className="group relative flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm p-6 shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1"
             >
               <Image
@@ -90,8 +96,8 @@ function Product() {
             </motion.div>
 
             <motion.div
-              animate={{ x: client.x * -0.4, y: client.y * -0.4 }}
-              transition={{ type: "tween", ease: "easeOut", duration: 0.2 }}
+              animate={parallax(-0.4, -0.4)}
+              transition={prefersReducedMotion ? { duration: 0 } : { type: "tween", ease: "easeOut", duration: 0.2 }}
               className="group relative flex flex-col items-center justify-center rounded-3xl bg-white/95 backdrop-blur-sm p-6 shadow-sm hover:shadow-xl border border-slate-100 hover:border-blue-200 transition-all duration-300 hover:-translate-y-1"
             >
               <Image

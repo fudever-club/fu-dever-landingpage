@@ -29,7 +29,7 @@ const ButtonGoBack = ({ firstname, lastname }: Props) => {
           />
         </span>
         <p>Hồ sơ của</p>
-        <h2 className="text-[#0098FF] ">
+        <h2 className="text-[#0066CC] ">
           {firstname || lastname
             ? `${firstname ?? ""} ${lastname ?? ""}`
             : "Chưa có tông tin tên"}

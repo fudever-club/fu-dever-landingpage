@@ -6,6 +6,7 @@ import Model from "@images/pages/project/model.png";
 import { motion } from "framer-motion";
 import "../../../../app/globals.css";
 import Link from "next/link";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 const parent: any = {
   show: {
@@ -31,6 +32,15 @@ const child: any = {
   }),
 };
 const Blogs = () => {
+  // The letter-wave loops forever by default; reduced-motion users get the
+  // final resting state (fully visible, no repeat) instead.
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const parentVariants: any = prefersReducedMotion
+    ? { show: { transition: { staggerChildren: 0 } } }
+    : parent;
+  const childVariants: any = prefersReducedMotion
+    ? { show: { y: 0, opacity: 1 } }
+    : child;
   return (
     <div className="w-[100%] sm:h-[413px] md:h-[402px] lg:h-[471px] xl:h-[588px]  sm:mb-[40px] md:mb-[60px] lg:mb-[60px]  relative ">
       <Image
@@ -49,7 +59,7 @@ const Blogs = () => {
               <div className=" sm:block md:hidden w-[120px] h-[4px] mt-[8px] mb-[12px] bg-highlight mx-auto "></div>
               <motion.div
                 animate="show"
-                variants={parent}
+                variants={parentVariants}
                 className="overflow-visible flex flex-wrap md:justify-start sm:justify-center relative w-[100%] min-h-[80px] sm:text-[32px] lg:text-[40px] font-black sm:leading-[39px] lg:leading-[48px] text-primary"
               >
                 {[
@@ -70,7 +80,7 @@ const Blogs = () => {
                   <motion.p
                     key={index}
                     custom={index}
-                    variants={child}
+                    variants={childVariants}
                     className={`${
                       char == " " ? "w-[0.5ch]" : ""
                     } max-h-[100%] whitespace-nowrap overflow-hidden`}

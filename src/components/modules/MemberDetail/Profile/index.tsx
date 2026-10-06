@@ -29,7 +29,7 @@ const Profile = ({ user }: { user: any }) => {
           ></Image>
         </div>
         <div className="flex flex-col gap-[8px] w-fit">
-          <h2 className="xl:text-[24px] lg:text-[20px] md:text-[18px] sm:text-[20px] text-[#0065A9] font-extrabold mb-[10px]">
+          <h2 className="xl:text-[24px] lg:text-[20px] md:text-[18px] sm:text-[20px] text-[#0066CC] font-extrabold mb-[10px]">
             {user?.firstname || user?.lastname
               ? `${user?.firstname ?? ""} ${user?.lastname ?? ""}`
               : "Chưa có tên"}
@@ -81,7 +81,7 @@ const Profile = ({ user }: { user: any }) => {
       <div className="flex flex-col gap-[8px] ">
         {decs?.map((data) => (
           <span key={data?.label} className="flex flex-col">
-            <h2 className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-semibold text-[#0065A9]">
+            <h2 className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-semibold text-[#0066CC]">
               {data?.label}
             </h2>
             <p className="xl:text-[16px] lg:text-[14px] font-bold">

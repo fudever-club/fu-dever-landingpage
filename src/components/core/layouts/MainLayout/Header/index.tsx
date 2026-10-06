@@ -2,7 +2,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import Logo from "@images/header/logo.svg";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { AppProgressBar } from "next-nprogress-bar";
 import "./style.css";
 import { usePathname, useRouter } from "next/navigation";
@@ -62,6 +62,7 @@ function Header() {
   };
 
   return (
+    <MotionConfig reducedMotion="user">
     <header
       className={`fixed top-0 left-0 right-0 z-[100] bg-white/95 backdrop-blur-md border-b transition-all duration-200 ${
         isScrollHeader
@@ -72,7 +73,7 @@ function Header() {
       <Suspense fallback={null}>
         <AppProgressBar
           height="4px"
-          color="#0098FF"
+          color="#0066CC"
           options={{ showSpinner: false }}
           shallowRouting
         />
@@ -102,14 +103,14 @@ function Header() {
             }}
             aria-current={pathname === "/" ? "page" : undefined}
             className={`${
-              pathname === "/" ? "text-[#0098FF] font-bold" : "text-gray-700"
-            } hover:text-[#0098FF] transition-all relative py-2`}
+              pathname === "/" ? "text-[#0066CC] font-bold" : "text-gray-700"
+            } hover:text-[#0066CC] transition-all relative py-2`}
           >
             Trang chủ
             {pathname === "/" && (
               <motion.span
                 layoutId="header-active"
-                className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0098FF] rounded-full"
+                className="absolute bottom-0 left-0 right-0 h-[3px] bg-[#0066CC] rounded-full"
               />
             )}
           </Link>
@@ -123,9 +124,9 @@ function Header() {
             <button
               className={`${
                 isGroupActive(["/blog", "/events", "/resources"])
-                  ? "text-[#0098FF] font-bold"
+                  ? "text-[#0066CC] font-bold"
                   : "text-gray-700"
-              } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
+              } hover:text-[#0066CC] transition-all flex items-center gap-1.5`}
             >
               Góc Học Tập
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "learning" ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -198,9 +199,9 @@ function Header() {
             <button
               className={`${
                 isGroupActive(["/member", "/leaderboard", "/alumni"])
-                  ? "text-[#0098FF] font-bold"
+                  ? "text-[#0066CC] font-bold"
                   : "text-gray-700"
-              } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
+              } hover:text-[#0066CC] transition-all flex items-center gap-1.5`}
             >
               Cộng Đồng
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "community" ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -273,9 +274,9 @@ function Header() {
             <button
               className={`${
                 isGroupActive(["/project", "/activity", "/project-lab"])
-                  ? "text-[#0098FF] font-bold"
+                  ? "text-[#0066CC] font-bold"
                   : "text-gray-700"
-              } hover:text-[#0098FF] transition-all flex items-center gap-1.5`}
+              } hover:text-[#0066CC] transition-all flex items-center gap-1.5`}
             >
               Sản Phẩm &amp; Lab
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${activeDropdown === "projects" ? "rotate-180" : ""}`} aria-hidden="true" />
@@ -438,7 +439,7 @@ function Header() {
                   <Home className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Trang chủ
                 </button>
 
-                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                <div className="font-bold text-xs text-[#0066CC] uppercase tracking-wider px-3 pt-2">
                   Góc Học Tập
                 </div>
                 <button onClick={() => handleDirect("/blog")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
@@ -451,7 +452,7 @@ function Header() {
                   <Library className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Kho Tài Liệu
                 </button>
 
-                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                <div className="font-bold text-xs text-[#0066CC] uppercase tracking-wider px-3 pt-2">
                   Cộng Đồng
                 </div>
                 <button onClick={() => handleDirect("/leaderboard")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
@@ -464,7 +465,7 @@ function Header() {
                   <GraduationCap className="h-4 w-4 text-[#0066CC]" aria-hidden="true" /> Cựu Thành Viên
                 </button>
 
-                <div className="font-bold text-xs text-[#0098FF] uppercase tracking-wider px-3 pt-2">
+                <div className="font-bold text-xs text-[#0066CC] uppercase tracking-wider px-3 pt-2">
                   Sản Phẩm &amp; Lab
                 </div>
                 <button onClick={() => handleDirect("/project")} className="flex w-full items-center gap-2 text-left p-2.5 pl-6 rounded-xl hover:bg-slate-100 text-slate-700">
@@ -502,6 +503,7 @@ function Header() {
         )}
       </AnimatePresence>
     </header>
+    </MotionConfig>
   );
 }
 

@@ -11,6 +11,7 @@ import {
 import SectionTitle from "@components/core/common/SectionTitle";
 import Image from "next/image";
 import { useState } from "react";
+import usePrefersReducedMotion from "@/src/hooks/usePrefersReducedMotion";
 
 import "swiper/css";
 import "swiper/css/free-mode";
@@ -20,6 +21,7 @@ import "./styles.css";
 
 function Slider({ images }: any) {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
+  const prefersReducedMotion = usePrefersReducedMotion();
   // Honest states only: null = fetch failed, [] = no photos yet. Stock
   // stand-ins must never impersonate club photos.
   const hasImages = Array.isArray(images) && images.length > 0;
@@ -46,10 +48,14 @@ function Slider({ images }: any) {
           ) : (
           <>
           <Swiper
-            autoplay={{
-              delay: 2500,
-              disableOnInteraction: false,
-            }}
+            autoplay={
+              prefersReducedMotion
+                ? false
+                : {
+                    delay: 2500,
+                    disableOnInteraction: false,
+                  }
+            }
             rewind={true}
             effect={"coverflow"}
             pagination={true}
@@ -62,7 +68,16 @@ function Slider({ images }: any) {
                 : undefined
             }
             spaceBetween={10}
-            slidesPerView={"auto"}
+            slidesPerView={1.15}
+            breakpoints={{
+              768: {
+                slidesPerView: 2,
+              },
+              1024: {
+                slidesPerView: "auto",
+              },
+            }}
+            speed={prefersReducedMotion ? 0 : 300}
             coverflowEffect={{
               rotate: 50,
               stretch: 0,
@@ -84,7 +99,7 @@ function Slider({ images }: any) {
             }}
           >
             {images.map((image: any, index: number) => (
-              <SwiperSlide key={image._id} style={{ width: "50%" }}>
+              <SwiperSlide key={image._id} className="activity-main-slide">
                 <Image
                   loading="lazy"
                   src={image?.url}

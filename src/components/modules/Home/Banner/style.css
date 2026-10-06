@@ -11,3 +11,9 @@
         transform: scaleX(1);
     }
 }
+
+@media (prefers-reduced-motion: reduce) {
+    .animate-line {
+        animation: none;
+    }
+}

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { BookOpen, Clock3, Flame, Heart, Search, SearchX } from "lucide-react";
 import Link from "next/link";
 import DeverBlogPreview from "@components/ui/DeverBlogPreview";
+import DeverBlogCover from "@components/ui/DeverBlogCover";
 import DeverCircuitBackground from "@components/ui/DeverCircuitBackground";
 import { apiFetch } from "@/src/lib/api";
 
@@ -28,7 +29,24 @@ interface BlogPost {
   coverImage: string;
 }
 
-const DEFAULT_BLOG_COVER = "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=1200&q=80";
+function BlogCoverImage({ src, title }: { src?: string; title: string }) {
+  const [imgError, setImgError] = useState(false);
+  if (!src || imgError) {
+    return <DeverBlogCover title={title} className="h-48" />;
+  }
+  return (
+    <Image
+      src={src}
+      alt={title}
+      width={800}
+      height={450}
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+      loading="lazy"
+      onError={() => setImgError(true)}
+      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+    />
+  );
+}
 
 const CATEGORIES = [
   "Tất cả",
@@ -48,7 +66,7 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
     .map((part) => part[0])
     .join("")
     .toUpperCase() || "D";
-  const avatarSize = size === "large" ? "h-11 w-11 text-xs" : "h-8 w-8 text-[10px]";
+  const avatarSize = size === "large" ? "h-11 w-11 text-xs" : "h-8 w-8 text-xs";
   const [imgError, setImgError] = useState(false);
 
   const avatarUrl = author?.avatar;
@@ -217,7 +235,7 @@ export default function BlogPage() {
               type="button"
               onClick={() => setSelectedCategory(cat)}
               aria-pressed={selectedCategory === cat}
-              className={`whitespace-nowrap px-4 py-2.5 rounded-full text-xs font-extrabold transition-all shadow-sm ${
+              className={`whitespace-nowrap inline-flex items-center min-h-[44px] px-4 py-2.5 rounded-full text-xs font-extrabold transition-all shadow-sm ${
                 selectedCategory === cat
                   ? "bg-[#0066CC] text-white shadow-blue-600/30 scale-105"
                   : "bg-white text-gray-700 border border-gray-300 hover:border-[#0066CC] hover:text-[#0066CC]"
@@ -234,7 +252,7 @@ export default function BlogPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {[1, 2, 3].map((i) => (
-              <div key={i} className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-sm p-6 space-y-4 animate-pulse">
+              <div key={i} className="bg-white rounded-2xl border border-blue-100 overflow-hidden shadow-sm p-6 space-y-4 animate-pulse motion-reduce:animate-none">
                 <div className="h-48 bg-slate-200 rounded-xl" />
                 <div className="h-6 bg-slate-200 rounded w-3/4" />
                 <div className="h-4 bg-slate-200 rounded w-full" />
@@ -287,19 +305,8 @@ export default function BlogPage() {
                 >
                   <div>
                     <Link href={`/blog/${encodeURIComponent(slugTarget)}`} className="block relative h-48 w-full overflow-hidden cursor-pointer bg-slate-100">
-                      <Image
-                        src={post.coverImage || DEFAULT_BLOG_COVER}
-                        alt={post.title}
-                        width={800}
-                        height={450}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        loading="lazy"
-                        onError={(e) => {
-                          e.currentTarget.src = DEFAULT_BLOG_COVER;
-                        }}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-                      />
-                      <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-[11px] px-3 py-1 rounded-full shadow-md border border-blue-100">
+                      <BlogCoverImage src={post.coverImage} title={post.title} />
+                      <span className="absolute top-3 left-3 bg-white/95 backdrop-blur-md text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full shadow-md border border-blue-100">
                         {post.category}
                       </span>
                     </Link>
@@ -325,7 +332,7 @@ export default function BlogPage() {
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <span className="flex items-center gap-1 text-[11px] text-gray-600 font-semibold"><Clock3 className="h-3.5 w-3.5" />{post.readTime || "5 phút"}</span>
+                      <span className="flex items-center gap-1 text-xs text-gray-600 font-semibold"><Clock3 className="h-3.5 w-3.5" />{post.readTime || "5 phút"}</span>
                       <button
                         type="button"
                         onClick={(e) => handleLike(post, e)}

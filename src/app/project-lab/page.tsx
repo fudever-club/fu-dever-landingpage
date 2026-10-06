@@ -36,7 +36,7 @@ export default async function ProjectLabPage() {
     <div className="min-h-screen pt-4 pb-16 bg-[#F8FCFF]">
       {/* Header Banner */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
-        <div className="bg-gradient-to-r from-[#0098FF] to-[#00528C] rounded-3xl p-8 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between shadow-xl overflow-hidden relative">
+        <div className="bg-gradient-to-r from-[#0066CC] to-[#004C99] rounded-3xl p-8 lg:p-12 text-white flex flex-col lg:flex-row items-center justify-between shadow-xl overflow-hidden relative">
           <div className="lg:w-3/5 z-10">
             <span className="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md text-white font-semibold text-sm px-4 py-1.5 rounded-full mb-4">
               <Lightbulb className="h-4 w-4" aria-hidden="true" /> DEVER TEAM MATCHMAKING
@@ -97,7 +97,7 @@ export default async function ProjectLabPage() {
                   <span className="bg-emerald-100 text-emerald-700 text-xs font-bold px-3 py-1 rounded-full">
                     {item.status === "open" ? "Đang tuyển" : "Tạm dừng"}
                   </span>
-                  <span className="bg-blue-50 text-[#0098FF] text-xs font-bold px-2.5 py-1 rounded-md">
+                  <span className="bg-blue-50 text-[#0066CC] text-xs font-bold px-2.5 py-1 rounded-md">
                     {item.category}
                   </span>
                 </div>
@@ -111,7 +111,7 @@ export default async function ProjectLabPage() {
                     {item.roles.map((role, rIdx) => (
                       <span
                         key={rIdx}
-                        className="bg-blue-50 text-[#0098FF] text-[11px] font-semibold px-2.5 py-1 rounded-md border border-blue-100"
+                        className="bg-blue-50 text-[#0066CC] text-xs font-semibold px-2.5 py-1 rounded-md border border-blue-100"
                       >
                         {role}
                       </span>
@@ -121,7 +121,7 @@ export default async function ProjectLabPage() {
               </div>
 
               {item.contactUrl ? (
-                <a href={item.contactUrl} target="_blank" rel="noreferrer" className="w-full bg-[#0098FF] hover:bg-blue-600 text-center text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm">
+                <a href={item.contactUrl} target="_blank" rel="noreferrer" className="w-full min-h-[44px] inline-flex items-center justify-center bg-[#0066CC] hover:bg-[#004C99] text-center text-white font-bold text-xs py-3 rounded-xl transition-all shadow-sm">
                   <span className="inline-flex items-center justify-center gap-1.5">Liên hệ tham gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></span>
                 </a>
               ) : (

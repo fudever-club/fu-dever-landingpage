@@ -257,7 +257,7 @@ export default function DeverCommandPalette() {
               {loading && query.trim() && (
                 <div className="space-y-2 p-2">
                   {[1, 2, 3].map((i) => (
-                    <div key={i} className="flex items-center gap-3 p-3 rounded-2xl animate-pulse bg-slate-50">
+                    <div key={i} className="flex items-center gap-3 p-3 rounded-2xl animate-pulse motion-reduce:animate-none bg-slate-50">
                       <div className="w-9 h-9 rounded-xl bg-slate-200 shrink-0" />
                       <div className="space-y-1.5 flex-1">
                         <div className="h-4 bg-slate-200 rounded w-3/5" />
