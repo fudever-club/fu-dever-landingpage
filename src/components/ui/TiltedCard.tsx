@@ -10,7 +10,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import type { SpringOptions } from "framer-motion";
 import { motion, useMotionValue, useSpring } from "framer-motion";
-import { StaticImageData } from "next/image";
+import Image, { StaticImageData } from "next/image";
 
 export interface TiltedCardProps {
   /** Source URL for the card image (string or StaticImageData) */
@@ -70,6 +70,8 @@ export const TiltedCard = ({
 }: TiltedCardProps) => {
   const ref = useRef<HTMLElement>(null);
 
+  const FALLBACK_SRC = "/images/pages/leaderBoard/avatar_default.png";
+
   const initialSrc =
     typeof imageSrc === "object" && imageSrc !== null && "src" in imageSrc
       ? imageSrc.src
@@ -82,7 +84,7 @@ export const TiltedCard = ({
       typeof imageSrc === "object" && imageSrc !== null && "src" in imageSrc
         ? imageSrc.src
         : (imageSrc as string);
-    setCurrentSrc(nextSrc || "/images/pages/leaderBoard/avatar_default.png");
+    setCurrentSrc(nextSrc || FALLBACK_SRC);
   }, [imageSrc]);
 
   const x = useMotionValue(0);
@@ -159,17 +161,21 @@ export const TiltedCard = ({
           scale,
         }}
       >
-        <motion.img
+        {/* Optimized via Vercel: remote avatars are fetched server-side, so a
+            browser that cannot reach the storage origin still sees images.
+            Local fallback shows only when the source truly fails. */}
+        <Image
           src={currentSrc}
           alt={altText}
+          fill
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          loading="lazy"
           onError={() => {
-            setCurrentSrc("/images/pages/leaderBoard/avatar_default.png");
+            if (currentSrc !== FALLBACK_SRC) {
+              setCurrentSrc(FALLBACK_SRC);
+            }
           }}
-          className={`w-full h-full object-cover rounded-2xl shadow-xl will-change-transform [transform:translateZ(0)] ${imageClassName}`}
-          style={{
-            width: imageWidth,
-            height: imageHeight,
-          }}
+          className={`object-cover rounded-2xl shadow-xl will-change-transform [transform:translateZ(0)] ${imageClassName}`}
         />
 
         {displayOverlayContent && overlayContent && (
