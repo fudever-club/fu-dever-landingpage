@@ -788,6 +788,34 @@ export default function EventsPage() {
                       )}
                     </div>
                   </div>
+                  {(() => {
+                    const thumb = resolveEventImageUrl(evt.coverImage);
+                    if (!thumb) return null;
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedRegisterEvent(evt);
+                          setLightboxOpen(true);
+                        }}
+                        aria-label={`Xem poster gốc: ${evt.title}`}
+                        className="relative hidden w-32 shrink-0 self-stretch overflow-hidden border-l border-slate-100 bg-slate-50 sm:block md:w-40"
+                      >
+                        <Image
+                          src={thumb}
+                          alt=""
+                          aria-hidden="true"
+                          fill
+                          sizes="160px"
+                          loading="lazy"
+                          className="object-cover transition-transform duration-200 hover:scale-105"
+                        />
+                        <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-lg bg-slate-950/70 px-2 py-1 text-[11px] font-bold text-white">
+                          <ZoomIn className="h-3 w-3" aria-hidden="true" /> Poster
+                        </span>
+                      </button>
+                    );
+                  })()}
                 </article>
               );
             })}
