@@ -16,6 +16,7 @@ import {
   Radio,
   Search,
   X,
+  ZoomIn,
 } from "lucide-react";
 import { apiFetch } from "@/src/lib/api";
 
@@ -216,6 +217,7 @@ export default function EventsPage() {
   const [calYear, setCalYear] = useState<number>(today.getFullYear());
   const [calMonth, setCalMonth] = useState<number>(today.getMonth());
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
+  const [lightboxOpen, setLightboxOpen] = useState<boolean>(false);
   const [openedForms, setOpenedForms] = useState<Set<string>>(() => {
     try {
       const raw = typeof window !== "undefined" ? window.localStorage.getItem(OPENED_FORMS_KEY) : null;
@@ -260,12 +262,23 @@ export default function EventsPage() {
   }, [openedForms]);
 
   useEffect(() => {
-    if (!selectedRegisterEvent) return;
+    if (!selectedRegisterEvent && !lightboxOpen) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setSelectedRegisterEvent(null);
+      if (e.key !== "Escape") return;
+      if (lightboxOpen) {
+        setLightboxOpen(false);
+      } else {
+        setSelectedRegisterEvent(null);
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [selectedRegisterEvent, lightboxOpen]);
+
+  useEffect(() => {
+    if (!selectedRegisterEvent) {
+      setLightboxOpen(false);
+    }
   }, [selectedRegisterEvent]);
 
   const parsedDates = useMemo(() => events.map((e) => parseEventTargetDate(e.date, e.time)), [events]);
@@ -816,7 +829,12 @@ export default function EventsPage() {
               <p className="mt-2 text-xs font-medium leading-relaxed text-slate-600">{selectedRegisterEvent.description}</p>
             </div>
             {modalCover !== "" ? (
-              <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-100">
+              <button
+                type="button"
+                onClick={() => setLightboxOpen(true)}
+                aria-label="Phóng to poster sự kiện (giữ nguyên tỉ lệ gốc)"
+                className="relative block h-40 w-full cursor-zoom-in overflow-hidden rounded-xl bg-slate-100"
+              >
                 <Image
                   src={modalCover}
                   alt={selectedRegisterEvent.title}
@@ -825,7 +843,10 @@ export default function EventsPage() {
                   loading="lazy"
                   className="object-cover"
                 />
-              </div>
+                <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-lg bg-slate-950/70 px-2 py-1 text-[11px] font-bold text-white">
+                  <ZoomIn className="h-3.5 w-3.5" aria-hidden="true" /> Phóng to
+                </span>
+              </button>
             ) : null}
             <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs font-medium text-slate-700">
               <p className="flex gap-2">
@@ -871,6 +892,40 @@ export default function EventsPage() {
           </div>
         </div>
       )}
+
+      {/* Poster lightbox: original aspect ratio, contain-fit, max viewport */}
+      {selectedRegisterEvent && lightboxOpen && modalCover !== "" ? (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label={`Poster phóng to: ${selectedRegisterEvent.title}`}
+          onClick={() => setLightboxOpen(false)}
+          className="fixed inset-0 z-[130] flex items-center justify-center bg-slate-950/90 p-4"
+        >
+          <button
+            type="button"
+            onClick={() => setLightboxOpen(false)}
+            aria-label="Đóng ảnh phóng to (Phím ESC)"
+            className="absolute right-4 top-4 inline-flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white hover:bg-white/20"
+          >
+            <X className="h-5 w-5" aria-hidden="true" />
+          </button>
+          <div
+            className="relative max-h-[88vh] w-auto max-w-[94vw]"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Image
+              src={modalCover}
+              alt={`Poster gốc: ${selectedRegisterEvent.title}`}
+              width={1200}
+              height={1600}
+              sizes="94vw"
+              className="max-h-[88vh] w-auto max-w-[94vw] rounded-xl object-contain shadow-2xl"
+              priority={false}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
