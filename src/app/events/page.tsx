@@ -1,36 +1,27 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import {
-  Bolt,
-  BrainCircuit,
   CalendarDays,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  ClipboardList,
   Clock3,
   ExternalLink,
-  Flame,
   Globe2,
-  MapPin,
-  Rocket,
-  Trophy,
-  UsersRound,
-  X,
-  ClipboardList,
-  CheckCircle2,
-  LayoutGrid,
-  Radio,
   History,
-  PauseCircle,
+  MapPin,
+  Radio,
   Search,
-  Sparkles,
+  X,
 } from "lucide-react";
-import DeverKnowledgeCanvas from "@components/ui/DeverKnowledgeCanvas";
-import DeverEventHero from "@components/ui/DeverEventHero";
 import { apiFetch } from "@/src/lib/api";
 
 interface EventItem {
   _id?: string;
-  id?: number;
+  id?: number | string;
   title: string;
   date: string;
   time: string;
@@ -41,24 +32,28 @@ interface EventItem {
   checkinUrl: string;
   speakers: string;
   coverImage: string;
+  category?: string;
   isFeatured?: boolean;
 }
+
+type ListFilter = "all" | "upcoming" | "online" | "offline" | "month";
+
+const ONLINE_HINT = /online|trực tuyến|truc tuyen|google meet|zoom|discord|teams|livestream|webinar/i;
+const OPENED_FORMS_KEY = "dever-events-opened-forms";
+const WEEKDAYS = ["T2", "T3", "T4", "T5", "T6", "T7", "CN"];
+const DAY_NAMES = ["CN", "T2", "T3", "T4", "T5", "T6", "T7"];
 
 function sanitizeUrl(url?: string): string {
   if (!url) return "#";
   const trimmed = url.trim();
-  if (/^(https?:\/\/)/i.test(trimmed)) {
-    return trimmed;
-  }
+  if (/^(https?:\/\/)/i.test(trimmed)) return trimmed;
   return "#";
 }
 
 function resolveEventImageUrl(url?: string): string {
   if (!url) return "";
   const gDriveMatch = url.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/);
-  if (gDriveMatch && gDriveMatch[1]) {
-    return `https://lh3.googleusercontent.com/d/${gDriveMatch[1]}`;
-  }
+  if (gDriveMatch && gDriveMatch[1]) return `https://lh3.googleusercontent.com/d/${gDriveMatch[1]}`;
   const gDriveIdMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
   if (gDriveIdMatch && gDriveIdMatch[1] && url.includes("drive.google.com")) {
     return `https://lh3.googleusercontent.com/d/${gDriveIdMatch[1]}`;
@@ -66,61 +61,169 @@ function resolveEventImageUrl(url?: string): string {
   return url;
 }
 
-function renderEventStatusBadge(status: string) {
-  switch (status) {
-    case "Đang mở đăng ký":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-blue-50/95 text-[#0066CC] border border-blue-200 shadow-sm backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066CC]"></span>
-          </span>
-          <CheckCircle2 className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />
-          <span>Đang mở đăng ký</span>
-        </span>
-      );
-    case "Đang diễn ra":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50/95 text-rose-600 border border-rose-200 shadow-sm backdrop-blur-sm">
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
-          </span>
-          <Radio className="h-3.5 w-3.5 text-rose-600 animate-pulse motion-reduce:animate-none" aria-hidden="true" />
-          <span>Đang diễn ra</span>
-        </span>
-      );
-    case "Sắp diễn ra":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50/95 text-amber-700 border border-amber-200 shadow-sm backdrop-blur-sm">
-          <Clock3 className="h-3.5 w-3.5 text-amber-600" aria-hidden="true" />
-          <span>Sắp diễn ra</span>
-        </span>
-      );
-    case "Tạm hoãn":
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-purple-50/95 text-purple-700 border border-purple-200 shadow-sm backdrop-blur-sm">
-          <PauseCircle className="h-3.5 w-3.5 text-purple-600" aria-hidden="true" />
-          <span>Tạm hoãn</span>
-        </span>
-      );
-    default:
-      return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100/95 text-slate-700 border border-slate-200 shadow-sm backdrop-blur-sm">
-          <History className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
-          <span>{status || "Đã kết thúc"}</span>
-        </span>
-      );
+/** Parse the real date/time strings into a Date. No invented RSVP/startAt. */
+function parseEventTargetDate(dateStr?: string, timeStr?: string): Date | null {
+  if (!dateStr || typeof dateStr !== "string") return null;
+  const cleanDate = dateStr.trim();
+  if (!cleanDate) return null;
+  let year = new Date().getFullYear();
+  let month = 0;
+  let day = 1;
+  let hours = 8;
+  let minutes = 0;
+  const dmyMatch = cleanDate.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+  if (dmyMatch) {
+    day = parseInt(dmyMatch[1], 10);
+    month = parseInt(dmyMatch[2], 10) - 1;
+    year = parseInt(dmyMatch[3], 10);
+  } else {
+    const ymdMatch = cleanDate.match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})/);
+    if (ymdMatch) {
+      year = parseInt(ymdMatch[1], 10);
+      month = parseInt(ymdMatch[2], 10) - 1;
+      day = parseInt(ymdMatch[3], 10);
+    } else {
+      const parsed = Date.parse(cleanDate);
+      if (!isNaN(parsed)) {
+        const fallback = new Date(parsed);
+        return new Date(fallback.getFullYear(), fallback.getMonth(), fallback.getDate(), 8, 0, 0);
+      }
+      return null;
+    }
   }
+  if (timeStr && typeof timeStr === "string") {
+    const timeMatch = timeStr.match(/(\d{1,2}):(\d{2})/);
+    if (timeMatch) {
+      hours = parseInt(timeMatch[1], 10);
+      minutes = parseInt(timeMatch[2], 10);
+    }
+  }
+  const built = new Date(year, month, day, hours, minutes, 0);
+  return isNaN(built.getTime()) ? null : built;
+}
+
+function toDateKey(d: Date): string {
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function eventId(evt: EventItem, idx: number): string {
+  if (evt._id) return evt._id;
+  if (evt.id !== undefined && evt.id !== null) return String(evt.id);
+  return `${evt.title}-${idx}`;
+}
+
+/** Honest Online/Offline heuristic: inferred from the real location string only. */
+function isOnlineEvent(location?: string): boolean {
+  if (!location) return false;
+  return ONLINE_HINT.test(location);
+}
+
+function isUpcomingStatus(status: string): boolean {
+  return status === "Đang mở đăng ký" || status === "Sắp diễn ra" || status === "Đang diễn ra";
+}
+
+type StatusKind = "live" | "upcoming" | "ended";
+
+function statusKind(status: string): StatusKind {
+  if (status === "Đang diễn ra") return "live";
+  if (status === "Đã kết thúc" || status === "Tạm hoãn") return "ended";
+  return "upcoming";
+}
+
+function statusBadge(kind: StatusKind, status: string) {
+  if (kind === "live") {
+    return (
+      <span className="inline-flex min-h-[44px] items-center gap-1 rounded-full bg-red-50 px-4 py-2 text-xs font-bold text-red-700 ring-1 ring-inset ring-red-200 motion-reduce:animate-none">
+        <Radio className="h-4 w-4" aria-hidden="true" />
+        <span>Đang diễn ra</span>
+      </span>
+    );
+  }
+  if (kind === "ended") {
+    return (
+      <span className="inline-flex min-h-[44px] items-center gap-1 rounded-full bg-slate-100 px-4 py-2 text-xs font-bold text-slate-600 ring-1 ring-inset ring-slate-200">
+        <History className="h-4 w-4" aria-hidden="true" />
+        <span>{status || "Đã kết thúc"}</span>
+      </span>
+    );
+  }
+  return (
+    <span className="inline-flex min-h-[44px] items-center gap-1 rounded-full bg-[#E6F0FA] px-4 py-2 text-xs font-bold text-[#004C99] ring-1 ring-inset ring-blue-200">
+      <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+      <span>{status || "Sắp diễn ra"}</span>
+    </span>
+  );
+}
+
+/** Re-renders the small <7-day countdowns once a minute. No per-second churn. */
+function useNowTick(active: boolean): number {
+  const [now, setNow] = useState<number>(() => Date.now());
+  useEffect(() => {
+    if (!active) return;
+    const t = setInterval(() => setNow(Date.now()), 60000);
+    return () => clearInterval(t);
+  }, [active]);
+  return now;
+}
+
+function SmallCountdown({ target, now }: { target: Date | null; now: number }) {
+  if (!target) return null;
+  const diff = target.getTime() - now;
+  if (diff <= 0) return null;
+  if (diff >= 7 * 24 * 60 * 60 * 1000) return null;
+  const days = Math.floor(diff / (24 * 60 * 60 * 1000));
+  const hours = Math.floor((diff % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+  const minutes = Math.floor((diff % (60 * 60 * 1000)) / (60 * 1000));
+  const label = days >= 1 ? `Còn ${days} ngày ${hours} giờ` : `Còn ${hours} giờ ${minutes} phút`;
+  return (
+    <p className="inline-flex items-center gap-1 text-xs font-bold text-[#004C99]">
+      <Clock3 className="h-4 w-4" aria-hidden="true" />
+      <span>{label}</span>
+    </p>
+  );
+}
+
+function TicketSkeleton() {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex items-stretch overflow-hidden rounded-2xl border border-slate-200 bg-white motion-reduce:animate-none"
+    >
+      <div className="flex w-[72px] shrink-0 flex-col items-center justify-center gap-1 bg-slate-100 p-4 md:w-24">
+        <div className="h-4 w-8 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+        <div className="h-6 w-8 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+        <div className="h-4 w-8 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+      </div>
+      <div className="relative w-4 shrink-0 border-l-2 border-dashed border-slate-200" />
+      <div className="flex-1 space-y-2 p-4">
+        <div className="h-4 w-24 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+        <div className="h-4 w-3/4 animate-pulse rounded bg-slate-200 motion-reduce:animate-none" />
+        <div className="h-4 w-full animate-pulse rounded bg-slate-100 motion-reduce:animate-none" />
+        <div className="h-8 w-32 animate-pulse rounded-xl bg-slate-100 motion-reduce:animate-none" />
+      </div>
+    </div>
+  );
 }
 
 export default function EventsPage() {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [loadError, setLoadError] = useState<boolean>(false);
-  const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [activeFilter, setActiveFilter] = useState<ListFilter>("all");
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const [selectedDateKey, setSelectedDateKey] = useState<string | null>(null);
+  const today = useMemo(() => new Date(), []);
+  const [calYear, setCalYear] = useState<number>(today.getFullYear());
+  const [calMonth, setCalMonth] = useState<number>(today.getMonth());
   const [selectedRegisterEvent, setSelectedRegisterEvent] = useState<EventItem | null>(null);
+  const [openedForms, setOpenedForms] = useState<Set<string>>(() => {
+    try {
+      const raw = typeof window !== "undefined" ? window.localStorage.getItem(OPENED_FORMS_KEY) : null;
+      return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    } catch {
+      return new Set();
+    }
+  });
 
   const fetchEvents = useCallback(async () => {
     try {
@@ -149,127 +252,375 @@ export default function EventsPage() {
   }, [fetchEvents]);
 
   useEffect(() => {
+    try {
+      window.localStorage.setItem(OPENED_FORMS_KEY, JSON.stringify(Array.from(openedForms)));
+    } catch {
+      /* local-only hint; ignore persistence failures */
+    }
+  }, [openedForms]);
+
+  useEffect(() => {
     if (!selectedRegisterEvent) return;
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setSelectedRegisterEvent(null);
-      }
+      if (e.key === "Escape") setSelectedRegisterEvent(null);
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedRegisterEvent]);
 
-  const filterTabs = [
-    {
-      key: "all",
-      label: "Tất cả",
-      icon: <LayoutGrid className="h-3.5 w-3.5" aria-hidden="true" />,
-      count: events.length,
+  const parsedDates = useMemo(() => events.map((e) => parseEventTargetDate(e.date, e.time)), [events]);
+  const now = useNowTick(events.length > 0 && !isLoading);
+
+  const eventsByDay = useMemo(() => {
+    const map = new Map<string, { total: number; featured: boolean }>();
+    events.forEach((evt, i) => {
+      const d = parsedDates[i];
+      if (!d) return;
+      const key = toDateKey(d);
+      const prev = map.get(key);
+      map.set(key, { total: (prev?.total ?? 0) + 1, featured: (prev?.featured ?? false) || !!evt.isFeatured });
+    });
+    return map;
+  }, [events, parsedDates]);
+
+  const monthKeys = useMemo(() => Array.from(eventsByDay.keys()).sort(), [eventsByDay]);
+
+  const jumpToEventMonth = useCallback(() => {
+    if (monthKeys.length === 0) {
+      setCalYear(today.getFullYear());
+      setCalMonth(today.getMonth());
+      return;
+    }
+    const cursorKey = `${calYear}-${String(calMonth + 1).padStart(2, "0")}`;
+    const next = monthKeys.find((k) => k.slice(0, 7) >= cursorKey) ?? monthKeys[monthKeys.length - 1];
+    setCalYear(parseInt(next.slice(0, 4), 10));
+    setCalMonth(parseInt(next.slice(5, 7), 10) - 1);
+  }, [monthKeys, calYear, calMonth, today]);
+
+  const goToday = useCallback(() => {
+    const t = new Date();
+    setCalYear(t.getFullYear());
+    setCalMonth(t.getMonth());
+  }, []);
+
+  const moveMonth = useCallback(
+    (delta: number) => {
+      const d = new Date(calYear, calMonth + delta, 1);
+      setCalYear(d.getFullYear());
+      setCalMonth(d.getMonth());
     },
-    {
-      key: "Đang mở đăng ký",
-      label: "Đang mở đăng ký",
-      icon: <CheckCircle2 className="h-3.5 w-3.5 text-blue-500" aria-hidden="true" />,
-      count: events.filter((e) => e.status === "Đang mở đăng ký").length,
+    [calYear, calMonth]
+  );
+
+  const toggleDay = useCallback((key: string) => {
+    setSelectedDateKey((prev) => (prev === key ? null : key));
+  }, []);
+
+  const handleCalKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const target = e.target as HTMLElement;
+      const key = target.getAttribute("data-cal-day");
+      if (e.key === "Escape") {
+        setSelectedDateKey(null);
+        return;
+      }
+      if (!key) return;
+      const [y, m, d] = key.split("-").map((v) => parseInt(v, 10));
+      let next: Date | null = null;
+      if (e.key === "ArrowLeft") next = new Date(y, m - 1, d - 1);
+      else if (e.key === "ArrowRight") next = new Date(y, m - 1, d + 1);
+      else if (e.key === "ArrowUp") next = new Date(y, m - 1, d - 7);
+      else if (e.key === "ArrowDown") next = new Date(y, m - 1, d + 7);
+      else return;
+      e.preventDefault();
+      setCalYear(next.getFullYear());
+      setCalMonth(next.getMonth());
+      requestAnimationFrame(() => {
+        const el = document.querySelector(`[data-cal-day="${toDateKey(next as Date)}"]`);
+        if (el instanceof HTMLElement) el.focus();
+      });
     },
-    {
-      key: "Đang diễn ra",
-      label: "Đang diễn ra",
-      icon: <Radio className="h-3.5 w-3.5 text-rose-500 animate-pulse motion-reduce:animate-none" aria-hidden="true" />,
-      count: events.filter((e) => e.status === "Đang diễn ra").length,
-    },
-    {
-      key: "Sắp diễn ra",
-      label: "Sắp diễn ra",
-      icon: <Clock3 className="h-3.5 w-3.5 text-amber-500" aria-hidden="true" />,
-      count: events.filter((e) => e.status === "Sắp diễn ra").length,
-    },
-    {
-      key: "Đã kết thúc",
-      label: "Đã kết thúc",
-      icon: <History className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />,
-      count: events.filter((e) => e.status === "Đã kết thúc").length,
-    },
-    {
-      key: "Tạm hoãn",
-      label: "Tạm hoãn",
-      icon: <PauseCircle className="h-3.5 w-3.5 text-purple-500" aria-hidden="true" />,
-      count: events.filter((e) => e.status === "Tạm hoãn").length,
-    },
+    []
+  );
+
+  const counts = useMemo(() => {
+    const nowD = new Date();
+    return {
+      all: events.length,
+      upcoming: events.filter((e) => isUpcomingStatus(e.status)).length,
+      online: events.filter((e) => isOnlineEvent(e.location)).length,
+      offline: events.filter((e) => !isOnlineEvent(e.location)).length,
+      month: events.filter((_, i) => {
+        const d = parsedDates[i];
+        return !!d && d.getFullYear() === nowD.getFullYear() && d.getMonth() === nowD.getMonth();
+      }).length,
+    };
+  }, [events, parsedDates]);
+
+  const filteredEvents = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+    return events.filter((evt, i) => {
+      if (activeFilter === "upcoming" && !isUpcomingStatus(evt.status)) return false;
+      if (activeFilter === "online" && !isOnlineEvent(evt.location)) return false;
+      if (activeFilter === "offline" && isOnlineEvent(evt.location)) return false;
+      if (activeFilter === "month") {
+        const d = parsedDates[i];
+        const n = new Date();
+        if (!d || d.getFullYear() !== n.getFullYear() || d.getMonth() !== n.getMonth()) return false;
+      }
+      if (selectedDateKey) {
+        const d = parsedDates[i];
+        if (!d || toDateKey(d) !== selectedDateKey) return false;
+      }
+      if (q) {
+        const hay = `${evt.title ?? ""} ${evt.description ?? ""} ${evt.location ?? ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [events, parsedDates, activeFilter, selectedDateKey, searchQuery]);
+
+  const hasActiveFilters = activeFilter !== "all" || searchQuery.trim() !== "" || selectedDateKey !== null;
+
+  const clearFilters = useCallback(() => {
+    setActiveFilter("all");
+    setSearchQuery("");
+    setSelectedDateKey(null);
+  }, []);
+
+  const filterTabs: { key: ListFilter; label: string; icon: React.ReactNode; count: number }[] = [
+    { key: "all", label: "Tất cả", icon: <CalendarDays className="h-4 w-4" aria-hidden="true" />, count: counts.all },
+    { key: "upcoming", label: "Sắp tới", icon: <Clock3 className="h-4 w-4" aria-hidden="true" />, count: counts.upcoming },
+    { key: "online", label: "Online", icon: <Globe2 className="h-4 w-4" aria-hidden="true" />, count: counts.online },
+    { key: "offline", label: "Offline", icon: <MapPin className="h-4 w-4" aria-hidden="true" />, count: counts.offline },
+    { key: "month", label: "Tháng này", icon: <CheckCircle2 className="h-4 w-4" aria-hidden="true" />, count: counts.month },
   ];
 
-  const filteredEvents = events.filter((evt) => {
-    const matchStatus = filterStatus === "all" || evt.status === filterStatus;
-    const matchSearch =
-      searchQuery.trim() === "" ||
-      evt.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      evt.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      evt.location.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchStatus && matchSearch;
-  });
+  const firstDayOffset = (new Date(calYear, calMonth, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const calCells: (number | null)[] = [
+    ...Array.from({ length: firstDayOffset }, () => null),
+    ...Array.from({ length: daysInMonth }, (_, i) => i + 1),
+  ];
+  const calMonthHasEvents = monthKeys.some((k) => k.startsWith(`${calYear}-${String(calMonth + 1).padStart(2, "0")}`));
 
-  const featuredEvent =
-    events.find((e) => e.isFeatured) ||
-    events[0] ||
-    null;
+  const selectedDateLabel = useMemo(() => {
+    if (!selectedDateKey) return null;
+    const [y, m, d] = selectedDateKey.split("-").map((v) => parseInt(v, 10));
+    return `${String(d).padStart(2, "0")}/${String(m).padStart(2, "0")}/${y}`;
+  }, [selectedDateKey]);
+
+  const markFormOpened = useCallback((id: string) => {
+    setOpenedForms((prev) => {
+      if (prev.has(id)) return prev;
+      const nextSet = new Set(prev);
+      nextSet.add(id);
+      return nextSet;
+    });
+  }, []);
+
+  const modalCover = selectedRegisterEvent ? resolveEventImageUrl(selectedRegisterEvent.coverImage) : "";
 
   return (
-    <div className="w-full min-h-screen bg-[#F8FCFF] pb-20 pt-4">
-      {/* Modern Premium 3D Holographic VIP Ticket & Background Beams Hero */}
-      <DeverEventHero
-        event={featuredEvent}
-        isLoading={isLoading}
-        onRegisterClick={() => {
-          if (featuredEvent) setSelectedRegisterEvent(featuredEvent);
-        }}
-      />
-
-      {/* Events List & Filter Section */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20">
-        <div className="bg-white rounded-3xl border border-blue-100 p-6 lg:p-8 shadow-sm mb-8 space-y-6">
-          {/* Header Bar */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h2 className="text-2xl font-extrabold text-gray-950">Danh Sách Sự Kiện & Workshop</h2>
-              <p className="text-xs text-gray-600 font-semibold mt-1">
-                Lọc nhanh sự kiện theo trạng thái và bấm <span className="font-extrabold text-[#0066CC]">Đăng Ký Tham Gia</span> để giữ chỗ.
-              </p>
-            </div>
-
-            {/* Search Input */}
-            <div className="relative w-full md:w-72">
-              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
+    <div className="min-h-screen w-full bg-white pb-20 pt-16">
+      {/* Compact white hero: H1 + real search + mini month calendar */}
+      <section className="mx-auto max-w-[1440px] px-4 pt-8 md:px-8 lg:px-20">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-12">
+          <div className="lg:col-span-7">
+            <p className="inline-flex items-center gap-2 rounded-full bg-[#E6F0FA] px-4 py-2 text-xs font-bold text-[#004C99]">
+              <span className="h-2 w-2 rounded-full bg-[#0066CC]" aria-hidden="true" />
+              FU-DEVER WORKSHOPS &amp; EVENTS
+            </p>
+            <h1 className="mt-4 text-3xl font-extrabold tracking-tight text-slate-900 md:text-4xl">
+              Lịch Sự Kiện &amp; Workshop
+            </h1>
+            <p className="mt-4 max-w-lg text-sm font-medium leading-relaxed text-slate-600">
+              Không gian chia sẻ kiến thức chuyên sâu và kết nối cùng FU-DEVER. Tìm theo tên, mô tả hoặc địa điểm thật của
+              sự kiện.
+            </p>
+            <div className="relative mt-4 w-full max-w-md">
+              <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" aria-hidden="true" />
+              <label htmlFor="event-search" className="sr-only">
+                Tìm sự kiện theo tên, mô tả, địa điểm
+              </label>
               <input
-                type="text"
-                placeholder="Tìm sự kiện, địa điểm..."
+                id="event-search"
+                type="search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0066CC] transition-all"
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setSearchQuery("");
+                }}
+                placeholder="Tìm tên, mô tả, địa điểm..."
+                className="min-h-[44px] w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-12 pr-12 text-sm font-medium text-slate-900 placeholder:text-slate-400 focus:border-[#0066CC] focus:outline-none focus:ring-2 focus:ring-blue-200"
               />
+              {searchQuery.trim() !== "" && (
+                <button
+                  type="button"
+                  onClick={() => setSearchQuery("")}
+                  aria-label="Xóa tìm kiếm"
+                  className="absolute right-2 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                >
+                  <X className="h-4 w-4" aria-hidden="true" />
+                </button>
+              )}
             </div>
+            {(selectedDateKey || searchQuery.trim() !== "") && (
+              <div className="mt-4 flex flex-wrap items-center gap-2">
+                {selectedDateLabel && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedDateKey(null)}
+                    aria-label={`Bỏ lọc theo ngày ${selectedDateLabel}`}
+                    className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#E6F0FA] px-4 py-2 text-xs font-bold text-[#004C99] ring-1 ring-inset ring-blue-200 hover:bg-blue-100"
+                  >
+                    <CalendarDays className="h-4 w-4" aria-hidden="true" />
+                    <span>Ngày {selectedDateLabel}</span>
+                    <X className="h-4 w-4" aria-hidden="true" />
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex min-h-[44px] items-center rounded-full border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-50"
+                >
+                  Xóa lọc
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Segmented Filter Pills (SVG Icons & Glassmorphism) */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-100 no-scrollbar">
+          {/* Mini month calendar */}
+          <div className="lg:col-span-5">
+            <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
+              <div className="flex items-center justify-between gap-2">
+                <button
+                  type="button"
+                  onClick={() => moveMonth(-1)}
+                  aria-label="Tháng trước"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100"
+                >
+                  <ChevronLeft className="h-4 w-4" aria-hidden="true" />
+                </button>
+                <p className="text-sm font-extrabold text-slate-900" aria-live="polite">
+                  Tháng {calMonth + 1} • {calYear}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => moveMonth(1)}
+                  aria-label="Tháng sau"
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-xl text-slate-600 hover:bg-slate-100"
+                >
+                  <ChevronRight className="h-4 w-4" aria-hidden="true" />
+                </button>
+              </div>
+              <div className="mt-4 grid grid-cols-7 gap-1 text-center" aria-hidden="true">
+                {WEEKDAYS.map((w) => (
+                  <span key={w} className="py-2 text-xs font-bold text-slate-500">
+                    {w}
+                  </span>
+                ))}
+              </div>
+              <div
+                role="group"
+                aria-label={`Lịch tháng ${calMonth + 1} năm ${calYear}. Dùng phím mũi tên để di chuyển, Enter để lọc, Esc để bỏ lọc.`}
+                onKeyDown={handleCalKeyDown}
+                className="grid grid-cols-7 gap-1"
+              >
+                {calCells.map((day, idx) => {
+                  if (day === null) return <span key={`blank-${idx}`} aria-hidden="true" />;
+                  const key = `${calYear}-${String(calMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
+                  const info = eventsByDay.get(key);
+                  const isSelected = selectedDateKey === key;
+                  const isToday = key === toDateKey(today);
+                  return (
+                    <button
+                      key={key}
+                      type="button"
+                      data-cal-day={key}
+                      onClick={() => toggleDay(key)}
+                      aria-pressed={isSelected}
+                      aria-label={`Ngày ${day} tháng ${calMonth + 1}${info ? `, ${info.total} sự kiện` : ", không có sự kiện"}${
+                        isSelected ? ", đang lọc" : ""
+                      }`}
+                      className={`flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-1 rounded-xl text-xs font-bold transition-colors motion-reduce:transition-none ${
+                        isSelected
+                          ? "bg-[#0066CC] text-white"
+                          : isToday
+                            ? "bg-slate-100 text-slate-900 ring-2 ring-inset ring-[#0066CC]"
+                            : "text-slate-700 hover:bg-slate-100"
+                      }`}
+                    >
+                      <span>{day}</span>
+                      <span className="flex h-2 items-center gap-1" aria-hidden="true">
+                        {info && (
+                          <span
+                            className={`${info.featured ? "h-2 w-2" : "h-1 w-1"} rounded-full ${
+                              isSelected ? "bg-white" : "bg-[#0066CC]"
+                            }`}
+                          />
+                        )}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+              {!calMonthHasEvents && (
+                <div className="mt-4 rounded-xl bg-slate-50 p-4 text-center">
+                  <p className="text-xs font-bold text-slate-600">Tháng này chưa có sự kiện.</p>
+                  <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+                    <button
+                      type="button"
+                      onClick={goToday}
+                      className="inline-flex min-h-[44px] items-center rounded-xl border border-slate-200 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-white"
+                    >
+                      Về hôm nay
+                    </button>
+                    {monthKeys.length > 0 && (
+                      <button
+                        type="button"
+                        onClick={jumpToEventMonth}
+                        className="inline-flex min-h-[44px] items-center rounded-xl bg-[#0066CC] px-4 py-2 text-xs font-bold text-white hover:bg-[#004C99]"
+                      >
+                        Tháng có sự kiện
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
+              <p className="mt-4 text-xs font-medium text-slate-500">Chấm xanh là ngày có sự kiện, chấm to là sự kiện nổi bật.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Sticky real filters */}
+      <div className="sticky top-16 z-40 mt-8 border-y border-slate-200 bg-white/95 backdrop-blur">
+        <div className="mx-auto max-w-[1440px] px-4 md:px-8 lg:px-20">
+          <div
+            role="tablist"
+            aria-label="Lọc sự kiện"
+            className="flex items-center gap-2 overflow-x-auto py-4 [mask-image:linear-gradient(to_right,transparent,black_16px,black_calc(100%-16px),transparent)]"
+          >
             {filterTabs.map((tab) => {
-              const isActive = filterStatus === tab.key;
+              const isActive = activeFilter === tab.key;
               return (
                 <button
                   key={tab.key}
                   type="button"
-                  onClick={() => setFilterStatus(tab.key)}
-                  className={`inline-flex items-center gap-2 px-3.5 min-h-[44px] py-1.5 rounded-full text-xs font-semibold transition-all duration-200 whitespace-nowrap cursor-pointer active:scale-95 ${
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => setActiveFilter(tab.key)}
+                  className={`inline-flex min-h-[44px] shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-4 py-2 text-xs font-bold transition-colors motion-reduce:transition-none ${
                     isActive
-                      ? "bg-[#0066CC] text-white shadow-sm shadow-blue-500/25 ring-2 ring-blue-500/20"
-                      : "bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 border border-slate-200/80"
+                      ? "bg-[#0066CC] text-white"
+                      : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 hover:text-slate-900"
                   }`}
                 >
-                  <span className={isActive ? "text-white" : ""}>{tab.icon}</span>
+                  <span aria-hidden="true">{tab.icon}</span>
                   <span>{tab.label}</span>
                   <span
-                    className={`px-1.5 py-0.5 rounded-full text-xs font-bold ${
-                      isActive ? "bg-white/20 text-white" : "bg-slate-200/70 text-slate-600"
-                    }`}
+                    className={`rounded-full px-2 py-1 text-xs font-bold ${isActive ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"}`}
                   >
                     {tab.count}
                   </span>
@@ -277,193 +628,244 @@ export default function EventsPage() {
               );
             })}
           </div>
+          <p className="pb-4 text-xs font-medium text-slate-500">
+            Phân loại Online/Offline suy từ địa chỉ sự kiện (chứa “online/trực tuyến” là Online).
+          </p>
+        </div>
+      </div>
 
-          {/* Events Grid / List */}
-          {isLoading ? (
-            <div className="space-y-6">
-              {[1, 2].map((i) => (
-                <div key={i} className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 items-center animate-pulse motion-reduce:animate-none">
-                  <div className="lg:col-span-4 h-48 rounded-xl bg-slate-200" />
-                  <div className="lg:col-span-8 space-y-3">
-                    <div className="h-6 bg-slate-200 rounded w-3/4" />
-                    <div className="h-4 bg-slate-200 rounded w-full" />
-                    <div className="h-4 bg-slate-200 rounded w-5/6" />
-                    <div className="h-10 bg-slate-100 rounded-xl w-full" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : events.length === 0 && loadError ? (
-            <div role="alert" className="text-center py-16 bg-white rounded-3xl border border-dashed border-rose-200 shadow-xs space-y-3">
-              <p className="text-sm font-bold text-rose-600">Không thể tải danh sách sự kiện.</p>
-              <p className="text-xs text-slate-500">Vui lòng kiểm tra kết nối và thử lại.</p>
+      {/* Ticket list (error scope is limited to this section) */}
+      <section aria-label="Danh sách sự kiện" className="mx-auto max-w-[1440px] px-4 pt-8 md:px-8 lg:px-20">
+        {isLoading ? (
+          <div role="status" className="space-y-4">
+            <span className="sr-only">Đang tải sự kiện…</span>
+            <TicketSkeleton />
+            <TicketSkeleton />
+            <TicketSkeleton />
+          </div>
+        ) : loadError && events.length === 0 ? (
+          <div role="alert" className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <p className="text-sm font-bold text-slate-800">Không thể tải danh sách sự kiện.</p>
+            <p className="mt-2 text-xs font-medium text-slate-500">Vui lòng kiểm tra kết nối và thử lại.</p>
+            <button
+              type="button"
+              onClick={fetchEvents}
+              className="mt-4 inline-flex min-h-[44px] items-center rounded-xl bg-[#0066CC] px-4 py-2 text-xs font-bold text-white hover:bg-[#004C99]"
+            >
+              Thử lại
+            </button>
+          </div>
+        ) : filteredEvents.length === 0 ? (
+          <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 p-8 text-center">
+            <Search className="mx-auto h-8 w-8 text-slate-400" aria-hidden="true" />
+            <p className="mt-4 text-sm font-bold text-slate-800">Không tìm thấy sự kiện nào phù hợp</p>
+            <p className="mt-2 text-xs font-medium text-slate-500">
+              {events.length === 0
+                ? "Các workshop và sự kiện mới sẽ sớm được cập nhật tại đây."
+                : "Vui lòng chọn bộ lọc khác hoặc đổi từ khóa tìm kiếm."}
+            </p>
+            {hasActiveFilters && events.length > 0 && (
               <button
                 type="button"
-                onClick={fetchEvents}
-                className="rounded-xl bg-[#0066CC] px-4 py-2 text-sm font-semibold text-white transition-all duration-200 hover:bg-[#004C99] active:scale-[0.98]"
+                onClick={clearFilters}
+                className="mt-4 inline-flex min-h-[44px] items-center rounded-xl bg-[#0066CC] px-4 py-2 text-xs font-bold text-white hover:bg-[#004C99]"
               >
-                Thử lại
+                Xóa bộ lọc
               </button>
-            </div>
-          ) : events.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 shadow-xs">
-              <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0066CC] flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-xs">
-                <CalendarDays className="w-8 h-8" />
-              </div>
-              <h3 className="text-lg font-extrabold text-slate-900 mb-1.5">Chưa Có Sự Kiện Hoặc Workshop Nào</h3>
-              <p className="text-xs text-slate-500 max-w-md mx-auto font-medium leading-relaxed">
-                Các sự kiện học thuật, workshop chuyên đề và giải đấu mới sẽ sớm được Ban Chủ Nhiệm cập nhật tại đây. Hãy theo dõi thường xuyên nhé!
-              </p>
-            </div>
-          ) : filteredEvents.length === 0 ? (
-            <div className="text-center py-12 bg-slate-50/50 rounded-2xl border border-dashed border-slate-200">
-              <Search className="w-10 h-10 text-slate-400 mx-auto mb-3" />
-              <p className="text-sm font-bold text-slate-700">Không tìm thấy sự kiện nào phù hợp</p>
-              <p className="text-xs text-slate-500 mt-1">Vui lòng chọn bộ lọc khác hoặc nhập từ khóa tìm kiếm</p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {filteredEvents.map((evt, idx) => {
-                const resolvedImg = resolveEventImageUrl(evt.coverImage);
-                return (
-                  <div
-                    key={evt._id || evt.id || idx}
-                    className="bg-white rounded-2xl border border-blue-100 p-6 lg:p-8 shadow-sm hover:shadow-xl transition-all duration-300 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center group"
-                  >
-                    <div className="lg:col-span-4 relative h-48 overflow-hidden rounded-xl shadow-sm lg:h-52 bg-slate-100">
-                      {resolvedImg ? (
-                        <Image
-                          src={resolvedImg}
-                          alt={evt.title}
-                          width={800}
-                          height={450}
-                          sizes="(max-width: 1024px) 100vw, 400px"
-                          loading="lazy"
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
-                      ) : (
-                        <DeverKnowledgeCanvas kind="event" title={evt.title} />
+            )}
+          </div>
+        ) : (
+          <div className="space-y-4">
+            {filteredEvents.map((evt) => {
+              const originalIndex = events.indexOf(evt);
+              const target = parseEventTargetDate(evt.date, evt.time);
+              const id = eventId(evt, originalIndex);
+              const kind = statusKind(evt.status);
+              const isEnded = kind === "ended";
+              const online = isOnlineEvent(evt.location);
+              const registerHref = sanitizeUrl(evt.registerUrl);
+              const checkinHref = sanitizeUrl(evt.checkinUrl);
+              const hasRegister = registerHref !== "#";
+              const hasCheckin = checkinHref !== "#";
+              const alreadyOpened = openedForms.has(id);
+              const monthLabel = target ? `T${target.getMonth() + 1}` : "—";
+              const dayLabel = target ? String(target.getDate()).padStart(2, "0") : "--";
+              const weekdayLabel = target ? DAY_NAMES[target.getDay()] : "—";
+              return (
+                <article
+                  key={id}
+                  aria-label={evt.title}
+                  className={`flex items-stretch overflow-hidden rounded-2xl border bg-white ${
+                    kind === "live" ? "border-red-200" : "border-slate-200"
+                  }`}
+                >
+                  {/* Date block: light-blue AA pair, 72px on mobile */}
+                  <div className="flex w-[72px] shrink-0 flex-col items-center justify-center gap-1 bg-[#E6F0FA] p-4 text-[#004C99] md:w-24">
+                    <span className="text-xs font-bold uppercase">Tháng {monthLabel}</span>
+                    <span className="text-xl font-extrabold leading-none">{dayLabel}</span>
+                    <span className="text-xs font-bold">{weekdayLabel}</span>
+                  </div>
+                  {/* Perforation divider (pure CSS) */}
+                  <div aria-hidden="true" className="relative w-4 shrink-0 border-l-2 border-dashed border-slate-200">
+                    <span className="absolute -left-2 -top-2 h-4 w-4 rounded-full border-b border-r border-slate-200 bg-white" />
+                    <span className="absolute -bottom-2 -left-2 h-4 w-4 rounded-full border-r border-t border-slate-200 bg-white" />
+                  </div>
+                  <div className="min-w-0 flex-1 p-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {statusBadge(kind, evt.status)}
+                      {evt.category && (
+                        <span className="inline-flex min-h-[44px] items-center rounded-full border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600">
+                          {evt.category}
+                        </span>
                       )}
-                      <div className="absolute top-3 left-3">
-                        {renderEventStatusBadge(evt.status)}
-                      </div>
+                      <span className="inline-flex min-h-[44px] items-center gap-1 rounded-full border border-slate-200 px-4 py-2 text-xs font-bold text-slate-600">
+                        {online ? (
+                          <Globe2 className="h-4 w-4" aria-hidden="true" />
+                        ) : (
+                          <MapPin className="h-4 w-4" aria-hidden="true" />
+                        )}
+                        <span>{online ? "Online" : "Offline"}</span>
+                      </span>
                     </div>
-
-                    <div className="lg:col-span-8 flex flex-col justify-between h-full space-y-4">
-                      <div>
-                        <h3 className="text-xl font-extrabold text-gray-950 mb-2 leading-tight group-hover:text-[#0066CC] transition-colors">
-                          {evt.title}
-                        </h3>
-                        <p className="text-xs text-gray-700 leading-relaxed font-medium line-clamp-3">
-                          {evt.description}
-                        </p>
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-900 font-semibold bg-[#F0F7FF] p-3 rounded-xl border border-blue-100">
-                        <p className="flex items-center gap-2">
-                          <CalendarDays className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
-                          <span>{evt.date} ({evt.time})</span>
-                        </p>
-                        <p className="flex items-center gap-2">
-                          <MapPin className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
-                          <span className="truncate">{evt.location}</span>
-                        </p>
-                        <p className="flex items-center gap-2 sm:col-span-2">
-                          <UsersRound className="h-4 w-4 text-[#0066CC] shrink-0" aria-hidden="true" />
-                          <span>Diễn giả: {evt.speakers || "Ban Chuyên Môn FU-DEVER"}</span>
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center justify-end gap-3 pt-2">
-                        <button
-                          onClick={() => setSelectedRegisterEvent(evt)}
-                          type="button"
-                          disabled={evt.status === "Đã kết thúc" || evt.status === "Tạm hoãn"}
-                          aria-disabled={evt.status === "Đã kết thúc" || evt.status === "Tạm hoãn"}
-                          className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white font-extrabold text-xs shadow-md shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+                    <h2 className="mt-4 line-clamp-2 text-base font-bold leading-snug text-slate-900">{evt.title}</h2>
+                    <p className="mt-2 flex items-center gap-2 text-xs font-medium text-slate-600">
+                      <Clock3 className="h-4 w-4 shrink-0 text-[#004C99]" aria-hidden="true" />
+                      <span>
+                        {evt.date}
+                        {evt.time ? ` • ${evt.time}` : ""}
+                      </span>
+                    </p>
+                    <p className="mt-2 flex items-center gap-2 text-xs font-medium text-slate-600">
+                      <MapPin className="h-4 w-4 shrink-0 text-[#004C99]" aria-hidden="true" />
+                      <span className="truncate">{evt.location || "Địa điểm đang cập nhật"}</span>
+                    </p>
+                    <div className="mt-2">
+                      <SmallCountdown target={target} now={now} />
+                    </div>
+                    <div className="mt-4 flex flex-wrap items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedRegisterEvent(evt)}
+                        disabled={isEnded}
+                        aria-disabled={isEnded}
+                        className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0066CC] px-4 py-2 text-xs font-bold text-white hover:bg-[#004C99] disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
+                      >
+                        <ClipboardList className="h-4 w-4" aria-hidden="true" />
+                        <span>{isEnded ? evt.status || "Đã kết thúc" : "Đăng ký"}</span>
+                      </button>
+                      {kind === "live" && hasCheckin && (
+                        <a
+                          href={checkinHref}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex min-h-[44px] items-center gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-2 text-xs font-bold text-red-700 hover:bg-red-100"
                         >
-                          {evt.status === "Đã kết thúc"
-                            ? "Đã Kết Thúc"
-                            : evt.status === "Tạm hoãn"
-                              ? "Tạm Hoãn"
-                              : <>Đăng Ký Tham Gia <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" /></>}
-                        </button>
-                      </div>
+                          <span>Điểm danh</span>
+                          <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                        </a>
+                      )}
+                      {alreadyOpened && !isEnded && (
+                        <span className="inline-flex min-h-[44px] items-center gap-1 px-4 py-2 text-xs font-bold text-slate-500">
+                          <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
+                          <span>Đã mở Form</span>
+                        </span>
+                      )}
+                      {!hasRegister && !isEnded && (
+                        <span className="text-xs font-medium text-slate-500">Form đăng ký đang cập nhật</span>
+                      )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
-      {/* Modal: Register via Google Form with Sanitized Safe URL */}
+      {/* Register modal: states clearly that the form lives outside this site */}
       {selectedRegisterEvent && (
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby="event-modal-title"
-          className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedRegisterEvent(null)}
+          className="fixed inset-0 z-[120] flex items-center justify-center bg-slate-950/60 p-4"
         >
-          <div className="bg-white rounded-3xl max-w-lg w-full p-6 lg:p-8 shadow-2xl space-y-5">
-            <div className="flex justify-between items-start">
-              <span className="bg-blue-100 text-[#004C99] font-extrabold text-xs px-3 py-1 rounded-full border border-blue-200">
-                <ClipboardList className="mr-1 inline h-3.5 w-3.5" aria-hidden="true" />{" "}
-                {selectedRegisterEvent.registerUrl && selectedRegisterEvent.registerUrl !== "#"
-                  ? "ĐĂNG KÝ QUA GOOGLE FORM"
-                  : "VÉ ĐIỆN TỬ & ĐIỂM DANH QR"}
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="w-full max-w-lg space-y-4 rounded-2xl bg-white p-4 shadow-xl md:p-8"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <span className="inline-flex min-h-[44px] items-center gap-2 rounded-full bg-[#E6F0FA] px-4 py-2 text-xs font-bold text-[#004C99]">
+                <ClipboardList className="h-4 w-4" aria-hidden="true" />
+                <span>Biểu mẫu ngoài website</span>
               </span>
               <button
                 type="button"
                 onClick={() => setSelectedRegisterEvent(null)}
                 aria-label="Đóng hộp thoại đăng ký (Phím ESC)"
-                className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 hover:bg-gray-100 hover:text-gray-800 transition-colors"
+                className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-slate-500 hover:bg-slate-100 hover:text-slate-800"
               >
-                <X className="h-5 w-5" aria-hidden="true" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </button>
             </div>
-
             <div>
-              <h3 id="event-modal-title" className="text-xl font-extrabold text-gray-950 mb-2">
+              <h2 id="event-modal-title" className="text-base font-extrabold leading-snug text-slate-900">
                 {selectedRegisterEvent.title}
-              </h3>
-              <p className="text-xs text-gray-700 leading-relaxed font-medium">
-                {selectedRegisterEvent.description}
+              </h2>
+              <p className="mt-2 text-xs font-medium leading-relaxed text-slate-600">{selectedRegisterEvent.description}</p>
+            </div>
+            {modalCover !== "" ? (
+              <div className="relative h-40 w-full overflow-hidden rounded-xl bg-slate-100">
+                <Image
+                  src={modalCover}
+                  alt={selectedRegisterEvent.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, 512px"
+                  loading="lazy"
+                  className="object-cover"
+                />
+              </div>
+            ) : null}
+            <div className="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4 text-xs font-medium text-slate-700">
+              <p className="flex gap-2">
+                <CalendarDays className="h-4 w-4 shrink-0 text-[#004C99]" aria-hidden="true" />
+                <span>
+                  Thời gian: {selectedRegisterEvent.date}
+                  {selectedRegisterEvent.time ? ` (${selectedRegisterEvent.time})` : ""}
+                </span>
+              </p>
+              <p className="flex gap-2">
+                <MapPin className="h-4 w-4 shrink-0 text-[#004C99]" aria-hidden="true" />
+                <span>Địa điểm: {selectedRegisterEvent.location || "Đang cập nhật"}</span>
+              </p>
+              <p className="font-bold text-slate-600">
+                Nút bên dưới sẽ mở biểu mẫu đăng ký của ban tổ chức trong tab mới, nằm ngoài website này.
               </p>
             </div>
-
-            <div className="bg-slate-50 rounded-2xl p-4 text-xs space-y-2 border border-slate-200 text-slate-900 font-semibold">
-              <p className="flex gap-1.5"><CalendarDays className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Thời gian:</strong> {selectedRegisterEvent.date} ({selectedRegisterEvent.time})</span></p>
-              <p className="flex gap-1.5"><MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0066CC]" aria-hidden="true" /><span><strong>Địa điểm:</strong> {selectedRegisterEvent.location}</span></p>
-            </div>
-
-            <div className="pt-2 flex justify-end gap-3">
+            <div className="flex flex-wrap items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setSelectedRegisterEvent(null)}
-                className="px-4 py-2.5 rounded-xl text-xs font-bold text-gray-700 hover:bg-gray-100"
+                className="inline-flex min-h-[44px] items-center rounded-xl px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100"
               >
                 Đóng
               </button>
-              {selectedRegisterEvent.registerUrl && selectedRegisterEvent.registerUrl !== "#" ? (
+              {sanitizeUrl(selectedRegisterEvent.registerUrl) !== "#" ? (
                 <a
                   href={sanitizeUrl(selectedRegisterEvent.registerUrl)}
                   target="_blank"
-                  rel="noreferrer noopener"
-                  className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    markFormOpened(eventId(selectedRegisterEvent, events.indexOf(selectedRegisterEvent)))
+                  }
+                  className="inline-flex min-h-[44px] items-center gap-2 rounded-xl bg-[#0066CC] px-4 py-2 text-xs font-bold text-white hover:bg-[#004C99]"
                 >
-                  Mở Google Form Đăng Ký <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
+                  <span>Mở Form đăng ký</span>
+                  <ExternalLink className="h-4 w-4" aria-hidden="true" />
                 </a>
               ) : (
-                <a
-                  href={process.env.NEXT_PUBLIC_CLIENT_URL || process.env.NEXT_PUBLIC_CLIENT_APP_URL || "https://client.fudever.com"}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="px-6 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-extrabold shadow-lg shadow-blue-600/20 transition-all flex items-center gap-2 active:scale-95"
-                >
-                  Đăng Ký Tại Cổng Sinh Viên <ExternalLink className="h-3.5 w-3.5" aria-hidden="true" />
-                </a>
+                <span className="text-xs font-medium text-slate-500">Form đăng ký đang cập nhật</span>
               )}
             </div>
           </div>
