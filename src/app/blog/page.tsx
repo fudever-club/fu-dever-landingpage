@@ -87,13 +87,13 @@ function AuthorBadge({ author, size = "regular" }: { author?: BlogPost["author"]
             className="w-full h-full object-cover"
           />
         ) : (
-          <span className="grid w-full h-full place-items-center font-black text-white">
+          <span className="grid w-full h-full place-items-center font-extrabold text-white">
             {initials}
           </span>
         )}
       </div>
       <div className="min-w-0">
-        <h4 className="truncate font-extrabold text-sm text-gray-900">{name}</h4>
+        <p className="truncate font-semibold text-sm text-gray-900">{name}</p>
         <p className="truncate text-xs font-medium text-gray-600">{author?.role || "DEVER Member"}</p>
       </div>
     </div>
@@ -198,7 +198,7 @@ export default function BlogPage() {
               <span className="inline-block bg-[#0055B8]/10 text-[#0055B8] text-xs font-extrabold tracking-wider uppercase px-3.5 py-1.5 rounded-full mb-3 border border-[#0055B8]/20">
                 DEVER TECH BLOG &amp; INSIGHTS
               </span>
-              <h1 className="text-3xl lg:text-5xl font-black text-gray-950 tracking-tight">
+              <h1 className="text-3xl lg:text-5xl font-extrabold text-gray-950 tracking-tight">
                 Góc Kiến Thức &amp; Chia Sẻ Công Nghệ
               </h1>
               <p className="text-gray-700 text-base mt-2 max-w-2xl font-medium">
@@ -265,7 +265,7 @@ export default function BlogPage() {
             <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center mx-auto mb-4 border border-rose-100 shadow-xs">
               <BookOpen className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-black text-gray-900 mb-1.5">Không tải được bài viết</h3>
+            <h3 className="text-xl font-extrabold text-gray-900 mb-1.5">Không tải được bài viết</h3>
             <p className="text-gray-600 text-xs mt-1 font-medium max-w-md mx-auto leading-relaxed">
               Máy chủ nội dung tạm thời không phản hồi. Vui lòng thử lại sau giây lát.
             </p>
@@ -282,7 +282,7 @@ export default function BlogPage() {
             <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0066CC] flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-xs">
               <BookOpen className="w-8 h-8" />
             </div>
-            <h3 className="text-xl font-black text-gray-900 mb-1.5">Chưa Có Bài Viết Công Nghệ Nào</h3>
+            <h3 className="text-xl font-extrabold text-gray-900 mb-1.5">Chưa Có Bài Viết Công Nghệ Nào</h3>
             <p className="text-gray-600 text-xs mt-1 font-medium max-w-md mx-auto leading-relaxed">
               Các bài viết chuyên sâu về thuật toán, kiến trúc hệ thống và cẩm nang công nghệ từ Ban Chuyên Môn sẽ được xuất bản tại đây.
             </p>

@@ -352,7 +352,7 @@ function Header() {
           >
             <Search className="h-3.5 w-3.5 text-[#0066CC]" />
             <span className="text-slate-600 font-normal">Tìm kiếm</span>
-            <kbd className="inline-flex items-center text-[10px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">
+            <kbd className="inline-flex items-center text-[11px] font-mono font-bold bg-white px-1.5 py-0.5 rounded border border-slate-200 text-slate-500">
               ⌘K
             </kbd>
           </button>
@@ -429,7 +429,7 @@ function Header() {
                     <Search className="h-4 w-4 text-[#0066CC]" />
                     <span>Tìm kiếm nhanh bài viết, sự kiện...</span>
                   </div>
-                  <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono">⌘K</kbd>
+                  <kbd className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-mono font-bold">⌘K</kbd>
                 </button>
 
                 <button

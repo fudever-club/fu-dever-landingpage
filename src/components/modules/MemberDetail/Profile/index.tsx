@@ -42,7 +42,7 @@ const Profile = ({ user }: { user: any }) => {
               width={30}
               height={30}
             ></Image>
-            <p className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-regular flex leading-none">
+            <p className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-normal flex leading-none">
               {user?.positionId?.name ?? "Chưa có vị trí cụ thể trong clb"}
             </p>
           </span>
@@ -54,7 +54,7 @@ const Profile = ({ user }: { user: any }) => {
               width={30}
               height={30}
             ></Image>
-            <p className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-regular flex leading-none">
+            <p className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-normal flex leading-none">
               {user?.dob ? dayjs(user?.dob).format("L") : "không có"}
             </p>
           </span>
@@ -66,12 +66,12 @@ const Profile = ({ user }: { user: any }) => {
               width={30}
               height={30}
             ></Image>
-            <p className="uppercase xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-regular flex leading-none">
+            <p className="uppercase xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-normal flex leading-none">
               {user?.MSSV ?? "không có"}
             </p>
           </span>
           <span className="flex flex-col gap-[8px] w-full">
-            <h2 className="lg:text-20px] md:text-[18px] sm:text-[14px] font-bold">
+            <h2 className="lg:text-[20px] md:text-[18px] sm:text-[14px] font-bold">
               Mạng xã hội
             </h2>
             <Social socials={user?.socials} />
@@ -81,10 +81,10 @@ const Profile = ({ user }: { user: any }) => {
       <div className="flex flex-col gap-[8px] ">
         {decs?.map((data) => (
           <span key={data?.label} className="flex flex-col">
-            <h2 className="xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px] font-semibold text-[#0066CC]">
+            <h2 className="text-sm font-semibold text-[#0066CC]">
               {data?.label}
             </h2>
-            <p className="xl:text-[16px] lg:text-[14px] font-bold">
+            <p className="text-base font-bold">
               {user?.[data?.dataIndex] ?? "Chưa có thông tin"}
             </p>
           </span>

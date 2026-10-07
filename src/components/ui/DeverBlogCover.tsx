@@ -41,7 +41,7 @@ export default function DeverBlogCover({ title, className = "" }: DeverBlogCover
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/15 text-white ring-1 ring-white/30">
           <Code2 className="h-5 w-5" aria-hidden="true" />
         </span>
-        <span className="text-xs font-black uppercase tracking-[0.2em] text-white">
+        <span className="text-xs font-extrabold uppercase tracking-[0.2em] text-white">
           FU-DEVER Tech Blog
         </span>
       </div>

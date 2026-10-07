@@ -9,7 +9,7 @@ export default function OfflinePage() {
     <div className="mx-auto flex min-h-[60vh] max-w-xl flex-col items-center justify-center px-4 text-center">
       <div
         aria-hidden
-        className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0066CC]/10 text-3xl font-black text-[#0066CC]"
+        className="mb-4 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#0066CC]/10 text-3xl font-extrabold text-[#0066CC]"
       >
         {"</>"}
       </div>

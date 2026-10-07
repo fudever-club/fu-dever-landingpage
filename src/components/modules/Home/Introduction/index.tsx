@@ -96,7 +96,7 @@ function Introduction() {
           {MARQUEE_ITEMS.map((item, idx) => (
             <div key={`m1-${idx}`} className="flex items-center shrink-0">
               <div className="flex items-baseline gap-2.5 px-6">
-                <span className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-xs">
+                <span className="text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-xs">
                   {item.number}
                 </span>
                 <span className="text-xs md:text-sm font-bold text-blue-100 uppercase tracking-wider whitespace-nowrap">
@@ -111,7 +111,7 @@ function Introduction() {
           {MARQUEE_ITEMS.map((item, idx) => (
             <div key={`m2-${idx}`} className="flex items-center shrink-0">
               <div className="flex items-baseline gap-2.5 px-6">
-                <span className="text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow-xs">
+                <span className="text-2xl md:text-3xl font-extrabold tracking-tight text-white drop-shadow-xs">
                   {item.number}
                 </span>
                 <span className="text-xs md:text-sm font-bold text-blue-100 uppercase tracking-wider whitespace-nowrap">

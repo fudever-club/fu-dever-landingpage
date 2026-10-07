@@ -44,7 +44,7 @@ function MemberCardImage({ user }: { user: any }) {
   if (!user || !user.avatar || imgError) {
     return (
       <div className="flex h-full w-full flex-col items-center justify-center rounded-2xl bg-gradient-to-br from-blue-50 via-slate-50 to-blue-100/70 p-2 sm:p-3 text-center border border-blue-200/80 shadow-xs select-none">
-        <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0066CC] to-[#0080FF] text-white font-black text-xs sm:text-sm shadow-md mb-1.5 sm:mb-2">
+        <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-xl bg-gradient-to-tr from-[#0066CC] to-[#0080FF] text-white font-extrabold text-xs sm:text-sm shadow-md mb-1.5 sm:mb-2">
           {initials}
         </div>
         <span className="text-xs font-bold text-slate-800 line-clamp-1 leading-tight">
@@ -79,7 +79,7 @@ const TopTypical = ({ data }: { data: any }) => {
   return (
     <article className="xl:max-w-[1440px] mx-auto">
       <div className="xl:px-[80px] md:px-[40px] sm:px-[20px] px-4 flex flex-col text-center">
-        <h1 className="font-black text-[#0066CC] drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-tight mx-auto">
+        <h1 className="font-extrabold text-[#0066CC] drop-shadow-[0_4px_4px_rgba(0,0,0,0.15)] uppercase text-2xl sm:text-3xl md:text-4xl lg:text-[40px] tracking-tight mx-auto">
           TRONG FU - DEVER CÓ AI?
         </h1>
         <p className="text-[#0066CC] font-bold text-xs sm:text-sm md:text-base lg:text-lg mt-3 sm:mt-4 mb-2">

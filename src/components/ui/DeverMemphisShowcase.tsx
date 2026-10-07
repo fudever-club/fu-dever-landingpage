@@ -24,13 +24,13 @@ export default function DeverMemphisShowcase() {
           {/* Left Column: Headline, Marker Highlights & Dual CTAs */}
           <div className="lg:col-span-7 space-y-6">
             {/* Violet Eyebrow Pill */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6b5be6] text-white text-xs sm:text-sm font-black border-[3px] border-[#17140d] shadow-[4px_4px_0_#17140d]">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#6b5be6] text-white text-xs sm:text-sm font-extrabold border-[3px] border-[#17140d] shadow-[4px_4px_0_#17140d]">
               <span className="w-2.5 h-2.5 rounded-full bg-[#ffc531] border-[2px] border-[#17140d]" />
               <span>NEW • FU-DEVER INNOVATION LAB 2026</span>
             </div>
 
             {/* Big Headline with Marker-Highlight Bars */}
-            <h2 className="text-4xl sm:text-6xl lg:text-[68px] font-black tracking-tight leading-[1.05] text-[#17140d]">
+            <h2 className="text-4xl sm:text-6xl lg:text-[68px] font-extrabold tracking-tight leading-[1.05] text-[#17140d]">
               Code projects that{" "}
               <span className="relative inline-block whitespace-nowrap">
                 <span className="relative z-10">actually</span>
@@ -58,7 +58,7 @@ export default function DeverMemphisShowcase() {
             <div className="flex flex-wrap items-center gap-4 pt-2">
               <Link
                 href="/projects"
-                className="px-6 py-3.5 rounded-full bg-[#ff5b57] text-white font-black text-sm sm:text-base border-[3px] border-[#17140d] shadow-[6px_6px_0_#17140d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_#17140d] transition-all flex items-center gap-2 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                className="px-6 py-3.5 rounded-full bg-[#ff5b57] text-white font-extrabold text-sm sm:text-base border-[3px] border-[#17140d] shadow-[6px_6px_0_#17140d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_#17140d] transition-all flex items-center gap-2 active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
               >
                 <span>Khám phá dự án</span>
                 <ArrowRight className="w-5 h-5 stroke-[3]" />
@@ -66,7 +66,7 @@ export default function DeverMemphisShowcase() {
 
               <Link
                 href="/events"
-                className="px-6 py-3.5 rounded-full bg-white text-[#17140d] font-black text-sm sm:text-base border-[3px] border-[#17140d] shadow-[6px_6px_0_#17140d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_#17140d] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
+                className="px-6 py-3.5 rounded-full bg-white text-[#17140d] font-extrabold text-sm sm:text-base border-[3px] border-[#17140d] shadow-[6px_6px_0_#17140d] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[3px_3px_0_#17140d] transition-all active:translate-x-[4px] active:translate-y-[4px] active:shadow-none"
               >
                 <span>Lịch Workshop sắp tới</span>
               </Link>
@@ -75,21 +75,21 @@ export default function DeverMemphisShowcase() {
             {/* Trust Row */}
             <div className="flex flex-wrap items-center gap-4 pt-4 border-t-[2.5px] border-[#17140d]/15">
               <div className="flex -space-x-3">
-                <div className="w-10 h-10 rounded-full bg-[#ff5b57] border-[3px] border-[#17140d] font-black text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
+                <div className="w-10 h-10 rounded-full bg-[#ff5b57] border-[3px] border-[#17140d] font-extrabold text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
                   P
                 </div>
-                <div className="w-10 h-10 rounded-full bg-[#12b3a4] border-[3px] border-[#17140d] font-black text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
+                <div className="w-10 h-10 rounded-full bg-[#12b3a4] border-[3px] border-[#17140d] font-extrabold text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
                   T
                 </div>
-                <div className="w-10 h-10 rounded-full bg-[#6b5be6] border-[3px] border-[#17140d] font-black text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
+                <div className="w-10 h-10 rounded-full bg-[#6b5be6] border-[3px] border-[#17140d] font-extrabold text-white flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
                   N
                 </div>
-                <div className="w-10 h-10 rounded-full bg-[#ffc531] border-[3px] border-[#17140d] font-black text-[#17140d] flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
+                <div className="w-10 h-10 rounded-full bg-[#ffc531] border-[3px] border-[#17140d] font-extrabold text-[#17140d] flex items-center justify-center text-xs shadow-[2px_2px_0_#17140d]">
                   D
                 </div>
               </div>
               <div className="text-xs sm:text-sm font-bold text-[#17140d]/90">
-                <strong className="text-[#17140d] font-black">500+ sinh viên &amp; lập trình viên</strong> đồng hành cùng hệ sinh thái DEVER.
+                <strong className="text-[#17140d] font-extrabold">500+ sinh viên &amp; lập trình viên</strong> đồng hành cùng hệ sinh thái DEVER.
               </div>
             </div>
           </div>
@@ -112,10 +112,10 @@ export default function DeverMemphisShowcase() {
               {/* Sprint Velocity Header */}
               <div className="flex items-center justify-between mb-3">
                 <div>
-                  <h4 className="text-sm font-black text-[#17140d]">Sprint Velocity</h4>
+                  <h4 className="text-sm font-extrabold text-[#17140d]">Sprint Velocity</h4>
                   <p className="text-[11px] text-[#17140d]/60 font-semibold">Tuần này • Ban Chuyên Môn</p>
                 </div>
-                <span className="px-2.5 py-1 rounded-full bg-[#12b3a4] text-white text-xs font-black border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
+                <span className="px-2.5 py-1 rounded-full bg-[#12b3a4] text-white text-xs font-extrabold border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
                   +38% UP
                 </span>
               </div>
@@ -189,10 +189,10 @@ export default function DeverMemphisShowcase() {
 
         {/* FULL-BLEED BLACK LOGO STRIP */}
         <div className="w-full bg-[#17140d] text-white p-5 rounded-2xl border-[3px] border-[#17140d] shadow-[6px_6px_0_#ffc531] flex flex-col md:flex-row items-center justify-between gap-4">
-          <span className="text-xs font-mono font-black text-[#ffc531] uppercase tracking-widest shrink-0">
+          <span className="text-xs font-mono font-extrabold text-[#ffc531] uppercase tracking-widest shrink-0">
             ★ HỆ SINH THÁI ĐỐI TÁC &amp; NỀN TẢNG
           </span>
-          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm sm:text-base font-black opacity-90">
+          <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm sm:text-base font-extrabold opacity-90">
             <span className="hover:text-[#ff5b57] transition-colors">NEXT.JS 14</span>
             <span className="hover:text-[#12b3a4] transition-colors">TYPESCRIPT</span>
             <span className="hover:text-[#3aa0ff] transition-colors">TAILWIND CSS</span>
@@ -204,10 +204,10 @@ export default function DeverMemphisShowcase() {
         {/* THREE-UP MEMPHIS FEATURE CARDS */}
         <div className="space-y-6">
           <div className="text-center space-y-2">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#6b5be6] text-white text-xs font-black border-[2.5px] border-[#17140d]">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#6b5be6] text-white text-xs font-extrabold border-[2.5px] border-[#17140d]">
               <span>TẠI SAO CHỌN FU-DEVER</span>
             </div>
-            <h3 className="text-2xl sm:text-4xl font-black text-[#17140d]">
+            <h3 className="text-2xl sm:text-4xl font-extrabold text-[#17140d]">
               Môi trường học thuật không nhàm chán.
             </h3>
           </div>
@@ -218,7 +218,7 @@ export default function DeverMemphisShowcase() {
               <div className="w-14 h-14 rounded-2xl bg-[#ff5b57] border-[3px] border-[#17140d] shadow-[4px_4px_0_#17140d] flex items-center justify-center text-white">
                 <Code2 className="w-7 h-7 stroke-[2.5]" />
               </div>
-              <h4 className="text-xl font-black text-[#17140d]">Thực Chiến Dự Án</h4>
+              <h4 className="text-xl font-extrabold text-[#17140d]">Thực Chiến Dự Án</h4>
               <p className="text-sm text-[#17140d]/80 font-medium leading-relaxed">
                 Tham gia phát triển các sản phẩm công nghệ thật, từ Client Portal, Landing Page đến các công cụ nội bộ phục vụ sinh viên.
               </p>
@@ -230,7 +230,7 @@ export default function DeverMemphisShowcase() {
               <div className="w-14 h-14 rounded-2xl bg-[#12b3a4] border-[3px] border-[#17140d] shadow-[4px_4px_0_#17140d] flex items-center justify-center text-white">
                 <Trophy className="w-7 h-7 stroke-[2.5]" />
               </div>
-              <h4 className="text-xl font-black text-[#17140d]">Đấu Trường ICPC</h4>
+              <h4 className="text-xl font-extrabold text-[#17140d]">Đấu Trường ICPC</h4>
               <p className="text-sm text-[#17140d]/80 font-medium leading-relaxed">
                 Đào tạo giải thuật chuyên sâu, cọ xát với các đề thi LeetCode Hard và tham gia các kỳ thi lập trình quốc tế ICPC hàng năm.
               </p>
@@ -242,7 +242,7 @@ export default function DeverMemphisShowcase() {
               <div className="w-14 h-14 rounded-2xl bg-[#6b5be6] border-[3px] border-[#17140d] shadow-[4px_4px_0_#17140d] flex items-center justify-center text-white">
                 <Users className="w-7 h-7 stroke-[2.5]" />
               </div>
-              <h4 className="text-xl font-black text-[#17140d]">Mạng Lưới Alumni</h4>
+              <h4 className="text-xl font-extrabold text-[#17140d]">Mạng Lưới Alumni</h4>
               <p className="text-sm text-[#17140d]/80 font-medium leading-relaxed">
                 Kết nối trực tiếp cùng các cựu thành viên hiện đang là Software Engineer, Tech Lead tại các tập đoàn công nghệ lớn.
               </p>

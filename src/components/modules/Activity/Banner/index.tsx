@@ -15,10 +15,10 @@ function Banner() {
               dự án tuyệt vời và mở khóa tiềm năng của bạn!!
             </p>
             <div className=" flex flex-col items-center justify-center">
-              <p className="font-black md:text-[32px] md:leading-[39px] text-[30px] leading-[36px] mb-[12px] stroke-text ">
+              <p className="font-extrabold md:text-[32px] md:leading-[39px] text-[30px] leading-[36px] mb-[12px] stroke-text ">
                 Hoạt động ở
               </p>
-              <p className="uppercase font-black md:text-[40px] md:leading-[48px] text-[38px] leading-[46px] text-[#0066CC]">
+              <p className="uppercase font-extrabold md:text-[40px] md:leading-[48px] text-[38px] leading-[46px] text-[#0066CC]">
                 {" "}
                 fu-dever club
               </p>
@@ -26,7 +26,7 @@ function Banner() {
             <div className=" flex-row items-center justify-center hidden lg:flex gap-[20px]">
               <p
                 style={{ shapeOutside: "circle(50%)" }}
-                className="font-black text-right text-[24px] leading-[29px] text-[#0066CC] opacity-70 max-w-[80px] w-full"
+                className="font-extrabold text-right text-[24px] leading-[29px] text-[#0066CC] opacity-70 max-w-[80px] w-full"
               >
                 Theo dõi chúng tôi
               </p>

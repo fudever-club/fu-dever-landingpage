@@ -149,7 +149,7 @@ export default async function HallOfFamePage() {
                         loading="lazy"
                         className="h-20 w-20 rounded-full object-cover ring-4 ring-slate-300 shadow-lg"
                       />
-                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-700 font-black shadow ring-2 ring-white">
+                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-slate-200 text-slate-700 font-extrabold shadow ring-2 ring-white">
                         2
                       </span>
                     </div>
@@ -183,7 +183,7 @@ export default async function HallOfFamePage() {
                       loading="lazy"
                       className="h-24 w-24 rounded-full object-cover ring-4 ring-amber-400 shadow-2xl"
                     />
-                    <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-white font-black shadow-lg ring-2 ring-white text-lg">
+                    <span className="absolute -bottom-2 -right-2 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-amber-400 to-amber-500 text-white font-extrabold shadow-lg ring-2 ring-white text-lg">
                       1
                     </span>
                   </div>
@@ -191,13 +191,13 @@ export default async function HallOfFamePage() {
                     {podium.first.name}
                   </h3>
                   <span className="text-xs font-semibold text-amber-600">{podium.first.title}</span>
-                  <div className="mt-1 flex items-center gap-1 text-sm font-black text-amber-600 bg-amber-50 px-3 py-0.5 rounded-full border border-amber-200">
+                  <div className="mt-1 flex items-center gap-1 text-sm font-extrabold text-amber-600 bg-amber-50 px-3 py-0.5 rounded-full border border-amber-200">
                     <Zap className="h-4 w-4 fill-amber-500 text-amber-500" /> {podium.first.exp} EXP
                   </div>
                 </div>
                 <div className="h-52 w-full rounded-t-3xl border border-amber-400/80 bg-gradient-to-b from-amber-100 via-amber-50 to-white p-4 text-center shadow-xl flex flex-col justify-center items-center">
                   <Trophy className="h-10 w-10 text-amber-500 mb-1" />
-                  <span className="text-base font-black text-amber-700">QUÁN QUÂN</span>
+                  <span className="text-base font-extrabold text-amber-700">QUÁN QUÂN</span>
                   <span className="text-xs font-semibold text-amber-600">Level {podium.first.level}</span>
                   <span className="text-xs text-slate-500 mt-1 inline-flex items-center gap-1"><Flame className="h-3.5 w-3.5 text-orange-500" aria-hidden="true" /> {podium.first.streakDays} ngày liên tiếp</span>
                 </div>
@@ -217,7 +217,7 @@ export default async function HallOfFamePage() {
                         loading="lazy"
                         className="h-20 w-20 rounded-full object-cover ring-4 ring-amber-700/40 shadow-lg"
                       />
-                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-amber-800 text-white font-black shadow ring-2 ring-white">
+                      <span className="absolute -bottom-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-amber-800 text-white font-extrabold shadow ring-2 ring-white">
                         3
                       </span>
                     </div>

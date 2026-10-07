@@ -247,7 +247,7 @@ export default function ResourcesPage() {
                 <span>TÀI LIỆU &amp; HỌC THUẬT FU-DEVER</span>
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-900 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900 leading-tight">
                 Góc Học Tập &amp; Kho Tài Liệu <br />
                 <span className="text-[#0066CC]">Lập Trình</span>
               </h1>
@@ -304,13 +304,13 @@ export default function ResourcesPage() {
                   <div className="lg:col-span-6 bg-white rounded-3xl p-6 lg:p-8 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
                     <div className="space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="px-3 py-1 rounded-full text-xs font-mono font-black bg-blue-50 text-[#004C99] border border-blue-200">
+                        <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-blue-50 text-[#004C99] border border-blue-200">
                           {item.type ? item.type.toUpperCase() : "SLIDE WORKSHOP"}
                         </span>
                         <span className="text-xs font-mono text-slate-400 font-bold">{item.size || "Tài liệu"}</span>
                       </div>
 
-                      <h3 className="text-xl lg:text-2xl font-black text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
+                      <h3 className="text-xl lg:text-2xl font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors leading-snug">
                         {item.title}
                       </h3>
 
@@ -346,7 +346,7 @@ export default function ResourcesPage() {
                 return (
                   <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-blue-300 transition-all flex flex-col justify-between group">
                     <div className="space-y-3">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-purple-50 text-purple-700 border border-purple-200 inline-block">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-purple-50 text-purple-700 border border-purple-200 inline-block">
                         {item.type ? item.type.toUpperCase() : "MÃ NGUỒN MẪU"}
                       </span>
 
@@ -382,7 +382,7 @@ export default function ResourcesPage() {
                 return (
                   <div className="lg:col-span-3 bg-white rounded-3xl p-6 border border-slate-200 shadow-sm hover:shadow-xl hover:border-emerald-300 transition-all flex flex-col justify-between group">
                     <div className="space-y-3">
-                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-black bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block">
+                      <span className="px-3 py-1 rounded-full text-[11px] font-mono font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 inline-block">
                         {item.type ? item.type.toUpperCase() : "EBOOK CHUYÊN NGÀNH"}
                       </span>
 
@@ -438,7 +438,7 @@ export default function ResourcesPage() {
       {/* 4. Main Resource Grid Section */}
       <section className="max-w-[1440px] mx-auto px-5 lg:px-20 space-y-6">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-mono font-black text-slate-500 uppercase tracking-wider">
+          <span className="text-xs font-mono font-extrabold text-slate-500 uppercase tracking-wider">
             DANH SÁCH TÀI LIỆU ({filteredResources.length})
           </span>
         </div>

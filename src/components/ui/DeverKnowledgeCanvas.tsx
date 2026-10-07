@@ -42,7 +42,7 @@ export default function DeverKnowledgeCanvas({
 
       <div className="relative flex h-full flex-col justify-between gap-5">
         <div className="flex items-start justify-between gap-3">
-          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.14em] text-blue-100">
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.14em] text-blue-100">
             <LeadIcon className="h-3.5 w-3.5 text-cyan-200" />
             {isEvent ? "DEVER Session" : "DEVER Notes"}
           </span>

@@ -449,7 +449,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
 
             {/* Name & Role & Bio */}
             <div className="space-y-2 mt-4">
-              <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight flex items-center gap-2">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight flex items-center gap-2">
                 <span>{fullName}</span>
                 <Sparkles className="w-5 h-5 text-amber-500 shrink-0" />
               </h1>
@@ -763,7 +763,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             </div>
 
             <div>
-              <span className="text-2xl font-black text-rose-950 tracking-tight leading-none block font-mono">
+              <span className="text-2xl font-extrabold text-rose-950 tracking-tight leading-none block font-mono">
                 {leetcodeSolved} <span className="text-rose-600 text-lg font-bold">AC</span>
               </span>
               <p className="text-xs text-rose-800/80 font-medium truncate">
@@ -948,7 +948,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             <div className="absolute -top-10 -right-10 w-40 h-40 bg-cyan-400/20 rounded-full blur-2xl pointer-events-none" />
 
             <div className="relative z-10 space-y-1 max-w-sm">
-              <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight leading-snug">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight leading-snug">
                 Let&apos;s make something
               </h3>
               <p className="text-xs text-blue-100 font-medium">
@@ -1096,7 +1096,7 @@ export default function BentoMemberProfile({ user }: BentoMemberProfileProps) {
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-lg font-black text-slate-900">
+              <h3 className="text-lg font-extrabold text-slate-900">
                 {selectedBadge.name}
               </h3>
               <span className={`inline-block px-3 py-0.5 rounded-full text-xs font-bold border ${selectedBadge.bgColor}`}>

@@ -56,7 +56,7 @@ function MentorCard({ mentor }: { mentor: Mentor }) {
               </div>
             )}
             {mentor.graduationGen && (
-              <span className="absolute -bottom-1.5 -right-1.5 rounded-md bg-[#0066CC] px-2 py-0.5 text-xs font-black text-white shadow">
+              <span className="absolute -bottom-1.5 -right-1.5 rounded-md bg-[#0066CC] px-2 py-0.5 text-xs font-extrabold text-white shadow">
                 {mentor.graduationGen}
               </span>
             )}
@@ -182,13 +182,13 @@ export default function MentorSection() {
         <div className="max-w-3xl space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-1.5 backdrop-blur-md">
             <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
-            <span className="text-xs font-black uppercase tracking-wider text-white">
+            <span className="text-xs font-extrabold uppercase tracking-wider text-white">
               Cố vấn &amp; Mentor FU-DEVER
             </span>
           </div>
           <h2
             id="mentor-showcase-heading"
-            className="text-2xl font-black leading-tight tracking-tight sm:text-3xl lg:text-4xl"
+            className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl lg:text-4xl"
           >
             Học trực tiếp từ anh chị đi trước
           </h2>
@@ -244,7 +244,7 @@ export default function MentorSection() {
                 <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
                 <span>Dữ Liệu Đang Được Cập Nhật</span>
               </div>
-              <h3 className="text-xl font-black text-slate-900 sm:text-2xl">
+              <h3 className="text-xl font-extrabold text-slate-900 sm:text-2xl">
                 Danh sách Mentor đang được xác thực
               </h3>
               <p className="mx-auto max-w-md text-sm font-medium leading-relaxed text-slate-600">

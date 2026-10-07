@@ -70,7 +70,7 @@ function renderEventStatusBadge(status: string) {
   switch (status) {
     case "Đang mở đăng ký":
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-blue-50/95 text-[#0066CC] border border-blue-200 shadow-sm backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-blue-50/95 text-[#0066CC] border border-blue-200 shadow-sm backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0066CC]"></span>
@@ -81,7 +81,7 @@ function renderEventStatusBadge(status: string) {
       );
     case "Đang diễn ra":
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-rose-50/95 text-rose-600 border border-rose-200 shadow-sm backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-rose-50/95 text-rose-600 border border-rose-200 shadow-sm backdrop-blur-sm">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping motion-reduce:animate-none absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-rose-500"></span>
@@ -92,21 +92,21 @@ function renderEventStatusBadge(status: string) {
       );
     case "Sắp diễn ra":
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-amber-50/95 text-amber-700 border border-amber-200 shadow-sm backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-amber-50/95 text-amber-700 border border-amber-200 shadow-sm backdrop-blur-sm">
           <Clock3 className="h-3.5 w-3.5 text-amber-600" aria-hidden="true" />
           <span>Sắp diễn ra</span>
         </span>
       );
     case "Tạm hoãn":
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-purple-50/95 text-purple-700 border border-purple-200 shadow-sm backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-purple-50/95 text-purple-700 border border-purple-200 shadow-sm backdrop-blur-sm">
           <PauseCircle className="h-3.5 w-3.5 text-purple-600" aria-hidden="true" />
           <span>Tạm hoãn</span>
         </span>
       );
     default:
       return (
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-black bg-slate-100/95 text-slate-700 border border-slate-200 shadow-sm backdrop-blur-sm">
+        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-extrabold bg-slate-100/95 text-slate-700 border border-slate-200 shadow-sm backdrop-blur-sm">
           <History className="h-3.5 w-3.5 text-slate-500" aria-hidden="true" />
           <span>{status || "Đã kết thúc"}</span>
         </span>
@@ -230,9 +230,9 @@ export default function EventsPage() {
           {/* Header Bar */}
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-black text-gray-950">Danh Sách Sự Kiện & Workshop</h2>
+              <h2 className="text-2xl font-extrabold text-gray-950">Danh Sách Sự Kiện & Workshop</h2>
               <p className="text-xs text-gray-600 font-semibold mt-1">
-                Lọc nhanh sự kiện theo trạng thái và bấm <span className="font-black text-[#0066CC]">Đăng Ký Tham Gia</span> để giữ chỗ.
+                Lọc nhanh sự kiện theo trạng thái và bấm <span className="font-extrabold text-[#0066CC]">Đăng Ký Tham Gia</span> để giữ chỗ.
               </p>
             </div>
 
@@ -310,7 +310,7 @@ export default function EventsPage() {
               <div className="w-16 h-16 rounded-2xl bg-blue-50 text-[#0066CC] flex items-center justify-center mx-auto mb-4 border border-blue-100 shadow-xs">
                 <CalendarDays className="w-8 h-8" />
               </div>
-              <h3 className="text-lg font-black text-slate-900 mb-1.5">Chưa Có Sự Kiện Hoặc Workshop Nào</h3>
+              <h3 className="text-lg font-extrabold text-slate-900 mb-1.5">Chưa Có Sự Kiện Hoặc Workshop Nào</h3>
               <p className="text-xs text-slate-500 max-w-md mx-auto font-medium leading-relaxed">
                 Các sự kiện học thuật, workshop chuyên đề và giải đấu mới sẽ sớm được Ban Chủ Nhiệm cập nhật tại đây. Hãy theo dõi thường xuyên nhé!
               </p>

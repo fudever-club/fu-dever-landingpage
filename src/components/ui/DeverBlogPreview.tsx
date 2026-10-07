@@ -213,7 +213,7 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
               <Sparkles className="w-3.5 h-3.5 text-[#0066CC]" />
               <span>BÀI VIẾT NỔI BẬT</span>
             </div>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-950 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-950 tracking-tight">
               Bài Viết Kỹ Thuật Tiêu Biểu
             </h2>
             <p className="text-sm text-slate-600 mt-1 max-w-xl font-medium">
@@ -268,7 +268,7 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
                   <div className="my-5 space-y-3">
                     <Link
                       href={`/blog/${article.slug}`}
-                      className="block text-xl sm:text-2xl font-black text-slate-900 leading-snug hover:text-[#0066CC] transition-colors group/link"
+                      className="block text-xl sm:text-2xl font-extrabold text-slate-900 leading-snug hover:text-[#0066CC] transition-colors group/link"
                     >
                       <span>{article.title}</span>
                       <ArrowUpRight className="inline-block w-5 h-5 ml-1 opacity-0 group-hover/link:opacity-100 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5 transition-all text-[#0066CC]" />
@@ -303,9 +303,9 @@ export default function DeverBlogPreview({ blogs: propBlogs }: DeverBlogPreviewP
                         </div>
                       </div>
                       <div className="min-w-0">
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                        <p className="text-sm font-semibold text-slate-900 truncate">
                           {article.author.name}
-                        </h4>
+                        </p>
                         <p className="text-xs text-slate-500 truncate">
                           {article.date}
                         </p>

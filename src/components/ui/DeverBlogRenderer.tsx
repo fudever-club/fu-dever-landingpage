@@ -641,9 +641,9 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
                   )}
                 </div>
                 <div className="font-sans">
-                  <h4 className="text-sm lg:text-base font-extrabold text-slate-900 font-sans">
+                  <p className="text-sm font-semibold text-slate-900 font-sans">
                     {post.author?.name || "Thành viên DEVER"}
-                  </h4>
+                  </p>
                   <p className="text-xs text-slate-500 font-medium font-sans">
                     {post.author?.role || "Ban Chuyên Môn FU-DEVER"}
                   </p>

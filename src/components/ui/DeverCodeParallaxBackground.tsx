@@ -65,7 +65,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 1,
       content: (
-        <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/25 text-[#0066CC] font-mono text-xs font-black shadow-sm backdrop-blur-xs">
+        <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-500/10 border border-blue-500/25 text-[#0066CC] font-mono text-xs font-extrabold shadow-sm backdrop-blur-xs">
           <Braces className="w-3.5 h-3.5" />
           <span>O(log N)</span>
         </span>
@@ -91,7 +91,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 3,
       content: (
-        <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-600 font-mono text-xs font-black shadow-sm backdrop-blur-xs">
+        <span className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/15 border border-amber-500/30 text-amber-600 font-mono text-xs font-extrabold shadow-sm backdrop-blur-xs">
           <Trophy className="w-3.5 h-3.5 fill-amber-500/30" />
           <span>BEATS 100%</span>
         </span>
@@ -129,7 +129,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 6,
       content: (
-        <span className="px-3 py-1 rounded-xl bg-[#0080FF]/10 border border-[#0080FF]/25 text-[#0066CC] font-mono text-xs font-black shadow-sm backdrop-blur-xs">
+        <span className="px-3 py-1 rounded-xl bg-[#0080FF]/10 border border-[#0080FF]/25 text-[#0066CC] font-mono text-xs font-extrabold shadow-sm backdrop-blur-xs">
           <code>root.left &amp;&amp; root.right</code>
         </span>
       ),
@@ -169,7 +169,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 9,
       content: (
-        <span className="px-2.5 py-1 rounded-lg bg-[#0066CC] text-white font-mono text-[11px] font-black shadow-md">
+        <span className="px-2.5 py-1 rounded-lg bg-[#0066CC] text-white font-mono text-[11px] font-extrabold shadow-md">
           #LeetCode 300
         </span>
       ),
@@ -221,7 +221,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 13,
       content: (
-        <span className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-blue-600/10 border border-blue-600/25 text-[#0066CC] font-mono text-xs font-black backdrop-blur-xs">
+        <span className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-blue-600/10 border border-blue-600/25 text-[#0066CC] font-mono text-xs font-extrabold backdrop-blur-xs">
           <Database className="w-3.5 h-3.5" />
           <span>HashMap&lt;K, V&gt;</span>
         </span>
@@ -258,7 +258,7 @@ export default function DeverCodeParallaxBackground({
     {
       id: 16,
       content: (
-        <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-700 font-mono text-[11px] font-black backdrop-blur-xs">
+        <span className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/10 border border-amber-500/25 text-amber-700 font-mono text-[11px] font-extrabold backdrop-blur-xs">
           <Sparkles className="w-3.5 h-3.5 text-amber-500" />
           <span>Top 1% Global</span>
         </span>

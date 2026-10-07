@@ -132,12 +132,12 @@ export default function AlumniPage() {
           <div className="relative z-10 max-w-3xl space-y-4">
             <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
               <Award className="h-4 w-4 text-amber-300" aria-hidden="true" />
-              <span className="text-xs font-black tracking-wider uppercase text-blue-50">
+              <span className="text-xs font-extrabold tracking-wider uppercase text-blue-50">
                 FU-DEVER ALUMNI NETWORK
               </span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight text-white drop-shadow-sm">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white drop-shadow-sm">
               Mạng Lưới Cựu Thành Viên <br />
               <span className="text-white font-bold">
                 Gen 1 Đến Gen 6 (Hơn 9+ Năm)
@@ -275,7 +275,7 @@ export default function AlumniPage() {
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>Dữ Liệu Đang Được Cập Nhật</span>
               </div>
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 Danh Sách Cựu Thành Viên Đang Cập Nhật
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto font-medium">
@@ -344,7 +344,7 @@ export default function AlumniPage() {
                           {item.name.charAt(0)}
                         </div>
                       )}
-                      <span className="absolute -bottom-1.5 -right-1.5 px-2 py-0.5 rounded-md text-xs font-black bg-[#0066CC] text-white shadow">
+                      <span className="absolute -bottom-1.5 -right-1.5 px-2 py-0.5 rounded-md text-xs font-extrabold bg-[#0066CC] text-white shadow">
                         {item.graduationGen || "Alumni"}
                       </span>
                     </div>
@@ -377,7 +377,7 @@ export default function AlumniPage() {
                   {/* Mentoring Status & Advisory Badges */}
                   <div className="flex flex-wrap items-center gap-2 text-xs pt-1">
                     {item.isAdvisoryBoard && (
-                      <span className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
+                      <span className="inline-flex items-center gap-1 text-xs font-extrabold text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
                         <Crown className="w-3 h-3 text-amber-600" />
                         Ban Cố Vấn CLB
                       </span>

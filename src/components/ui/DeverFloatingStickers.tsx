@@ -50,7 +50,7 @@ export default function DeverFloatingStickers({ className = "" }: DeverFloatingS
 
       {/* Sticker 1: Outer Top Right (Far away from image3) */}
       <div className="absolute top-[8%] right-[2%] animate-sticker-1 opacity-80">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#ff5b57] text-white text-xs font-black border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#ff5b57] text-white text-xs font-extrabold border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
           <Rocket className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>SHIP IT 🚀</span>
         </div>
@@ -58,7 +58,7 @@ export default function DeverFloatingStickers({ className = "" }: DeverFloatingS
 
       {/* Sticker 2: Outer Top Left (Far away from image1) */}
       <div className="absolute top-[8%] left-[2%] animate-sticker-2 opacity-80">
-        <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#12b3a4] text-white text-xs font-mono font-black border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#12b3a4] text-white text-xs font-mono font-extrabold border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d]">
           <Terminal className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>&lt;code&gt;clean&lt;/code&gt;</span>
         </div>
@@ -66,7 +66,7 @@ export default function DeverFloatingStickers({ className = "" }: DeverFloatingS
 
       {/* Sticker 3: Outer Bottom Right (Far away from image4) */}
       <div className="absolute bottom-[6%] right-[2%] animate-sticker-3 opacity-80">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#ffc531] text-[#17140d] text-xs font-black border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d] rotate-3">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#ffc531] text-[#17140d] text-xs font-extrabold border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d] rotate-3">
           <Zap className="w-3.5 h-3.5 fill-[#17140d] stroke-[2]" />
           <span>100% HANDS-ON</span>
         </div>
@@ -74,7 +74,7 @@ export default function DeverFloatingStickers({ className = "" }: DeverFloatingS
 
       {/* Sticker 4: Outer Bottom Left (Far away from image2) */}
       <div className="absolute bottom-[6%] left-[2%] animate-sticker-1 opacity-80">
-        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#6b5be6] text-white text-xs font-black border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d] -rotate-4">
+        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-2xl bg-[#6b5be6] text-white text-xs font-extrabold border-[2px] border-[#17140d] shadow-[2px_2px_0_#17140d] -rotate-4">
           <Trophy className="w-3.5 h-3.5 text-amber-300 stroke-[2.5]" />
           <span>ICPC &amp; HACKATHON</span>
         </div>

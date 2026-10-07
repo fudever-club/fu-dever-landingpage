@@ -434,11 +434,11 @@ function SeasonLeaderboardBoard() {
                           <span
                             className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
                               isTop1
-                                ? "bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 shadow-md font-black"
+                                ? "bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 shadow-md font-extrabold"
                                 : isTop2
-                                ? "bg-slate-300 text-slate-900 font-black"
+                                ? "bg-slate-300 text-slate-900 font-extrabold"
                                 : isTop3
-                                ? "bg-amber-700 text-white font-black"
+                                ? "bg-amber-700 text-white font-extrabold"
                                 : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                             }`}
                           >
@@ -459,7 +459,7 @@ function SeasonLeaderboardBoard() {
                           </div>
                         </div>
                         <div className="text-right shrink-0 pl-2">
-                          <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
+                          <div className="text-xs sm:text-sm font-extrabold text-[#0066CC] dark:text-blue-400 leading-tight">
                             {score} pts
                           </div>
                           <div className="text-xs sm:text-xs text-slate-500 dark:text-slate-400">
@@ -564,7 +564,7 @@ export default function LeaderboardModule({
               Bảng Vinh Danh Thuật Toán • FU-DEVER
             </div>
 
-            <h1 className="text-2xl sm:text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight leading-tight uppercase">
+            <h1 className="text-2xl sm:text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight uppercase">
               BẢNG XẾP HẠNG{" "}
               <span className="text-[#0066CC] dark:text-[#0080FF]">
                 LEETCODE
@@ -598,7 +598,7 @@ export default function LeaderboardModule({
                       imageClassName="border-2 sm:border-4 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800"
                       overlayContent={
                         <div className="w-full p-2 sm:p-3 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-b-2xl text-white text-center">
-                          <span className="w-6 h-6 sm:w-8 sm:h-8 bg-slate-300 text-slate-900 rounded-full inline-flex items-center justify-center font-black text-xs sm:text-sm shadow-md mx-auto mb-1">
+                          <span className="w-6 h-6 sm:w-8 sm:h-8 bg-slate-300 text-slate-900 rounded-full inline-flex items-center justify-center font-extrabold text-xs sm:text-sm shadow-md mx-auto mb-1">
                             2
                           </span>
                           <p className="text-xs sm:text-xs font-bold text-slate-200 truncate">
@@ -636,10 +636,10 @@ export default function LeaderboardModule({
                       imageClassName="border-3 sm:border-4 border-amber-400 dark:border-amber-500 bg-amber-50 dark:bg-slate-800 shadow-2xl shadow-amber-500/30"
                       overlayContent={
                         <div className="w-full p-2 sm:p-4 bg-gradient-to-t from-black/85 via-black/20 to-transparent rounded-b-2xl text-white text-center">
-                          <span className="w-7 h-7 sm:w-9 sm:h-9 bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 rounded-full inline-flex items-center justify-center font-black text-xs sm:text-base shadow-lg mx-auto mb-1 border border-white">
+                          <span className="w-7 h-7 sm:w-9 sm:h-9 bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 rounded-full inline-flex items-center justify-center font-extrabold text-xs sm:text-base shadow-lg mx-auto mb-1 border border-white">
                             1
                           </span>
-                          <p className="text-xs sm:text-sm font-black text-amber-200 truncate">
+                          <p className="text-xs sm:text-sm font-extrabold text-amber-200 truncate">
                             {getFullName(user1?.user)}
                           </p>
                           <p className="text-xs sm:text-xs font-bold text-yellow-300">
@@ -674,7 +674,7 @@ export default function LeaderboardModule({
                       imageClassName="border-2 sm:border-4 border-amber-700/60 dark:border-amber-800 bg-slate-100 dark:bg-slate-800"
                       overlayContent={
                         <div className="w-full p-2 sm:p-3 bg-gradient-to-t from-black/80 via-black/20 to-transparent rounded-b-2xl text-white text-center">
-                          <span className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-black text-xs sm:text-sm shadow-md mx-auto mb-1 border border-amber-400">
+                          <span className="w-6 h-6 sm:w-8 sm:h-8 bg-amber-700 text-white rounded-full inline-flex items-center justify-center font-extrabold text-xs sm:text-sm shadow-md mx-auto mb-1 border border-amber-400">
                             3
                           </span>
                           <p className="text-xs sm:text-xs font-bold text-slate-200 truncate">
@@ -790,11 +790,11 @@ export default function LeaderboardModule({
                       <span
                         className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full font-bold text-xs flex items-center justify-center shrink-0 ${
                           isTop1
-                            ? "bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 shadow-md font-black"
+                            ? "bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 shadow-md font-extrabold"
                             : isTop2
-                            ? "bg-slate-300 text-slate-900 font-black"
+                            ? "bg-slate-300 text-slate-900 font-extrabold"
                             : isTop3
-                            ? "bg-amber-700 text-white font-black"
+                            ? "bg-amber-700 text-white font-extrabold"
                             : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
                         }`}
                       >
@@ -825,7 +825,7 @@ export default function LeaderboardModule({
 
                     {/* Right: Points & Solved Count */}
                     <div className="text-right shrink-0 pl-2">
-                      <div className="text-xs sm:text-sm font-black text-[#0066CC] dark:text-blue-400 leading-tight">
+                      <div className="text-xs sm:text-sm font-extrabold text-[#0066CC] dark:text-blue-400 leading-tight">
                         {getPoints(entry)} pts
                       </div>
                       <div className="text-xs sm:text-xs text-slate-500 dark:text-slate-400">

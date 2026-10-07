@@ -55,7 +55,7 @@ const Member = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="w-16 h-16 rounded-2xl bg-rose-50 text-rose-500 border border-rose-100 flex items-center justify-center mx-auto">
             <UserX className="w-8 h-8" />
           </div>
-          <h2 className="text-xl font-black text-slate-900">Không Tìm Thấy Thành Viên</h2>
+          <h2 className="text-xl font-extrabold text-slate-900">Không Tìm Thấy Thành Viên</h2>
           <p className="text-xs text-slate-500 leading-relaxed font-medium">
             Hồ sơ thành viên này không tồn tại hoặc đã được chuyển sang chế độ riêng tư.
           </p>

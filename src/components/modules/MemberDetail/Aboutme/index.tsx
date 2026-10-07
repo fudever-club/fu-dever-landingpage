@@ -11,7 +11,7 @@ const AboutMe = ({ user }: any) => {
           Giới thiệu bản thân
         </h2>
         <div
-          className=" font-regular xl:text-[18px] lg:text-[16px] sm:text-[14px] leading-[150%]"
+          className=" font-normal xl:text-[18px] lg:text-[16px] sm:text-[14px] leading-[150%]"
           dangerouslySetInnerHTML={{
             __html: sanitizeHtml(`<div>${user?.description ?? "Chưa có thông tin"}</div>`),
           }}
@@ -19,47 +19,47 @@ const AboutMe = ({ user }: any) => {
       </div>
       <div className="grid lg:grid-cols-2 sm:grid-cols-3 xl:gap-[20px] lg:gap-[10px] sm:gap-[8px]">
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Công việc:
           </h2>
-          <p className="font-bold xl:text-[18px] lg:text-[16px] sm:text-[14px] text-[#0066CC]">
+          <p className="text-base font-bold text-[#0066CC]">
             {user?.job ?? "Chưa có vị trí cụ thể"}
           </p>
         </span>
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Làm việc tại:
           </h2>
-          <p className="font-bold xl:text-[18px] lg:text-[16px] sm:text-[14px] text-[#0066CC]">
+          <p className="text-base font-bold text-[#0066CC]">
             {user?.workplace ?? "Chưa từng làm việc"}
           </p>
         </span>
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Thế hệ:
           </h2>
-          <p className="font-bold xl:text-[18px] lg:text-[16px] sm:text-[14px] text-[#0066CC]">
+          <p className="text-base font-bold text-[#0066CC]">
             {user?.gen ? `Gen ${user?.gen}` : "Chưa biết"}
           </p>
         </span>
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Trường học:
           </h2>
-          <p className="font-bold xl:text-[18px] lg:text-[16px] sm:text-[14px] text-[#0066CC]">
+          <p className="text-base font-bold text-[#0066CC]">
             {user?.school ?? "chưa có thông tin"}
           </p>
         </span>
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Chuyên ngành:
           </h2>
-          <p className="font-bold xl:text-[18px] lg:text-[16px] sm:text-[14px] text-[#0066CC]">
+          <p className="text-base font-bold text-[#0066CC]">
             {user?.majorId?.name ?? "Chưa có thông tin"}
           </p>
         </span>
         <span className="w-fit">
-          <h2 className="font-regular xl:text-[20px] lg:text-[18px] md:text-[16px] sm:text-[14px]">
+          <h2 className="text-sm font-semibold">
             Ban hoạt động:
           </h2>
           <span className="flex flex-col gap-[4px]">
