@@ -176,7 +176,7 @@ export default function MentorSection() {
   return (
     <section
       aria-labelledby="mentor-showcase-heading"
-      className="mx-auto mt-16 max-w-[1440px] px-5 lg:px-20"
+      className="mx-auto mt-12 max-w-[1440px] px-5 lg:px-20"
     >
       <div className="overflow-hidden rounded-3xl border border-blue-400/30 bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] p-8 text-white shadow-2xl lg:p-12">
         <div className="max-w-3xl space-y-4">

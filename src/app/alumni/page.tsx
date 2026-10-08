@@ -8,19 +8,18 @@ import MentorSection from "@/src/components/modules/Alumni/MentorSection";
 import {
   Award,
   Building2,
-  CheckCircle2,
-  ExternalLink,
-  GraduationCap,
-  Globe,
-  MessageSquareQuote,
   Search,
   Sparkles,
   FolderOpen,
   RefreshCw,
   AlertTriangle,
   ArrowRight,
-  ShieldCheck,
+  GraduationCap,
+  MessageSquareQuote,
+  Globe,
+  ExternalLink,
   Crown,
+  Users,
 } from "lucide-react";
 
 interface Alumnus {
@@ -39,17 +38,63 @@ interface Alumnus {
   isPublished?: boolean;
 }
 
+const TIMELINE_GENS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
 const GEN_OPTIONS = [
   "Tất Cả Thế Hệ",
-  "Gen 1",
-  "Gen 2",
-  "Gen 3",
-  "Gen 4",
-  "Gen 5",
-  "Gen 6",
-  "Gen 7",
-  "Gen 8",
+  ...TIMELINE_GENS.map((n) => `Gen ${n}`),
 ];
+
+function parseGenNumber(value?: string): number | null {
+  if (!value) return null;
+  const match = value.match(/gen\s*(\d+)/i);
+  if (!match) return null;
+  const n = Number.parseInt(match[1], 10);
+  return Number.isFinite(n) && n >= 1 && n <= 10 ? n : null;
+}
+
+/**
+ * Niên khóa ước tính theo số thứ tự Gen (mỗi Gen ≈ 1 năm, bắt đầu từ 2016).
+ * Chỉ mang tính tham chiếu vì API hiện chưa trả về năm tốt nghiệp.
+ */
+function genYearRange(gen: number): string {
+  const start = 2015 + gen;
+  return `${start}–${start + 1}`;
+}
+
+function faceAlt(item: Alumnus): string {
+  const role = item.headline || item.workplace || "cựu thành viên FU-DEVER";
+  return `${item.name} – ${role}`;
+}
+
+interface TopCompany {
+  name: string;
+  count: number;
+}
+
+function topCompaniesOf(members: Alumnus[], limit = 3): TopCompany[] {
+  const counts = new Map<string, { name: string; count: number }>();
+  for (const m of members) {
+    const raw = m.workplace?.trim();
+    if (!raw) continue;
+    const key = raw.toLowerCase();
+    const entry = counts.get(key);
+    if (entry) {
+      entry.count += 1;
+    } else {
+      counts.set(key, { name: raw, count: 1 });
+    }
+  }
+  return Array.from(counts.values())
+    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name))
+    .slice(0, limit);
+}
+
+function facesOf(members: Alumnus[], limit = 3): Alumnus[] {
+  const withAvatar = members.filter((m) => m.avatar?.trim());
+  const withoutAvatar = members.filter((m) => !m.avatar?.trim());
+  return [...withAvatar, ...withoutAvatar].slice(0, limit);
+}
 
 export default function AlumniPage() {
   const [alumniList, setAlumniList] = useState<Alumnus[]>([]);
@@ -75,6 +120,38 @@ export default function AlumniPage() {
     const dynamicCompanies = Array.from(uniqueMap.values()).sort((a, b) => a.localeCompare(b));
     return ["Tất Cả Doanh Nghiệp", ...dynamicCompanies];
   }, [alumniList]);
+
+  // Real stats counted from API data
+  const stats = useMemo(() => {
+    const genSet = new Set<string>();
+    for (const item of alumniList) {
+      const gen = item.graduationGen?.trim().toLowerCase();
+      if (gen) genSet.add(gen);
+    }
+    return {
+      genCount: genSet.size,
+      memberCount: alumniList.length,
+      companyCount: companyOptions.length > 0 ? companyOptions.length - 1 : 0,
+    };
+  }, [alumniList, companyOptions]);
+
+  // Timeline rows Gen 1 → Gen 10, grouped from real data
+  const timelineRows = useMemo(
+    () =>
+      TIMELINE_GENS.map((gen) => {
+        const members = alumniList.filter((item) => parseGenNumber(item.graduationGen) === gen);
+        return {
+          gen,
+          label: `Gen ${gen}`,
+          years: genYearRange(gen),
+          members,
+          count: members.length,
+          topCompanies: topCompaniesOf(members, 3),
+          faces: facesOf(members, 3),
+        };
+      }),
+    [alumniList],
+  );
 
   const fetchAlumni = async () => {
     setIsLoading(true);
@@ -104,6 +181,15 @@ export default function AlumniPage() {
     fetchAlumni();
   }, []);
 
+  const scrollToDirectory = () => {
+    document.getElementById("alumni-directory")?.scrollIntoView();
+  };
+
+  const handleViewGen = (genLabel: string) => {
+    setSelectedGen(genLabel);
+    scrollToDirectory();
+  };
+
   const filteredAlumni = alumniList.filter((item) => {
     const matchSearch =
       item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -122,62 +208,182 @@ export default function AlumniPage() {
   });
 
   return (
-    <div className="min-h-screen pt-4 pb-20 bg-[#F8FCFF]">
-      {/* Hero Banner */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-12">
-        <div className="relative bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] rounded-3xl p-8 lg:p-12 text-white shadow-2xl overflow-hidden border border-blue-400/30">
-          <div className="absolute top-0 right-1/4 w-96 h-96 bg-blue-400/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-cyan-400/15 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen pt-4 pb-12 bg-[#F8FCFF]">
+      {/* Compact white hero */}
+      <section aria-labelledby="alumni-hero-heading" className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-8">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <p className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-100 px-3 py-1 text-xs font-extrabold uppercase tracking-wider text-[#004C99]">
+            <span aria-hidden="true" className="h-2 w-2 rounded-full bg-[#0066CC]" />
+            FU-DEVER Alumni Network
+          </p>
+          <h1 id="alumni-hero-heading" className="mt-4 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">
+            Timeline các thế hệ cựu thành viên
+          </h1>
+          <p className="mt-2 text-sm font-medium leading-relaxed text-slate-600">
+            Hành trình Gen 1 đến Gen 10 của FU-DEVER và nơi các anh chị đang làm việc.
+          </p>
+          <p aria-live="polite" className="mt-4 text-sm font-semibold text-slate-700">
+            {isLoading ? (
+              <span className="text-slate-400">Đang tổng hợp số liệu từ hồ sơ cựu thành viên…</span>
+            ) : (
+              <>
+                <strong className="font-extrabold text-[#0066CC]">{stats.genCount}</strong> thế hệ
+                {" · "}
+                <strong className="font-extrabold text-[#0066CC]">{stats.memberCount}</strong> anh chị
+                {" · "}
+                <strong className="font-extrabold text-[#0066CC]">{stats.companyCount}</strong> công ty
+              </>
+            )}
+          </p>
+        </div>
+      </section>
 
-          <div className="relative z-10 max-w-3xl space-y-4">
-            <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 shadow-inner">
-              <Award className="h-4 w-4 text-amber-300" aria-hidden="true" />
-              <span className="text-xs font-extrabold tracking-wider uppercase text-blue-50">
-                FU-DEVER ALUMNI NETWORK
-              </span>
+      {/* Generation timeline Gen 1 → Gen 10 */}
+      <section aria-labelledby="alumni-timeline-heading" className="max-w-[1440px] mx-auto px-5 lg:px-20 mb-8">
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm">
+          <h2 id="alumni-timeline-heading" className="text-base font-extrabold text-slate-900">
+            Trục thế hệ Gen 1 → Gen 10
+          </h2>
+          <p className="mt-1 text-xs font-medium text-slate-500">
+            Niên khóa ước tính theo thứ tự thế hệ (mỗi Gen ≈ 1 năm, từ 2016) — chỉ mang tính tham chiếu.
+          </p>
+
+          {isLoading ? (
+            <div className="mt-6 space-y-4" aria-hidden="true">
+              {[1, 2, 3].map((n) => (
+                <div key={n} className="flex items-center gap-4 animate-pulse motion-reduce:animate-none">
+                  <div className="h-11 w-11 rounded-full bg-slate-200" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 w-1/3 rounded bg-slate-200" />
+                    <div className="h-3 w-1/2 rounded bg-slate-100" />
+                  </div>
+                </div>
+              ))}
             </div>
+          ) : (
+            <ol className="relative mt-6 ml-2 space-y-4 border-l-2 border-slate-200 pl-6">
+              {timelineRows.map((row) => {
+                const hasData = row.count > 0;
+                return (
+                  <li key={row.gen} className="relative">
+                    <span
+                      aria-hidden="true"
+                      className={`absolute -left-[33px] top-6 h-4 w-4 rounded-full border-2 ${
+                        hasData ? "border-[#0066CC] bg-[#0066CC]" : "border-slate-300 bg-white"
+                      }`}
+                    />
+                    <article
+                      aria-label={`${row.label} (${row.years}): ${hasData ? `${row.count} anh chị` : "đang cập nhật"}`}
+                      className={`rounded-2xl border p-4 transition-colors motion-reduce:transition-none ${
+                        hasData
+                          ? "border-slate-200 bg-slate-50"
+                          : "border-dashed border-slate-200 bg-white opacity-70"
+                      }`}
+                    >
+                      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                        <h3 className="text-sm font-extrabold text-slate-900">{row.label}</h3>
+                        <span className="text-xs font-semibold text-slate-500">{row.years}</span>
+                        {hasData ? (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-blue-50 border border-blue-100 px-2 py-0.5 text-xs font-bold text-[#004C99]">
+                            <Users className="h-3 w-3" aria-hidden="true" />
+                            {row.count} anh chị
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 text-xs font-bold text-slate-500">
+                            đang cập nhật
+                          </span>
+                        )}
+                      </div>
 
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight text-white drop-shadow-sm">
-              Mạng Lưới Cựu Thành Viên <br />
-              <span className="text-white font-bold">
-                Gen 1 Đến Gen 6 (Hơn 9+ Năm)
-              </span>
-            </h1>
-
-            <p className="text-blue-100 text-sm lg:text-base leading-relaxed font-medium">
-              Vinh danh các thế hệ cựu thành viên xuất sắc từ Gen 1 đến Gen 6 của FU-DEVER hiện đang giữ các vị trí Tech Lead, Senior Engineer và chuyên gia công nghệ tại các tập đoàn hàng đầu thế giới và Việt Nam.
-            </p>
-
-            <div className="pt-2 flex flex-wrap items-center gap-3 text-xs font-extrabold text-blue-100">
-              <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                <CheckCircle2 className="h-3.5 w-3.5 text-amber-300" /> 9+ Năm Phát Triển
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                <CheckCircle2 className="h-3.5 w-3.5 text-cyan-300" /> Thế Hệ Gen 1 - Gen 6
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/10 px-3.5 py-1.5 rounded-xl border border-white/20">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" /> Sẵn Sàng Mentoring
-              </span>
-            </div>
-          </div>
+                      {hasData ? (
+                        <div className="mt-3 space-y-3">
+                          {row.topCompanies.length > 0 && (
+                            <p className="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs font-semibold text-slate-600">
+                              <Building2 className="h-3.5 w-3.5 text-[#0066CC]" aria-hidden="true" />
+                              <span className="sr-only">Nơi làm việc nổi bật: </span>
+                              {row.topCompanies.map((c, idx) => (
+                                <span key={c.name}>
+                                  {c.name}
+                                  <span className="text-slate-400"> ({c.count})</span>
+                                  {idx < row.topCompanies.length - 1 && <span aria-hidden="true"> · </span>}
+                                </span>
+                              ))}
+                            </p>
+                          )}
+                          <div className="flex flex-wrap items-center gap-3">
+                            <div className="flex items-center" aria-label={`Gương mặt tiêu biểu ${row.label}`}>
+                              {row.faces.map((m, fidx) => (
+                                m.avatar ? (
+                                  <Image
+                                    key={m._id}
+                                    src={m.avatar}
+                                    alt={faceAlt(m)}
+                                    title={m.name}
+                                    width={44}
+                                    height={44}
+                                    sizes="44px"
+                                    loading="lazy"
+                                    className={`h-11 w-11 rounded-full object-cover border-2 border-white shadow-sm ${fidx > 0 ? "-ml-3" : ""}`}
+                                  />
+                                ) : (
+                                  <span
+                                    key={m._id}
+                                    title={m.name}
+                                    role="img"
+                                    aria-label={faceAlt(m)}
+                                    className={`flex h-11 w-11 items-center justify-center rounded-full bg-[#0066CC] text-sm font-bold text-white border-2 border-white shadow-sm ${fidx > 0 ? "-ml-3" : ""}`}
+                                  >
+                                    {m.name.trim().charAt(0).toUpperCase()}
+                                  </span>
+                                )
+                              ))}
+                              {row.count > row.faces.length && (
+                                <span className="flex h-11 w-11 -ml-3 items-center justify-center rounded-full bg-slate-200 text-xs font-extrabold text-slate-600 border-2 border-white">
+                                  +{row.count - row.faces.length}
+                                </span>
+                              )}
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => handleViewGen(row.label)}
+                              aria-label={`Lọc danh sách theo ${row.label}`}
+                              className="inline-flex items-center gap-1 min-h-[44px] px-3 rounded-xl text-xs font-extrabold text-[#0066CC] hover:bg-blue-50 active:scale-[0.98] transition-all motion-reduce:transition-none"
+                            >
+                              Xem {row.label}
+                              <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <p className="mt-2 text-xs font-medium text-slate-500">
+                          Ban Chủ Nhiệm đang tổng hợp và xác thực hồ sơ {row.label} — quay lại sau nhé.
+                        </p>
+                      )}
+                    </article>
+                  </li>
+                );
+              })}
+            </ol>
+          )}
         </div>
       </section>
 
       {/* Main Content & Filters */}
-      <section className="max-w-[1440px] mx-auto px-5 lg:px-20 space-y-8">
+      <section id="alumni-directory" aria-label="Danh sách cựu thành viên" className="max-w-[1440px] mx-auto px-5 lg:px-20 space-y-6 scroll-mt-4">
         {/* Controls: Search, Gen Tabs & Company Radar */}
         <div className="bg-white rounded-3xl p-6 shadow-sm border border-blue-100 space-y-4">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
             {/* Gen Tabs */}
-            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none">
+            <div className="flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 scrollbar-none" role="group" aria-label="Lọc theo thế hệ">
               {GEN_OPTIONS.map((gen) => (
                 <button
                   key={gen}
                   type="button"
                   onClick={() => setSelectedGen(gen)}
-                  className={`px-4 py-2 rounded-xl text-xs font-extrabold whitespace-nowrap transition-all duration-200 ${
+                  aria-pressed={selectedGen === gen}
+                  className={`px-4 min-h-[44px] inline-flex items-center rounded-xl text-xs font-extrabold whitespace-nowrap transition-all duration-200 motion-reduce:transition-none ${
                     selectedGen === gen
-                      ? "bg-[#0066CC] text-white shadow-md shadow-blue-600/20 scale-[1.02]"
+                      ? "bg-[#0066CC] text-white shadow-md shadow-blue-600/20 scale-[1.02] motion-reduce:transform-none"
                       : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                   }`}
                 >
@@ -188,13 +394,14 @@ export default function AlumniPage() {
 
             {/* Search Input */}
             <div className="relative w-full lg:w-72">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" aria-hidden="true" />
               <input
                 type="text"
                 placeholder="Tìm tên, công ty, vị trí..."
+                aria-label="Tìm cựu thành viên theo tên, công ty, vị trí"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:bg-white transition-all text-slate-900"
+                className="w-full min-h-[44px] pl-10 pr-4 py-2 text-xs font-semibold bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0066CC] focus:bg-white transition-all text-slate-900"
               />
             </div>
           </div>
@@ -203,14 +410,15 @@ export default function AlumniPage() {
           {companyOptions.length > 1 && (
             <div className="pt-2 border-t border-slate-100 flex items-center gap-2 overflow-x-auto scrollbar-none text-xs">
               <span className="text-slate-400 font-bold flex items-center gap-1 shrink-0">
-                <Building2 className="w-3.5 h-3.5 text-[#0066CC]" /> Doanh nghiệp:
+                <Building2 className="w-3.5 h-3.5 text-[#0066CC]" aria-hidden="true" /> Doanh nghiệp:
               </span>
               {companyOptions.map((comp) => (
                 <button
                   key={comp}
                   type="button"
                   onClick={() => setSelectedCompany(comp)}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+                  aria-pressed={selectedCompany === comp}
+                  className={`px-3 min-h-[44px] inline-flex items-center rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer motion-reduce:transition-none ${
                     selectedCompany === comp
                       ? "bg-blue-100 text-[#004C99] border border-blue-300 shadow-xs"
                       : "text-slate-600 hover:bg-slate-100"
@@ -249,16 +457,17 @@ export default function AlumniPage() {
         {!isLoading && isError && (
           <div className="p-8 rounded-2xl bg-red-50 border border-red-200 text-center space-y-4 max-w-lg mx-auto my-8">
             <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
-              <AlertTriangle className="w-6 h-6" />
+              <AlertTriangle className="w-6 h-6" aria-hidden="true" />
             </div>
             <h3 className="text-base font-bold text-red-700">
               Không thể tải danh sách cựu thành viên
             </h3>
             <button
+              type="button"
               onClick={fetchAlumni}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] text-white rounded-xl transition-all shadow-md"
+              className="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] text-white rounded-xl transition-all motion-reduce:transition-none shadow-md"
             >
-              <RefreshCw className="w-4 h-4" /> Thử Lại
+              <RefreshCw className="w-4 h-4" aria-hidden="true" /> Thử Lại
             </button>
           </div>
         )}
@@ -267,35 +476,35 @@ export default function AlumniPage() {
         {!isLoading && !isError && alumniList.length === 0 && (
           <div className="relative rounded-3xl bg-gradient-to-b from-white to-blue-50/50 border border-blue-100 p-12 text-center max-w-2xl mx-auto shadow-sm space-y-6">
             <div className="w-20 h-20 rounded-3xl bg-blue-50 text-[#0066CC] border border-blue-200/80 flex items-center justify-center mx-auto shadow-inner">
-              <GraduationCap className="w-10 h-10" />
+              <GraduationCap className="w-10 h-10" aria-hidden="true" />
             </div>
 
             <div className="space-y-2">
               <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100/70 text-[#0066CC] text-xs font-bold">
-                <Sparkles className="w-3.5 h-3.5" />
+                <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
                 <span>Dữ Liệu Đang Được Cập Nhật</span>
               </div>
               <h3 className="text-xl sm:text-2xl font-extrabold text-slate-900">
                 Danh Sách Cựu Thành Viên Đang Cập Nhật
               </h3>
               <p className="text-sm text-slate-600 leading-relaxed max-w-md mx-auto font-medium">
-                Ban Chủ Nhiệm đang trong quá trình tổng hợp và xác thực hồ sơ chính thức của các thế hệ Cựu thành viên FU-DEVER (Gen 1 – Gen 6).
+                Ban Chủ Nhiệm đang trong quá trình tổng hợp và xác thực hồ sơ chính thức của các thế hệ Cựu thành viên FU-DEVER (Gen 1 – Gen 10).
               </p>
             </div>
 
             <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
               <Link
                 href="/activity"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold shadow-md transition-all active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl bg-[#0066CC] hover:bg-[#004C99] text-white text-xs font-bold shadow-md transition-all motion-reduce:transition-none active:scale-[0.98] motion-reduce:transform-none"
               >
                 <span>Khám Phá Hoạt Động CLB</span>
-                <ArrowRight className="w-3.5 h-3.5" />
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
               </Link>
               <Link
                 href="/hall-of-fame"
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 shadow-sm transition-all active:scale-[0.98]"
+                className="inline-flex items-center gap-2 px-5 py-2.5 min-h-[44px] rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold border border-slate-200 shadow-sm transition-all motion-reduce:transition-none active:scale-[0.98] motion-reduce:transform-none"
               >
-                <Award className="w-3.5 h-3.5 text-[#0066CC]" />
+                <Award className="w-3.5 h-3.5 text-[#0066CC]" aria-hidden="true" />
                 <span>Bảng Vàng Hall of Fame</span>
               </Link>
             </div>
@@ -306,7 +515,7 @@ export default function AlumniPage() {
         {!isLoading && !isError && alumniList.length > 0 && filteredAlumni.length === 0 && (
           <div className="p-12 rounded-3xl bg-white border border-dashed border-slate-300 text-center space-y-3 my-8 shadow-sm">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto">
-              <FolderOpen className="w-6 h-6" />
+              <FolderOpen className="w-6 h-6" aria-hidden="true" />
             </div>
             <h3 className="text-base font-bold text-slate-800">
               Không tìm thấy cựu thành viên phù hợp với bộ lọc
@@ -323,7 +532,7 @@ export default function AlumniPage() {
             {filteredAlumni.map((item) => (
               <div
                 key={item._id}
-                className="group bg-white rounded-3xl p-6 border border-blue-100/80 hover:border-[#0066CC] shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1"
+                className="group bg-white rounded-3xl p-6 border border-blue-100/80 hover:border-[#0066CC] shadow-sm hover:shadow-xl transition-all duration-300 motion-reduce:transition-none flex flex-col justify-between hover:-translate-y-1 motion-reduce:transform-none"
               >
                 <div className="space-y-4">
                   {/* Top: Avatar & Basic Info */}
@@ -332,7 +541,7 @@ export default function AlumniPage() {
                       {item.avatar ? (
                         <Image
                           src={item.avatar}
-                          alt={item.name}
+                          alt={faceAlt(item)}
                           width={64}
                           height={64}
                           sizes="64px"
@@ -340,7 +549,7 @@ export default function AlumniPage() {
                           className="w-16 h-16 rounded-2xl object-cover border-2 border-blue-100 shadow-sm"
                         />
                       ) : (
-                        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0066CC] to-[#004C99] flex items-center justify-center text-white text-xl font-bold shadow-sm">
+                        <div aria-hidden="true" className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0066CC] to-[#004C99] flex items-center justify-center text-white text-xl font-bold shadow-sm">
                           {item.name.charAt(0)}
                         </div>
                       )}
@@ -350,7 +559,7 @@ export default function AlumniPage() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors truncate">
+                      <h3 className="text-base font-extrabold text-slate-900 group-hover:text-[#0066CC] transition-colors motion-reduce:transition-none truncate">
                         {item.name}
                       </h3>
                       <p className="text-xs font-semibold text-slate-600 truncate">
@@ -358,7 +567,7 @@ export default function AlumniPage() {
                       </p>
                       {item.workplace && (
                         <span className="inline-flex items-center gap-1 mt-1 text-xs font-bold text-[#0066CC] bg-blue-50 px-2 py-0.5 rounded-md">
-                          <Building2 className="w-3 h-3" /> {item.workplace}
+                          <Building2 className="w-3 h-3" aria-hidden="true" /> {item.workplace}
                         </span>
                       )}
                     </div>
@@ -367,7 +576,7 @@ export default function AlumniPage() {
                   {/* Spotlight Quote */}
                   {item.quote && (
                     <div className="bg-slate-50 border border-slate-100 rounded-2xl p-3.5 relative">
-                      <MessageSquareQuote className="w-4 h-4 text-[#0066CC]/40 absolute top-2 right-2" />
+                      <MessageSquareQuote className="w-4 h-4 text-[#0066CC]/40 absolute top-2 right-2" aria-hidden="true" />
                       <p className="text-xs text-slate-600 font-medium italic leading-relaxed pr-4">
                         &quot;{item.quote}&quot;
                       </p>
@@ -378,12 +587,12 @@ export default function AlumniPage() {
                   <div className="flex flex-wrap items-center gap-2 text-xs pt-1">
                     {item.isAdvisoryBoard && (
                       <span className="inline-flex items-center gap-1 text-xs font-extrabold text-amber-800 bg-amber-100/90 px-2.5 py-0.5 rounded-full border border-amber-300 shadow-sm">
-                        <Crown className="w-3 h-3 text-amber-600" />
+                        <Crown className="w-3 h-3 text-amber-600" aria-hidden="true" />
                         Ban Cố Vấn CLB
                       </span>
                     )}
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse motion-reduce:animate-none" />
+                      <span aria-hidden="true" className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse motion-reduce:animate-none" />
                       Sẵn sàng Mentoring OJT
                     </span>
                   </div>
@@ -406,11 +615,11 @@ export default function AlumniPage() {
                     href={item.profileUrl || "https://linkedin.com"}
                     target="_blank"
                     rel="noreferrer"
-                    className="w-full min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] active:scale-[0.98] text-white shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full min-h-[44px] py-2.5 px-4 rounded-xl text-xs font-extrabold bg-[#0066CC] hover:bg-[#004C99] active:scale-[0.98] motion-reduce:transform-none text-white shadow-md shadow-blue-600/20 transition-all motion-reduce:transition-none flex items-center justify-center gap-2"
                   >
-                    <Globe className="h-3.5 w-3.5" />
+                    <Globe className="h-3.5 w-3.5" aria-hidden="true" />
                     <span>Kết Nối LinkedIn &amp; Hỏi Đáp</span>
-                    <ExternalLink className="h-3 w-3 opacity-70" />
+                    <ExternalLink className="h-3 w-3 opacity-70" aria-hidden="true" />
                   </a>
                 </div>
               </div>
