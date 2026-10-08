@@ -272,6 +272,41 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
   const renderParsedContent = (rawText: string) => {
     if (!rawText) return <p className="text-slate-500 font-sans">Nội dung bài viết đang được cập nhật.</p>;
 
+    // Inline formatting: **bold**, *italic*, `code`, [text](url).
+    // The backend sanitize allowlist keeps these characters as plain text,
+    // so the renderer must convert them (previously showed literally).
+    const renderInline = (text: string, keyPrefix: string): React.ReactNode[] => {
+      const parts: React.ReactNode[] = [];
+      const pattern = /(\*\*.+?\*\*|\*[^*]+?\*|`[^`]+?`|\[[^\]]+?\]\([^)]+?\))/g;
+      let lastIndex = 0;
+      let match: RegExpExecArray | null;
+      let key = 0;
+      const pushText = (chunk: string) => {
+        if (chunk) parts.push(<React.Fragment key={`${keyPrefix}-${key++}`}>{chunk}</React.Fragment>);
+      };
+      while ((match = pattern.exec(text)) !== null) {
+        pushText(text.slice(lastIndex, match.index));
+        const token = match[0];
+        if (token.startsWith("**")) {
+          parts.push(<strong key={`${keyPrefix}-${key++}`} className="font-bold text-slate-900">{token.slice(2, -2)}</strong>);
+        } else if (token.startsWith("`")) {
+          parts.push(<code key={`${keyPrefix}-${key++}`} className="rounded bg-slate-100 px-1.5 py-0.5 font-mono text-[13px] text-[#004C99]">{token.slice(1, -1)}</code>);
+        } else if (token.startsWith("[")) {
+          const linkMatch = token.match(/^\[([^\]]+)\]\(([^)]+)\)$/);
+          if (linkMatch) {
+            parts.push(<a key={`${keyPrefix}-${key++}`} href={linkMatch[2]} target="_blank" rel="noopener noreferrer" className="font-semibold text-[#0066CC] underline decoration-blue-200 underline-offset-2 hover:text-[#004C99]">{linkMatch[1]}</a>);
+          } else {
+            pushText(token);
+          }
+        } else {
+          parts.push(<em key={`${keyPrefix}-${key++}`}>{token.slice(1, -1)}</em>);
+        }
+        lastIndex = match.index + token.length;
+      }
+      pushText(text.slice(lastIndex));
+      return parts;
+    };
+
     const lines = rawText.split("\n");
     const output: React.ReactNode[] = [];
     let inCode = false;
@@ -280,6 +315,32 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
 
     let inTable = false;
     let tableRows: string[][] = [];
+
+    // Consecutive list items are collected and wrapped in a single <ul>/<ol>
+    // so numbering never continues across sections and bullets stay grouped.
+    let listItems: { ordered: boolean; content: string }[] = [];
+    let listOrdered = false;
+
+    const flushList = (keyIndex: number) => {
+      if (listItems.length > 0) {
+        const ListTag = listOrdered ? "ol" : "ul";
+        output.push(
+          <ListTag
+            key={`list-${keyIndex}`}
+            className={`ml-6 my-3 space-y-1.5 font-sans text-[15px] sm:text-base ${
+              listOrdered ? "list-decimal" : "list-disc"
+            }`}
+          >
+            {listItems.map((item, itemIndex) => (
+              <li key={itemIndex} className="text-slate-700 leading-relaxed font-normal">
+                {renderInline(item.content, `li-${keyIndex}-${itemIndex}`)}
+              </li>
+            ))}
+          </ListTag>,
+        );
+        listItems = [];
+      }
+    };
 
     const flushTable = (keyIndex: number) => {
       if (tableRows.length > 0) {
@@ -293,6 +354,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
       // Code block start/end
       if (line.trim().startsWith("```")) {
         flushTable(index);
+        flushList(index);
         if (inCode) {
           output.push(
             <CodeBlockWithCopy
@@ -318,6 +380,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
 
       // Markdown Table (| col1 | col2 |)
       if (line.trim().startsWith("|") && line.trim().endsWith("|")) {
+        flushList(index);
         // Skip separator row (|---|---|)
         if (/^\|[\s\-:]+\|/.test(line.trim())) {
           return;
@@ -334,7 +397,8 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
         flushTable(index);
       }
 
-      // Headers with smooth scroll anchors
+      // Headers with smooth scroll anchors (close any open list first)
+      flushList(index);
       if (line.startsWith("# ")) {
         const text = line.slice(2);
         const id = text
@@ -392,6 +456,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
       }
 
       // Callouts / Alerts
+      flushList(index);
       if (
         line.startsWith("> [!NOTE]") ||
         line.startsWith("> [!TIP]") ||
@@ -435,6 +500,7 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
       }
 
       // Blockquotes
+      flushList(index);
       if (line.startsWith("> ")) {
         output.push(
           <blockquote
@@ -454,6 +520,8 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
 
       const imgMatch = mdImgMatch || htmlImgMatch || directUrlMatch;
       if (imgMatch) {
+        flushList(index);
+        flushTable(index);
         const altText = mdImgMatch ? mdImgMatch[1] : "Hình ảnh minh họa";
         const imgSrc = mdImgMatch ? mdImgMatch[2] : htmlImgMatch ? htmlImgMatch[1] : line.trim();
 
@@ -462,16 +530,33 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
             key={index}
             className="my-6 rounded-2xl overflow-hidden border border-slate-200 shadow-md bg-white font-sans"
           >
-            {/* TODO(allowlist): markdown body images keep <img> — author-pasted
-                URLs can point at any host outside next.config.mjs
-                remotePatterns; converting would return 400 for those hosts. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={imgSrc}
-              alt={altText || post.title}
-              className="w-full max-h-[480px] object-cover"
-              loading="lazy"
-            />
+            {/* Served via Next optimizer (R2 is allowlisted): browsers that
+                cannot reach the storage origin still see the image. Plain
+                <img> is kept only for non-allowlisted author-pasted hosts. */}
+            {imgSrc.startsWith("https://dever-backend-production.up.railway.app") ? (
+              <Image
+                src={imgSrc}
+                alt={altText || post.title}
+                width={1200}
+                height={630}
+                sizes="(max-width: 1024px) 100vw, 768px"
+                loading="lazy"
+                className="w-full h-auto"
+              />
+            ) : (
+              <>
+                {/* TODO(allowlist): markdown body images keep <img> — author-pasted
+                    URLs can point at any host outside next.config.mjs
+                    remotePatterns; converting would return 400 for those hosts. */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={imgSrc}
+                  alt={altText || post.title}
+                  className="w-full max-h-[480px] object-cover"
+                  loading="lazy"
+                />
+              </>
+            )}
             {altText && altText !== "Hình ảnh minh họa" && (
               <p className="text-center text-xs text-slate-500 font-semibold py-2 px-4 bg-slate-50 border-t border-slate-100 font-sans">
                 {altText}
@@ -482,31 +567,26 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
         return;
       }
 
-      // Bullet lists
+      // Bullet lists (grouped into one <ul>)
       if (line.startsWith("- ") || line.startsWith("* ")) {
-        output.push(
-          <li
-            key={index}
-            className="ml-6 list-disc text-slate-700 leading-relaxed my-1 font-normal font-sans text-[15px] sm:text-base"
-          >
-            {line.slice(2)}
-          </li>
-        );
+        flushTable(index);
+        if (listItems.length > 0 && listOrdered) flushList(index);
+        listOrdered = false;
+        listItems.push({ ordered: false, content: line.slice(2) });
         return;
       }
 
-      // Numbered lists
+      // Numbered lists (grouped into one <ol> so numbering restarts per section)
       if (/^\d+\.\s/.test(line)) {
-        output.push(
-          <li
-            key={index}
-            className="ml-6 list-decimal text-slate-700 leading-relaxed my-1 font-normal font-sans text-[15px] sm:text-base"
-          >
-            {line.replace(/^\d+\.\s/, "")}
-          </li>
-        );
+        flushTable(index);
+        if (listItems.length > 0 && !listOrdered) flushList(index);
+        listOrdered = true;
+        listItems.push({ ordered: true, content: line.replace(/^\d+\.\s/, "") });
         return;
       }
+
+      // Any other block ends an open list.
+      flushList(index);
 
       // Blank line
       if (!line.trim()) {
@@ -517,12 +597,13 @@ export default function DeverBlogRenderer({ post }: { post: BlogData }) {
       // Regular paragraph
       output.push(
         <p key={index} className="text-slate-700 leading-relaxed mb-4 font-normal font-sans text-[15px] sm:text-base">
-          {line}
+          {renderInline(line, `p-${index}`)}
         </p>
       );
     });
 
     flushTable(lines.length);
+    flushList(lines.length);
     return output;
   };
 
