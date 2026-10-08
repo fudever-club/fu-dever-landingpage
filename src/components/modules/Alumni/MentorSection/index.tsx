@@ -178,21 +178,21 @@ export default function MentorSection() {
       aria-labelledby="mentor-showcase-heading"
       className="mx-auto mt-12 max-w-[1440px] px-5 lg:px-20"
     >
-      <div className="overflow-hidden rounded-3xl border border-blue-400/30 bg-gradient-to-br from-[#002D66] via-[#004C99] to-[#0066CC] p-8 text-white shadow-2xl lg:p-12">
+      <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white p-8 shadow-sm lg:p-12">
         <div className="max-w-3xl space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/15 px-4 py-1.5 backdrop-blur-md">
-            <Sparkles className="h-4 w-4 text-amber-300" aria-hidden="true" />
-            <span className="text-xs font-extrabold uppercase tracking-wider text-white">
+          <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-4 py-1.5">
+            <Sparkles className="h-4 w-4 text-[#0066CC]" aria-hidden="true" />
+            <span className="text-xs font-extrabold uppercase tracking-wider text-[#004C99]">
               Cố vấn &amp; Mentor FU-DEVER
             </span>
           </div>
           <h2
             id="mentor-showcase-heading"
-            className="text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl lg:text-4xl"
+            className="text-2xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-3xl lg:text-4xl"
           >
             Học trực tiếp từ anh chị đi trước
           </h2>
-          <p className="text-sm font-medium leading-relaxed text-white lg:text-base">
+          <p className="text-sm font-medium leading-relaxed text-slate-600 lg:text-base">
             Đội ngũ cố vấn là các cựu thành viên đang làm việc trong ngành công
             nghệ, đồng hành cùng thành viên CLB qua định hướng nghề nghiệp,
             review CV và mentoring chuyên môn theo chủ đề.
@@ -201,12 +201,12 @@ export default function MentorSection() {
             href={CLIENT_SIGN_IN_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-xl bg-white px-5 min-h-[44px] py-2.5 text-xs font-extrabold text-[#004C99] shadow-md transition-all hover:bg-blue-50 active:scale-[0.98]"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#0066CC] px-5 min-h-[44px] py-2.5 text-xs font-extrabold text-white shadow-md transition-all hover:bg-[#004C99] active:scale-[0.98]"
           >
             <span>Tham gia CLB để kết nối</span>
             <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
           </a>
-          <p className="text-xs font-bold text-white">
+          <p className="text-xs font-bold text-slate-500">
             CLB duy trì hình thức invite-only: kết nối mentor dành cho thành
             viên đã được xác thực trên Cổng Thành Viên.
           </p>

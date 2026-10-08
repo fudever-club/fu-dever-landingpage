@@ -54,11 +54,11 @@ function parseGenNumber(value?: string): number | null {
 }
 
 /**
- * Niên khóa ước tính theo số thứ tự Gen (mỗi Gen ≈ 1 năm, bắt đầu từ 2016).
- * Chỉ mang tính tham chiếu vì API hiện chưa trả về năm tốt nghiệp.
+ * Niên khóa theo số thứ tự Gen: Gen 1 = 2017–2018 (năm thành lập CLB),
+ * Gen 10 = 2026–2027. Mỗi Gen ≈ 1 niên khóa.
  */
 function genYearRange(gen: number): string {
-  const start = 2015 + gen;
+  const start = 2016 + gen;
   return `${start}–${start + 1}`;
 }
 
@@ -245,7 +245,7 @@ export default function AlumniPage() {
             Trục thế hệ Gen 1 → Gen 10
           </h2>
           <p className="mt-1 text-xs font-medium text-slate-500">
-            Niên khóa ước tính theo thứ tự thế hệ (mỗi Gen ≈ 1 năm, từ 2016) — chỉ mang tính tham chiếu.
+            Niên khóa theo thế hệ: Gen 1 = 2017–2018 (năm thành lập CLB) đến Gen 10 = 2026–2027.
           </p>
 
           {isLoading ? (
